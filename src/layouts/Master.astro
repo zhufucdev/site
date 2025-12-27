@@ -1,0 +1,27 @@
+---
+import type { I18nKv } from "../strings/types";
+import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+  title: string;
+  lang: string;
+}
+const { title, lang } = Astro.props;
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header><slot name="header" /></header>
+    <slot />
+  </body>
+</html>
+
+<ClientRouter />

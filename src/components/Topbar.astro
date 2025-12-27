@@ -1,0 +1,28 @@
+---
+import { getAbsoluteLocaleUrl } from "astro:i18n";
+import type { I18nResource } from "../strings/types";
+import ArrowUnderliningTextButton from "./ArrowUnderliningTextButton.astro";
+
+const { i18n, currentItem } = Astro.props;
+const items = [
+  ["", i18n.highlights_para],
+  ["articles", i18n.all_articles_para],
+  ["about", i18n.about_me_para],
+] as const;
+interface Props {
+  i18n: I18nResource;
+  currentItem?: (typeof items)[number][0];
+}
+---
+
+<div class="flex flex-col items-start gap-4 p-4 sm:flex-row" transition:animate="none" transition:name="topbar">
+  {
+    items.map(([href, name]) => (
+      <a href={getAbsoluteLocaleUrl(i18n.localeName, href)}>
+        <ArrowUnderliningTextButton selected={href == currentItem}>
+          {name}
+        </ArrowUnderliningTextButton>
+      </a>
+    ))
+  }
+</div>

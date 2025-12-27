@@ -1,0 +1,23 @@
+---
+interface Props {
+  selected?: boolean;
+}
+const { selected = false } = Astro.props;
+---
+
+<div
+  class="group relative flex flex-row items-center text-xl font-bold"
+  class:list={selected ? ["selected"] : []}
+>
+  <span
+    class="absolute right-0 bottom-0 h-1 w-0 max-w-32 bg-orange-500 opacity-0 transition-all group-hover:w-[calc(80%-24px)] group-hover:opacity-100 "
+  ></span>
+  {
+    Astro.slots["icon"] && (
+      <div class="h-6 w-6 translate-x-3 transform transform-gpu opacity-0 transition-all group-hover:translate-0 group-hover:opacity-100 group-[.selected]:text-orange-500">
+        <slot name="icon" />
+      </div>
+    )
+  }
+  <div class="text-nowrap text-ellipsis group-[.selected]:text-orange-500"><slot /></div>
+</div>

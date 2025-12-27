@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+body {
+  font-family: "Futura", "Noto Sans KR", "Noto Sans SC", "Noto Sans JP", system-ui, -apple-system;
+}
+

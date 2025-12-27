@@ -1,0 +1,13 @@
+---
+import UnderliningTextButton from "./UnderliningTextButton.astro";
+import ArrowRightCircle from "../icons/ArrowRightCircle.astro";
+interface Props {
+  selected?: boolean;
+}
+const { selected = false } = Astro.props;
+---
+
+<UnderliningTextButton selected={selected}>
+  <ArrowRightCircle slot="icon" />
+  <slot />
+</UnderliningTextButton>

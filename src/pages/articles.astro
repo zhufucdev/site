@@ -1,0 +1,10 @@
+---
+import Master from "../layouts/Master.astro";
+import i18n from "../strings/en.ts";
+import Topbar from "../components/Topbar.astro";
+---
+
+<Master title={i18n.all_articles_para} lang="en">
+  <Topbar slot="header" i18n={i18n} currentItem="articles" />
+  Article list here
+</Master>
