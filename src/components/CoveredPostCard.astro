@@ -1,0 +1,33 @@
+---
+interface Props {
+  cover: string;
+  mask: string;
+  class?: string;
+}
+const { cover, mask, class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    "@container flex min-w-72 flex-col space-y-4 overflow-clip rounded-2xl border-2 border-gray-500 bg-gray-300 p-6",
+    className,
+  ]}
+>
+  <p class="space-x-2 font-mono leading-8">
+    <span class="bg-orange-600 p-2 text-white"
+      ><slot name="header-leading" /></span
+    >
+    <span><slot name="header-tailing" /></span>
+  </p>
+  <div class="relative min-h-72 flex-1 @max-md:pb-72">
+    <div class="space-y-4 @md:mr-72">
+      <p class="text-4xl"><slot name="title" /></p>
+      <p class="font-sans"><slot name="summary" /></p>
+    </div>
+    <div
+      class="absolute -right-24 -bottom-24 h-96 w-96 bg-orange-100 bg-cover"
+      style={`background-image: ${cover}; mask-image: ${mask}`}
+    >
+    </div>
+  </div>
+</div>

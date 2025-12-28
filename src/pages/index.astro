@@ -1,10 +1,42 @@
 ---
 import Master from "../layouts/Master.astro";
 import Topbar from "../components/Topbar.astro";
+import CoveredPostCard from "../components/CoveredPostCard.astro";
 import i18n from "../strings/en";
 ---
 
 <Master title={i18n.highlights_para} lang="en">
   <Topbar slot="header" i18n={i18n} currentItem="" />
-  Hello
+  <div class="flex flex-row flex-wrap gap-4">
+    <CoveredPostCard
+      cover="url(/quick-brown-fox-jumping-over-a-dog.jpg)"
+      mask="url(/ElevenSidedStar.svg)"
+      class="flex-1"
+    >
+      <Fragment slot="header-leading" set:text="Status update" />
+      <Fragment slot="header-tailing" set:text="28th Dec." />
+      <Fragment
+        slot="title"
+        set:text="Did the quick brown fox really jump over the lazy dog?"
+      />
+      <Fragment
+        slot="summary"
+        set:text="I did say, but can I really eat glass? Should have known before it's too late."
+      />
+    </CoveredPostCard>
+
+    <CoveredPostCard
+      cover="url(/ferris-with-knief.png)"
+      mask="url(/ElevenSidedStar.svg)"
+      class="flex-1"
+    >
+      <Fragment slot="header-leading" set:text="News" />
+      <Fragment slot="header-tailing" set:text="22th Dec." />
+      <Fragment slot="title" set:text="Binder CVE" />
+      <Fragment
+        slot="summary"
+        set:text="There was a piece of Rust code in the Linux kernel that led to a potential race condition."
+      />
+    </CoveredPostCard>
+  </div>
 </Master>
