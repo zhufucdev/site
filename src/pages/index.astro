@@ -43,10 +43,8 @@ import i18n from "../strings/en";
     </CoveredPostCard>
   </div>
 
-  <div class="text-blue-50">
-    <div class="to-blueprint h-8 bg-linear-to-b from-transparent via-gray-300">
-    </div>
-    <BlueprintSheet>
+  <div class="mt-4 flex flex-row flex-wrap gap-4 px-2 sm:px-6">
+    <BlueprintSheet class="flex-1">
       <TitleSummary>
         <Fragment slot="title" set:text="Liquid Glass Toolbar Flickering" />
         <Fragment
@@ -54,12 +52,12 @@ import i18n from "../strings/en";
           set:text="It's high time for me to adapt the new design language for Apple platforms. However, my app uses an asynchronize data loading model, which is not how Apple does things."
         />
       </TitleSummary>
-      <ArrowHighlightingButton href="#"
+      <ArrowHighlightingButton slot="bottom" href="#"
         >{i18n.read_full_para}</ArrowHighlightingButton
       >
     </BlueprintSheet>
 
-    <BlueprintSheet>
+    <BlueprintSheet class="flex-1">
       <TitleSummary>
         <Fragment slot="title" set:text="As an AWS Engineer" />
         <Fragment
@@ -67,10 +65,11 @@ import i18n from "../strings/en";
           set:text="I have been working for Amazon since 3 years ago, and I am 22. What a shocker."
         />
       </TitleSummary>
-      <ArrowHighlightingButton href="#"
+      <ArrowHighlightingButton slot="bottom" href="#"
         >{i18n.read_full_para}</ArrowHighlightingButton
       >
     </BlueprintSheet>
   </div>
-  <div class="bg-blueprint flex-1"></div>
+
+  <div class="h-12"/>
 </Master>

@@ -14,6 +14,7 @@ body {
 
 @theme {
   --color-blueprint: #0C559A;
+  --color-scroll: #F7F7D9;
 }
 
 .bg-blueprint-grid {
