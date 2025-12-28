@@ -1,0 +1,13 @@
+---
+import ArrowRight from "../icons/ArrowRight.astro";
+import HighlightingButton from "./HighlightingButton.astro";
+interface Props {
+  href?: string;
+}
+const { href } = Astro.props;
+---
+
+<HighlightingButton href={href}>
+  <ArrowRight slot="icon" />
+  <slot />
+</HighlightingButton>

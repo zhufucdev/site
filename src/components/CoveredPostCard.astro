@@ -1,4 +1,5 @@
 ---
+import TitleSummary from "./TitleSummary.astro";
 interface Props {
   cover: string;
   mask: string;
@@ -21,8 +22,10 @@ const { cover, mask, class: className } = Astro.props;
   </p>
   <div class="relative min-h-72 flex-1 @max-md:pb-72">
     <div class="space-y-4 @md:mr-72">
-      <p class="text-4xl"><slot name="title" /></p>
-      <p class="font-sans"><slot name="summary" /></p>
+      <TitleSummary>
+        <slot name="title" slot="title" />
+        <slot name="summary" slot="summary" />
+      </TitleSummary>
     </div>
     <div
       class="absolute -right-24 -bottom-24 h-96 w-96 bg-orange-100 bg-cover"
