@@ -43,8 +43,14 @@ import i18n from "../strings/en";
     </CoveredPostCard>
   </div>
 
-  <div class="mt-4 flex flex-row flex-wrap gap-4 px-2 sm:px-6">
-    <BlueprintSheet class="flex-1">
+  <div
+    class="h-4 w-full mask-[url(/WaveSegment.svg)] bg-repeat-x bg-gray-100 mt-4"
+  >
+  </div>
+  <div
+    class="flex flex-row flex-wrap gap-4 border-b-3 border-b-gray-500 bg-linear-to-b from-gray-100 via-gray-200 via-70% to-gray-300 px-2 py-4 sm:px-6"
+  >
+    <BlueprintSheet class="flex-2">
       <TitleSummary>
         <Fragment slot="title" set:text="Liquid Glass Toolbar Flickering" />
         <Fragment
@@ -71,5 +77,5 @@ import i18n from "../strings/en";
     </BlueprintSheet>
   </div>
 
-  <div class="h-12"/>
+  <div class="h-12"></div>
 </Master>
