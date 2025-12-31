@@ -16,15 +16,15 @@ interface Props {
 ---
 
 <div class="relative">
-  <div
-    class="p-4 sm:hidden"
+  <button
+    class="flex flex-row p-4 sm:hidden"
     id="topbar-persistent-item"
     transition:animate="none"
   >
-    <ArrowUnderliningTextButton selected>
-      {items.find(([ref]) => ref == currentItem)![1]}
-    </ArrowUnderliningTextButton>
-  </div>
+      <ArrowUnderliningTextButton selected>
+        {items.find(([ref]) => ref == currentItem)![1]}
+      </ArrowUnderliningTextButton>
+  </button>
   <div
     class="top-0 z-10 flex flex-col items-start gap-4 p-4 max-sm:absolute max-sm:hidden max-sm:h-screen max-sm:w-screen max-sm:bg-white sm:flex-row"
     id="topbar-expanded-items"
