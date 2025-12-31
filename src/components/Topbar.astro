@@ -21,9 +21,9 @@ interface Props {
     id="topbar-persistent-item"
     transition:animate="none"
   >
-      <ArrowUnderliningTextButton selected>
-        {items.find(([ref]) => ref == currentItem)![1]}
-      </ArrowUnderliningTextButton>
+    <ArrowUnderliningTextButton selected>
+      {items.find(([ref]) => ref == currentItem)![1]}
+    </ArrowUnderliningTextButton>
   </button>
   <div
     class="top-0 z-10 flex flex-col items-start gap-4 p-4 max-sm:absolute max-sm:hidden max-sm:h-screen max-sm:w-screen max-sm:bg-white sm:flex-row"
@@ -35,6 +35,7 @@ interface Props {
       items.map(([href, name]) => (
         <a
           class="topbar-list-item"
+          aria-busy={currentItem == href}
           href={getAbsoluteLocaleUrl(i18n.localeName, href)}
         >
           <ArrowUnderliningTextButton selected={href == currentItem}>
@@ -65,11 +66,20 @@ interface Props {
       return aboveSm;
     }
     window.addEventListener("resize", () => (aboveSm = recompute()));
-    persistentItemContainer.addEventListener("click", () => {
+    persistentItemContainer.addEventListener("click", (event) => {
       if (aboveSm) {
+        event.preventDefault();
         return;
       }
       setExpandedItemsContainerVisibility(true);
     });
+    document.querySelectorAll(".topbar-list-item").forEach((item) =>
+      item.addEventListener("click", (event) => {
+        if (item.ariaBusy == "true") {
+          event.preventDefault();
+          setExpandedItemsContainerVisibility(false);
+        }
+      }),
+    );
   });
 </script>
