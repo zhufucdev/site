@@ -7,7 +7,7 @@ const { class: className } = Astro.props;
 
 <div class:list={["bg-blueprint rounded-2xl pt-4 text-blue-50", className]}>
   <div
-    class="bg-blueprint-grid flex h-full flex-col space-y-2 border-t-2 border-blue-50 p-6"
+    class="bg-blueprint-grid flex h-full flex-col space-y-2 border-t-2 border-blue-50 p-6 min-w-72"
   >
     <slot />
     <div class="flex-1"></div>
