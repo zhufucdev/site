@@ -23,7 +23,7 @@ const { title, lang } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <header><slot name="header" /></header>
+    <nav><slot name="nav" /></nav>
     <div class="pt-6 flex flex-col min-h-screen">
       <slot />
     </div>
