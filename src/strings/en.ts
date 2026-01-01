@@ -8,6 +8,7 @@ const enRes: I18nResource = {
   read_full_para: "Read full",
   subsribe_via_rss_para: "Subsribe via RSS",
   copy_link_para: "Copy link",
+  get_list_para: "Get list",
 };
 
 export default enRes;

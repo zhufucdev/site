@@ -1,5 +1,6 @@
 import { createSignal, type JSX } from "solid-js";
 import type { I18nResource } from "../strings/types";
+import ChunkyIconButton from "./ChunkyIconButton";
 
 interface RssSectionProps {
   i18n: I18nResource;
@@ -24,29 +25,33 @@ export default function RssSection(props: RssSectionProps) {
       <div class="flex flex-col items-start">
         <p class="text-3xl">{i18n.subsribe_via_rss_para}</p>
         <div class="flex-1" />
-        <button
-          ref={buttonElement}
-          class="flex cursor-pointer items-center gap-2 border-r-4 border-b-4 border-gray-400 bg-black px-2 text-white transition-all hover:border-r-8 hover:border-b-8 hover:border-gray-200 hover:bg-orange-600 focus:bg-orange-600"
-          onClick={handleCopyButtonClick}
-        >
-          <div class="relative">
-            <ClipboardIcon
-              class="size-4"
-              classList={{
-                "transition-all": !copied(),
-                "transition-discrete": !copied(),
-                "opacity-0": copied(),
-              }}
-            />
-            <CheckIcon
-              class="absolute top-0 left-0 size-4 transition-all transition-discrete"
-              classList={{
-                "opacity-0": !copied(),
-              }}
-            />
-          </div>
-          {i18n.copy_link_para}
-        </button>
+        <div class="flex flex-row gap-4">
+          <ChunkyIconButton
+            ref={buttonElement}
+            onClick={handleCopyButtonClick}
+            icon={
+              <>
+                <ClipboardIcon
+                  class="size-4"
+                  classList={{
+                    "transition-all": !copied(),
+                    "transition-discrete": !copied(),
+                    "opacity-0": copied(),
+                  }}
+                />
+                <CheckIcon
+                  class="absolute top-0 left-0 size-4 transition-all transition-discrete"
+                  classList={{
+                    "opacity-0": !copied(),
+                  }}
+                />
+              </>
+            }
+          >
+            {i18n.copy_link_para}
+          </ChunkyIconButton>
+          <ChunkyIconButton>{i18n.get_list_para}</ChunkyIconButton>
+        </div>
       </div>
     </div>
   );

@@ -4,7 +4,8 @@ export type i18nKeys =
   | "about_me_para"
   | "read_full_para"
   | "subsribe_via_rss_para"
-  | "copy_link_para";
+  | "copy_link_para"
+  | "get_list_para";
 export type I18nKv = { [key in i18nKeys]: string };
 export type I18nResource = I18nKv & {
   localeName: string;
