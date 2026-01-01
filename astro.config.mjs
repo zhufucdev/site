@@ -5,6 +5,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 import cloudflare from "@astrojs/cloudflare";
 
+import solidJs from "@astrojs/solid-js";
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
@@ -17,4 +19,6 @@ export default defineConfig({
   },
 
   adapter: cloudflare(),
+  integrations: [solidJs()],
 });
+

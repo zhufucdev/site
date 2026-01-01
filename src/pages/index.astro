@@ -5,7 +5,13 @@ import CoveredPostCard from "../components/CoveredPostCard.astro";
 import ArrowHighlightingButton from "../components/ArrowHighlightingButton.astro";
 import TitleSummary from "../components/TitleSummary.astro";
 import BlueprintSheet from "../components/BlueprintSheet.astro";
+import RssSection from "../components/RssSection.tsx";
 import i18n from "../strings/en";
+import { createHighlighter } from "shiki";
+const highlighter = await createHighlighter({
+  themes: ["one-light"],
+  langs: ["xml"],
+});
 ---
 
 <Master title={i18n.highlights_para} lang="en">
@@ -77,5 +83,30 @@ import i18n from "../strings/en";
     </BlueprintSheet>
   </div>
 
+  <div class="relative flex flex-row overflow-clip">
+    <RssSection class="p-6" i18n={i18n} client:idle />
+    <div class="absolute top-0 right-0 -translate-y-1/3 text-sm mask-b-from-0 mask-l-from-0 -z-10">
+      <Fragment
+        set:html={highlighter.codeToHtml(
+          `<channel>
+  <title>Example dot Come</title>
+  <link>http://www.example.com</link>
+  <description>Example domain that is free to quote</description>
+  <item>
+    <title>Sample title</title>
+    <link>http://www.example.com/sample</link>
+    <description>New Sample is Coming</description>
+  </item>
+  <item>
+    <title>Vaperware</title>
+    <link>http://www.example.com/vaperware</link>
+    <description>Just a Vaperware</description>
+  </item>
+</channel>`,
+          { lang: "xml", theme: "one-light" },
+        )}
+      />
+    </div>
+  </div>
   <div class="h-12"></div>
 </Master>
