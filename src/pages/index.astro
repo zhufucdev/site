@@ -84,17 +84,17 @@ const highlighter = await createHighlighter({
     </BlueprintSheet>
   </div>
 
-  <div class="relative flex flex-row overflow-clip">
-    <RssSection class="p-6" i18n={i18n} client:idle />
+  <div class="relative flex sm:flex-row max-sm:flex-col overflow-clip">
+    <RssSection class="p-6 flex-1" i18n={i18n} client:idle />
     <SourceSection
-      class="p-6"
+      class="p-6 flex-1"
       source="https://github.com/zhufucdev/site.git"
       license="https://www.apache.org/licenses/LICENSE-2.0.txt"
       i18n={i18n}
       client:idle
     />
     <div
-      class="absolute top-0 right-0 -z-10 -translate-y-1/3 mask-b-from-0 mask-l-from-0 text-sm"
+      class="absolute max-sm:bottom-0 sm:top-1/2 sm:-translate-y-1/2 right-0 -z-10 mask-b-from-0 mask-l-from-0 text-sm"
     >
       <Fragment
         set:html={highlighter.codeToHtml(
