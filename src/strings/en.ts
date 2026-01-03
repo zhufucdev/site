@@ -9,6 +9,8 @@ const enRes: I18nResource = {
   subsribe_via_rss_para: "Subsribe via RSS",
   copy_link_para: "Copy link",
   get_list_para: "Get list",
+  get_source_code_para: "Get source code",
+  license_para: "License",
 };
 
 export default enRes;

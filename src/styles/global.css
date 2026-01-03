@@ -13,8 +13,8 @@ body {
 }
 
 @theme {
-  --color-blueprint: #0C559A;
-  --color-scroll: #F7F7D9;
+  --color-blueprint: #0c559a;
+  --color-scroll: #f7f7d9;
 }
 
 .bg-blueprint-grid {
@@ -33,4 +33,11 @@ body {
     -2px -2px,
     -1px -1px,
     -1px -1px;
+}
+
+.stroke-gray-700-2 {
+  filter: drop-shadow(2px 0 0 var(--color-gray-700))
+    drop-shadow(0 2px 0 var(--color-gray-700))
+    drop-shadow(-2px 0 0 var(--color-gray-700))
+    drop-shadow(0 -2px 0 var(--color-gray-700));
 }

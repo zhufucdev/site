@@ -6,6 +6,7 @@ import ArrowHighlightingButton from "../components/ArrowHighlightingButton.astro
 import TitleSummary from "../components/TitleSummary.astro";
 import BlueprintSheet from "../components/BlueprintSheet.astro";
 import RssSection from "../components/RssSection.tsx";
+import SourceSection from "../components/SourceSection.tsx";
 import i18n from "../strings/en";
 import { createHighlighter } from "shiki";
 const highlighter = await createHighlighter({
@@ -85,7 +86,16 @@ const highlighter = await createHighlighter({
 
   <div class="relative flex flex-row overflow-clip">
     <RssSection class="p-6" i18n={i18n} client:idle />
-    <div class="absolute top-0 right-0 -translate-y-1/3 text-sm mask-b-from-0 mask-l-from-0 -z-10">
+    <SourceSection
+      class="p-6"
+      source="https://github.com/zhufucdev/site.git"
+      license="https://www.apache.org/licenses/LICENSE-2.0.txt"
+      i18n={i18n}
+      client:idle
+    />
+    <div
+      class="absolute top-0 right-0 -z-10 -translate-y-1/3 mask-b-from-0 mask-l-from-0 text-sm"
+    >
       <Fragment
         set:html={highlighter.codeToHtml(
           `<channel>
