@@ -77,7 +77,9 @@ interface Props {
       item.addEventListener("click", (event) => {
         if (item.ariaBusy == "true") {
           event.preventDefault();
-          setExpandedItemsContainerVisibility(false);
+          if (!aboveSm) {
+            setExpandedItemsContainerVisibility(false);
+          }
         }
       }),
     );
