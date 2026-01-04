@@ -124,7 +124,7 @@ const highlighter = await createHighlighter({
       Array.from({ length: 10 }).map((_, i) => (
         <img
           src={`https://placecats.com/${["neo", "millie", "millie_neo", "neo_2", "neo_banana"][i % 5]}/300/200`}
-          class="min-h-40 min-w-40 sm:min-w-[30vw] md:min-w-[20vw] flex-1 bg-orange-100 object-cover"
+          class="min-h-40 min-w-40 sm:min-w-[30%] md:min-w-[20%] md:max-w-[33%] flex-1 bg-orange-100 object-cover"
         />
       ))
     }
