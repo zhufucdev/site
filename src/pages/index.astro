@@ -120,16 +120,20 @@ const highlighter = await createHighlighter({
       />
     </div>
   </div>
-  <div class="relative flex flex-row flex-wrap items-start gap-2 pt-12 sm:px-2">
+  <div class="relative pt-12 px-2 sm:px-6">
     <TracePhotoCamera class="absolute -top-10 right-0 max-w-60 text-gray-200" />
-    {
-      Array.from({ length: 10 }).map((_, i) => (
-        <img
-          src={`https://placecats.com/${["neo", "millie", "millie_neo", "neo_2", "neo_banana"][i % 5]}/300/200`}
-          class="min-h-40 min-w-40 flex-1 bg-orange-100 object-cover sm:min-w-[30%] md:max-w-[33%] md:min-w-[20%]"
-        />
-      ))
-    }
+    <div
+      class="flex flex-row flex-wrap items-start gap-2 overflow-clip rounded-2xl"
+    >
+      {
+        Array.from({ length: 10 }).map((_, i) => (
+          <img
+            src={`https://placecats.com/${["neo", "millie", "millie_neo", "neo_2", "neo_banana"][i % 5]}/300/200`}
+            class="min-h-40 min-w-40 flex-1 bg-orange-100 object-cover sm:min-w-[30%] md:max-w-[33%] md:min-w-[20%]"
+          />
+        ))
+      }
+    </div>
   </div>
   <div class="h-12"></div>
 </Master>
