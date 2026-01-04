@@ -45,16 +45,19 @@ const data = [
       data.map(([year, articles]) => (
         <>
           <h1 class="text-3xl font-semibold" id={String(year)}>
-            <a href={`#${year}`}>{year}</a>
+            <a href={`#${year}`} class="flex flex-row items-center gap-2 hover:text-orange-600 transition-all">
+              <span class="size-2 rounded-full outline-5 outline-orange-500 max-sm:mx-2 sm:mr-2" />
+              {year}
+            </a>
           </h1>
           {(articles as string[][]).map(([title, summary]) => (
             <>
               <a href="#" class="group">
-                <div class="flex flex-row">
+                <h2 class="flex flex-row wrap-break-word">
                   <UnderliningTextButton slot="title">
                     {title}
                   </UnderliningTextButton>
-                </div>
+                </h2>
                 <p class="font-sans">{summary}</p>
               </a>
               <hr class="text-gray-300" />
