@@ -21,7 +21,7 @@ export default function RssSection(props: RssSectionProps) {
   }
   return (
     <div class={`flex flex-row flex-wrap content-around gap-6 ${className}`}>
-      <RssIcon class="size-20 rounded-2xl border-2 border-gray-700 bg-orange-500 text-white" />
+      <RssIcon class="size-16 rounded-2xl border-2 border-gray-700 bg-orange-500 text-white" />
       <div class="flex flex-col items-start">
         <p class="text-3xl">{i18n.subsribe_via_rss_para}</p>
         <div class="flex-1" />
