@@ -7,6 +7,7 @@ import TitleSummary from "../components/TitleSummary.astro";
 import BlueprintSheet from "../components/BlueprintSheet.astro";
 import RssSection from "../components/RssSection.tsx";
 import SourceSection from "../components/SourceSection.tsx";
+import TracePhotoCamera from "../icons/TracePhotoCamera.svg";
 import i18n from "../strings/en";
 import { createHighlighter } from "shiki";
 const highlighter = await createHighlighter({
@@ -83,18 +84,17 @@ const highlighter = await createHighlighter({
       >
     </BlueprintSheet>
   </div>
-
-  <div class="relative flex sm:flex-row max-sm:flex-col overflow-clip">
-    <RssSection class="p-6 flex-1" i18n={i18n} client:idle />
+  <div class="relative flex overflow-clip max-sm:flex-col sm:flex-row">
+    <RssSection class="flex-1 p-6" i18n={i18n} client:idle />
     <SourceSection
-      class="p-6 flex-1"
+      class="flex-1 p-6"
       source="https://github.com/zhufucdev/site.git"
       license="https://www.apache.org/licenses/LICENSE-2.0.txt"
       i18n={i18n}
       client:idle
     />
     <div
-      class="absolute max-sm:bottom-0 sm:top-1/2 sm:-translate-y-1/2 right-0 -z-10 mask-b-from-0 mask-l-from-0 text-sm"
+      class="absolute right-1/2 -z-10 translate-x-1/2 mask-b-from-0 mask-l-from-0 text-sm max-sm:bottom-0 sm:top-1/2 sm:-translate-y-1/2"
     >
       <Fragment
         set:html={highlighter.codeToHtml(
@@ -117,6 +117,17 @@ const highlighter = await createHighlighter({
         )}
       />
     </div>
+  </div>
+  <div class="relative flex flex-row flex-wrap items-start gap-2 pt-12 sm:px-2">
+    <TracePhotoCamera class="absolute -top-10 right-0 max-w-60 text-gray-200" />
+    {
+      Array.from({ length: 10 }).map((_, i) => (
+        <img
+          src={`https://placecats.com/${["neo", "millie", "millie_neo", "neo_2", "neo_banana"][i % 5]}/300/200`}
+          class="min-h-40 min-w-40 flex-1 bg-orange-100 object-cover"
+        />
+      ))
+    }
   </div>
   <div class="h-12"></div>
 </Master>
