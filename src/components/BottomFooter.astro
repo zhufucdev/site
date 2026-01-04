@@ -3,8 +3,48 @@ import type { I18nResource } from "../strings/types";
 
 interface Props {
   i18n: I18nResource;
+  currentNavItem: string;
 }
+const { currentNavItem, i18n } = Astro.props;
+const options = [
+  ["en", "English"],
+  ["zh", "中文（简体）"],
+  ["zh-tw", "中文（繁體）"],
+];
 ---
 
+<div class="flex flex-row border-t-2 border-gray-500 bg-gray-200 p-6">
+  <span>©{new Date().getFullYear()} Steve Reed</span>
+  <div class="flex-1"></div>
+  <select
+    class="rounded-sm outline-gray-500 focus:outline-2"
+    id="language-select"
+    data-navitem={currentNavItem}
+  >
+    {
+      options.map(([locale, name]) => (
+        <option value={locale} selected={locale == i18n.localeName}>
+          {name}
+        </option>
+      ))
+    }
+  </select>
+</div>
 
-
+<script>
+  import { getRelativeLocaleUrl } from "astro:i18n";
+  import { navigate } from "astro:transitions/client";
+  document.addEventListener("astro:page-load", () => {
+    const languageSelect = document.getElementById(
+      "language-select",
+    )! as HTMLSelectElement;
+    languageSelect.addEventListener("change", () => {
+      navigate(
+        getRelativeLocaleUrl(
+          languageSelect.value,
+          languageSelect.dataset.navitem,
+        ),
+      );
+    });
+  });
+</script>

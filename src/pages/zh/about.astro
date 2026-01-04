@@ -1,10 +1,12 @@
 ---
 import Master from "../../layouts/Master.astro";
-import i18n from "../../strings/zh.ts";
 import Topbar from "../../components/Topbar.astro";
+import BottomFooter from "../../components/BottomFooter.astro";
+import i18n from "../../strings/zh.ts";
 ---
 
 <Master title={i18n.about_me_para} lang="zh">
   <Topbar slot="nav" i18n={i18n} currentItem="about" />
+  <BottomFooter slot="footer" i18n={i18n} currentNavItem="about" />
   个人信息在此
 </Master>
