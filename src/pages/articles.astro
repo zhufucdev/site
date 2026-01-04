@@ -2,9 +2,66 @@
 import Master from "../layouts/Master.astro";
 import i18n from "../strings/en.ts";
 import Topbar from "../components/Topbar.astro";
+import TitleSummary from "../components/TitleSummary.astro";
+import UnderliningTextButton from "../components/UnderliningTextButton.astro";
+const data = [
+  [
+    2025,
+    [
+      [
+        "Liquid Glass Toolbar Flickering",
+        "It's high time for me to adapt the new design language for Apple platforms. However, my app uses an asynchronize data loading model, which is not how Apple does things.",
+      ],
+      [
+        "As an AWS Engineer",
+        "I have been working for Amazon since 3 years ago, and I am 22. What a shocker.",
+      ],
+      [
+        "How to Program in Sea",
+        "Recently, I have been working on a project that requires me to program in sea. I am not sure if I will be able to finish it, but I am eager to learn.",
+      ],
+      [
+        "Apple Watch as a Service",
+        "Apple Watch has become an important part of people's life. Running AWaaS to provide a seamless experience for users is a great idea.",
+      ],
+    ],
+  ],
+  [
+    2024,
+    [
+      [
+        "How to Get Hired",
+        "I challenge myself to get hired by a company. There're several candidates in my mind.",
+      ],
+    ],
+  ],
+];
 ---
 
 <Master title={i18n.all_articles_para} lang="en">
   <Topbar slot="nav" i18n={i18n} currentItem="articles" />
-  Article list here
+  <div class="flex flex-col gap-6 px-2 sm:px-6">
+    {
+      data.map(([year, articles]) => (
+        <>
+          <h1 class="text-3xl font-semibold" id={String(year)}>
+            <a href={`#${year}`}>{year}</a>
+          </h1>
+          {(articles as string[][]).map(([title, summary]) => (
+            <>
+              <a href="#" class="group">
+                <div class="flex flex-row">
+                  <UnderliningTextButton slot="title">
+                    {title}
+                  </UnderliningTextButton>
+                </div>
+                <p class="font-sans">{summary}</p>
+              </a>
+              <hr class="text-gray-300" />
+            </>
+          ))}
+        </>
+      ))
+    }
+  </div>
 </Master>

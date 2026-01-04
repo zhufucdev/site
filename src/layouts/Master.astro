@@ -24,9 +24,10 @@ const { title, lang } = Astro.props;
   </head>
   <body>
     <nav><slot name="nav" /></nav>
-    <div class="pt-6 flex flex-col min-h-screen">
+    <div class="flex min-h-screen flex-col pt-1">
       <slot />
     </div>
+    <footer><slot name="footer" /></footer>
   </body>
 </html>
 
