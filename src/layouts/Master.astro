@@ -6,8 +6,9 @@ import { ClientRouter } from "astro:transitions";
 interface Props {
   title: string;
   lang: string;
+  disableBottomPadding?: boolean;
 }
-const { title, lang } = Astro.props;
+const { title, lang, disableBottomPadding = false } = Astro.props;
 ---
 
 <html lang={lang}>
@@ -24,7 +25,12 @@ const { title, lang } = Astro.props;
   </head>
   <body>
     <nav><slot name="nav" /></nav>
-    <div class="flex min-h-screen flex-col pt-1">
+    <div
+      class:list={[
+        "flex min-h-screen flex-col",
+        disableBottomPadding ? "" : "pt-1",
+      ]}
+    >
       <slot />
     </div>
     <footer><slot name="footer" /></footer>

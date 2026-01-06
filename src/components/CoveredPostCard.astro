@@ -1,26 +1,34 @@
 ---
 import TitleSummary from "./TitleSummary.astro";
 interface Props {
-  cover: string;
+  cover?: string;
   mask: string;
   class?: string;
+  customColors?: boolean;
 }
-const { cover, mask, class: className } = Astro.props;
+const { cover, mask, class: className, customColors = false } = Astro.props;
 ---
 
 <div
   class:list={[
-    "@container flex min-w-72 flex-col space-y-4 overflow-clip rounded-2xl border-2 border-gray-500 bg-gray-300 p-6",
+    "@container flex min-w-72 flex-col space-y-4 overflow-clip rounded-2xl border-2 p-6",
+    customColors ? "" : "border-gray-500 bg-gray-300",
     className,
   ]}
 >
-  <p class="space-x-2 font-mono leading-8">
-    <span class="bg-orange-600 p-2 text-white"
-      ><slot name="header-leading" /></span
-    >
-    <span><slot name="header-tailing" /></span>
-  </p>
-  <div class="relative min-h-72 flex-1 @max-md:pb-72">
+  {
+    Astro.slots.has("header-leading") && Astro.slots.has("header-trailing") && (
+      <p class="space-x-2 font-mono leading-8">
+        <span class="bg-orange-600 p-2 text-white">
+          <slot name="header-leading" />
+        </span>
+        <span>
+          <slot name="header-tailing" />
+        </span>
+      </p>
+    )
+  }
+  <div class="relative min-h-72 flex-1 @max-md:pb-72 z-0">
     <div class="space-y-4 @md:mr-72">
       <TitleSummary>
         <slot name="title" slot="title" />
@@ -28,8 +36,13 @@ const { cover, mask, class: className } = Astro.props;
       </TitleSummary>
     </div>
     <div
-      class="absolute -right-24 -bottom-24 h-96 w-96 bg-orange-100 bg-cover"
-      style={`background-image: ${cover}; mask-image: ${mask}`}
+      class="absolute -right-24 -bottom-24 h-96 w-96 bg-orange-100 bg-cover -z-10"
+      style={[
+        cover ? `background-image: ${cover}` : "",
+        mask ? `mask-image: ${mask}` : "",
+      ]
+        .filter((p) => Boolean(p))
+        .join(";")}
     >
     </div>
   </div>
