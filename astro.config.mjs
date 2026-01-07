@@ -7,6 +7,8 @@ import cloudflare from "@astrojs/cloudflare";
 
 import solidJs from "@astrojs/solid-js";
 
+import mdx from "@astrojs/mdx";
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
@@ -18,7 +20,9 @@ export default defineConfig({
     defaultLocale: "en",
   },
 
-  adapter: cloudflare(),
-  integrations: [solidJs()],
+  adapter: cloudflare({
+    imageService: "compile",
+  }),
+  integrations: [solidJs(), mdx()],
 });
 

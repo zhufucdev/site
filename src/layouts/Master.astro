@@ -6,8 +6,14 @@ interface Props {
   title: string;
   lang: string;
   disableTopPadding?: boolean;
+  class?: string;
 }
-const { title, lang, disableTopPadding = false } = Astro.props;
+const {
+  title,
+  lang,
+  disableTopPadding = false,
+  class: className,
+} = Astro.props;
 ---
 
 <html lang={lang}>
@@ -28,6 +34,7 @@ const { title, lang, disableTopPadding = false } = Astro.props;
       class:list={[
         "flex min-h-screen flex-col",
         disableTopPadding ? "" : "pt-1",
+        className,
       ]}
     >
       <slot />

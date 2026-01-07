@@ -3,7 +3,7 @@ import { getAbsoluteLocaleUrl } from "astro:i18n";
 import type { I18nResource } from "../strings/types";
 import ArrowUnderliningTextButton from "./ArrowUnderliningTextButton.astro";
 
-const { i18n, currentItem } = Astro.props;
+const { i18n, currentItem, allowNavigateToCurrent = true } = Astro.props;
 const items = [
   ["", i18n.highlights_para],
   ["articles", i18n.all_articles_para],
@@ -12,6 +12,7 @@ const items = [
 interface Props {
   i18n: I18nResource;
   currentItem?: (typeof items)[number][0];
+  allowNavigateToCurrent?: boolean;
 }
 ---
 
@@ -35,7 +36,7 @@ interface Props {
       items.map(([href, name]) => (
         <a
           class="topbar-list-item"
-          aria-busy={currentItem == href}
+          aria-busy={currentItem == href && !allowNavigateToCurrent }
           href={getAbsoluteLocaleUrl(i18n.localeName, href)}
         >
           <ArrowUnderliningTextButton selected={href == currentItem}>

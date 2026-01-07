@@ -1,0 +1,64 @@
+---
+import Master from "./Master.astro";
+import Topbar from "../components/Topbar.astro";
+import BottomFooter from "../components/BottomFooter.astro";
+import type { I18nResource } from "../strings/types";
+import { format } from "@formkit/tempo";
+interface Props {
+  i18n: I18nResource;
+  frontmatter: any;
+  url: string;
+}
+const { frontmatter, i18n, url } = Astro.props;
+---
+
+<Master lang="en" title={frontmatter.title} class="px-2 font-sans sm:px-6">
+  <Topbar
+    slot="nav"
+    i18n={i18n}
+    currentItem="articles"
+    allowNavigateToCurrent
+  />
+  <article class="max-w-2xl space-y-2 self-center">
+    <header class="font-default text-4xl">
+      {frontmatter.title}
+    </header>
+    <p class="font-default">
+      {format(new Date(frontmatter.created), { date: "long" }, "en")}
+    </p>
+    <slot />
+  </article>
+  <div class="h-6"></div>
+  <BottomFooter slot="footer" i18n={i18n} currentNavItem={url} />
+</Master>
+
+<style>
+  @import "../styles/global.css";
+  article :global(h1) {
+    @apply text-3xl;
+  }
+  article :global(h2) {
+    @apply text-2xl;
+  }
+  article :global(h3) {
+    @apply text-xl;
+  }
+  article :global(h4) {
+    @apply text-lg;
+  }
+  article :global(ul) {
+    @apply list-inside list-decimal;
+  }
+  article :global(ol) {
+    @apply list-inside list-disc;
+  }
+  article :global(a) {
+    @apply inline-block max-w-[calc(100vw-2rem)] overflow-clip text-ellipsis whitespace-nowrap text-orange-500 transition-colors hover:text-orange-600 focus:underline;
+  }
+  article :global(blockquote) {
+    @apply rounded-e-lg border-l-4 border-l-orange-500 bg-orange-50 px-2 py-1;
+  }
+  article :global(code) {
+    @apply bg-gray-100 px-1;
+  }
+</style>

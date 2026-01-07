@@ -55,9 +55,9 @@ const data = [
               {year}
             </a>
           </h1>
-          {(articles as string[][]).map(([title, summary]) => (
+          {(articles as string[][]).map(([title, summary, href]) => (
             <>
-              <a href="#" class="group">
+              <a href={href ? `/article/${href}` : "#"} class="group">
                 <h2 class="flex flex-row wrap-break-word">
                   <UnderliningTextButton slot="title">
                     {title}

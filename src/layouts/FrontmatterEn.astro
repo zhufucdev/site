@@ -1,0 +1,9 @@
+---
+import FrontmatterDefault from "./FrontmatterDefault.astro";
+import en from "../strings/en";
+const { url, frontmatter } = Astro.props;
+---
+
+<FrontmatterDefault frontmatter={frontmatter} url={url} i18n={en}>
+  <slot />
+</FrontmatterDefault>
