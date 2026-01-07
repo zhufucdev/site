@@ -24,7 +24,7 @@ const { frontmatter, i18n, url } = Astro.props;
       {frontmatter.title}
     </header>
     <p class="font-default">
-      {format(new Date(frontmatter.created), { date: "long" }, "en")}
+      {format(new Date(frontmatter.created), { date: "long" }, i18n.localeName)}
     </p>
     <slot />
   </article>
