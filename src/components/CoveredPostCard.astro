@@ -19,12 +19,8 @@ const { cover, mask, class: className, customColors = false } = Astro.props;
   {
     Astro.slots.has("header-leading") && Astro.slots.has("header-tailing") && (
       <p class="space-x-2 font-mono leading-8">
-        <span class="bg-orange-600 p-2 text-white">
-          <slot name="header-leading" />
-        </span>
-        <span>
-          <slot name="header-tailing" />
-        </span>
+        <span class="bg-orange-600 p-2 text-white"><slot name="header-leading" /></span>
+        <span><slot name="header-tailing" /></span>
       </p>
     )
   }
