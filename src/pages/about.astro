@@ -3,6 +3,7 @@ import Master from "../layouts/Master.astro";
 import Topbar from "../components/Topbar.astro";
 import BottomFooter from "../components/BottomFooter.astro";
 import CoveredPostCard from "../components/CoveredPostCard.astro";
+import LineExtendedHeader from "../components/LineExtendedHeader.astro";
 import i18n from "../strings/en.ts";
 
 const content = [
@@ -30,16 +31,16 @@ const content = [
     "",
     "TiltedRectangle.svg",
     "How can I date you?",
-    `Whether you are a man, woman or whatever, contact me on <a class="text-orange-500" href="https://t.me/zhufucdev" target="_blank">Telegram</a>.`,
+    `Whether you are a man, woman or whatever, contact me on my <a class="text-orange-500" href="#socials">socials</a>.`,
   ],
 ];
 ---
 
-<Master title={i18n.about_me_para} lang="en" disableBottomPadding>
+<Master title={i18n.about_me_para} lang="en">
   <Topbar slot="nav" i18n={i18n} currentItem="about" />
   <BottomFooter slot="footer" i18n={i18n} currentNavItem="/about" />
   <div
-    class="no-scrollbar flex min-h-[calc(100vh-72px)] snap-x snap-mandatory flex-row overflow-x-scroll pb-6"
+    class="no-scrollbar flex min-h-[calc(100vh-72px)] snap-x snap-mandatory flex-row overflow-x-scroll pb-12"
   >
     {
       content.map(([cover, mask, title, summary], index) => (
@@ -58,4 +59,63 @@ const content = [
       ))
     }
   </div>
+
+  <LineExtendedHeader href="reading" class="mb-2">Reading</LineExtendedHeader>
+  <div
+    class="flex flex-row content-center items-center justify-center gap-4 self-center px-6 pb-12"
+  >
+    <div class="relative flex-nowrap">
+      <img
+        src="/the-tunnel-to-summer-the-exit-of-goodbyes.jpg"
+        class="h-12 rounded-sm"
+        alt="book cover"
+      />
+      <div class="absolute -right-1 -bottom-1 -z-10 size-full bg-amber-100">
+      </div>
+    </div>
+    <div class="flex-1">
+      <p class="text-lg">The Tunnel to Summer, the Exit of Goodbyes</p>
+      <p class="font-sans">Mei Hachimoku</p>
+    </div>
+  </div>
+  <LineExtendedHeader href="playing">Playing</LineExtendedHeader>
+  <div class="flex flex-row flex-wrap items-center justify-center sepia-10">
+    <img src="/vivid-stasis.png" class="w-32" alt="vivid/stasis" />
+    <img src="/osu.png" class="h-16" alt="osu" />
+    <img src="/celeste.png" class="w-32 p-2" alt="celeste" />
+  </div>
+  <p class="self-center pb-12 font-sans text-gray-500">*bad at gaming</p>
+
+  <LineExtendedHeader href="socials" class="mb-2">Socials</LineExtendedHeader>
+  <div class="space-x-4 self-center px-6">
+    <a
+      class="ci ci-youtube ci-2x"
+      href="https://www.youtube.com/@zhufucdev"
+      target="_blank">youtube</a
+    >
+    <a
+      class="ci ci-telegram ci-2x"
+      href="https://t.me/zhufucdev"
+      target="_blank">telegram</a
+    >
+    <a
+      class="ci ci-discord ci-2x"
+      href="https://discordapp.com/users/315265319725826060"
+      target="_blank">discord</a
+    >
+    <a
+      class="ci ci-bluesky ci-2x"
+      href="https://bsky.app/profile/zhufucdev.bsky.social"
+      target="_blank">bluesky</a
+    >
+    <a class="ci ci-x ci-2x" href="https://x.com/zhufucdev" target="_blank"
+      >twitter / x</a
+    >
+  </div>
+
+  <div class="h-6"></div>
 </Master>
+
+<style>
+  @import url("https://cdn.jsdelivr.net/gh/dheereshag/coloured-icons@1.9.6/app/ci.min.css");
+</style>

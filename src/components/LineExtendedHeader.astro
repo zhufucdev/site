@@ -1,0 +1,20 @@
+---
+interface Props {
+  href: string;
+  class?: string;
+}
+const { href, class: className } = Astro.props;
+---
+
+<a
+  href={`#${href}`}
+  id={href}
+  class:list={[
+    "flex flex-row items-center gap-2 self-center text-xl",
+    className,
+  ]}
+>
+  <div class="h-1 w-10 rounded-full bg-gray-200"></div>
+  <slot />
+  <div class="h-1 w-10 rounded-full bg-gray-200"></div>
+</a>
