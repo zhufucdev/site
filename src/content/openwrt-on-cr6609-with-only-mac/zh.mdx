@@ -1,0 +1,178 @@
+---
+title: 我用Mac、仅通过无线网给CR6609刷了OpenWrt
+summary: 关于软路由，程序员怎么看（第一次玩
+created: 1675177804874
+---
+OpenWrt是什么？你问
+
+想象刷机之于Android，就像是软路由之于路由器
+
+氪金可以解决的问题，为什么要搞机呢？不知道
+
+# 准备
+
+- 一台M1 Pro的MacBookPro，有你喜欢的http serving环境
+- 一台CR6609，咸鱼一百以内入手（没给我电源，这个逼登
+- 你用了一万年的老路由器
+- 手机，要支持Wi-Fi上网的型号
+- 你的ROM，如果不确定，[这儿](https://openwrt.org/toh/hwdata/xiaomi/xiaomi_mi_router_cr6609)是一些链接
+
+我不想用原版ROM，你说。那你或许会想看我的这个项目，
+用一些Docker来跑LEDE编译器
+
+<Repo id="zhufucdev/lede_compiler"/>
+
+# 开干
+
+我喜欢先搞软的，准备一些蟒蛇代码
+
+```python
+import json
+
+from flask import Flask
+from flask import request
+
+app = Flask(__name__)
+
+res = {
+    "code": 0,
+    "token": ';nvram set ssh_en=1; nvram commit; sed -i \'s/channel=.*/channel="debug"/g\' /etc/init.d/dropbear; '
+             '/etc/init.d/dropbear start;'
+}
+
+
+@app.route('/cgi-bin/luci/api/xqsystem/token', methods=['POST', 'GET'])
+@app.route('/cgi-bin/luci/api')
+@app.route('/cgi-bin/luci/api/xqsystem')
+def hello_world():
+    if request.method == 'POST':
+        print(request.form)
+
+    return json.dumps(res)
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=80)
+
+```
+
+我不喜欢蟒蛇。你说
+
+随你，你想用Node Deno还是什么Brainfuck，都可以，开心就行
+
+## 思路
+
+小米路由器有个**一键换机**功能，非常实用。通过伪造被换机的路由器，可以注入脚本，解锁SSH
+
+正常情况下，换机的流程大概是
+
+1. 新机A与旧机B（excuse my language）通过一些方法握手
+2. B关闭DHCP，将网关改为`169.254.31.1`，提供（serve）数据
+3. A连接B的热点，拉取不知道什么东西，包括一些明文脚本
+4. 等待重启
+
+我们的操作空间在第2、3步
+
+## 伪造被换机路由器
+
+启动你用了一万年的老路由器，进入后台，关闭Wi-Fi 4 Wi-Fi 5二合一（如果有的话），关闭DHCP，并把网关改成比如`169.254.31.11`
+
+用马克布克连接，修改静态IP到`169.254.31.1`
+![image-1](images/oHKkdpZQJb01PmGOaLcMx.webp)
+
+启动你喜欢的http服务器，注意监听`0.0.0.0:80`，勿自娱自乐
+
+![image-2](images/pS7oKi7_Owpg9Yc-8lF33.webp)
+
+## 破解
+
+掏出你Wi-Fi上网的手机，连接CR6609，用浏览器访问比如`192.168.2.1`（或者其他网关，你自己想）
+
+输入管理员密码（写在路由器反面，或许你改过），注意浏览器地址栏，有以`http://192.168.2.1/cgi-bin/luci/;stok=`开头的东西，`=`到下一个`/`中间是明文令牌（非常牛逼的设计btw），记下来
+
+再开一个浏览器标签，编辑地址
+```plain
+http://192.168.2.1/cgi-bin/luci/;stok=∂/api/misystem/extendwifi_connect?ssid=ß&password=µ
+```
+其中
+
+|标记|含义|
+|:---:|:-----|
+|∂|刚刚记下的明文令牌|
+|ß|用了一万年的老路由器的热点ID|
+|µ|对应的Wi-Fi密码|
+
+过个10s，顺利的话，CR6609就连上了老路由器，页面会显示一坨JSON，其中有`"code": 0`
+
+如果没有，得再想想DHCP有没有关闭，热点ID、密码错没错，还有没有其他设备连着，试试Wi-Fi 4热点，或许兼容性会好点
+
+接着，编辑地址
+```plain
+http://192.168.2.1/cgi-bin/luci/;stok=∂/api/xqsystem/oneclick_get_remote_token?username=ß&password=ß&nonce=ß
+```
+其中，∂还是那个明文令牌，ß无所谓填什么
+
+顺利的话，会显示类似这样的东西（不完全是，但至少有`"code": 0`）
+![image-3](images/J9UZqH0uttR80X9deBoyl.webp)
+
+观察Mac的控制台，会有CR6609的访问记录。顺便说一句，蟒蛇代码里，`token`就是注入的脚本
+
+```shell
+nvram set ssh_en=1
+nvram commit
+sed -i \'s/channel=.*/channel="debug"/g\'
+/etc/init.d/dropbear
+/etc/init.d/dropbear start
+```
+
+这个脚本做的事情，基本就是开个dropbear服务（轻量无头的SSH）。不出意外，丢熊服务已经在运行了，可以SSH进路由器了
+
+恭喜🎉
+
+## 连接
+把马克布克换回DHCP，连上CR6609的热点，运行
+```shell
+$ ssh root@192.168.2.1 # 或者其他什么网关，你知道的
+```
+
+如果出错
+```plain
+Unable to negotiate with 192.168.2.1 port 22: no matching host key type found. Their offer: ssh-rsa
+```
+
+修改~/.ssh/config
+```shell
+$ vim ~/.ssh/config
+
+HostKeyAlgorithms ssh-rsa
+PubkeyAcceptedKeyTypes ssh-rsa
+
+:wq
+```
+
+应该可以连接了
+
+root密码，CR6609就写在背面，6606跟6608据说要用什么SN算，我也搞不清楚
+
+## 刷入
+
+可以把ROM放到http server的static目录下（或许你没有）
+
+看一下马克布克的IP，比如说`Ω`，再看一下ROM的文件名，比如`ß`，在路由器执行
+```shell
+cd /tmp
+curl -O http://Ω/static/ß
+nvram set boot_wait=on ; nvram set bootdelay=3
+nvram set flag_try_sys1_failed=0 ; nvram set flag_try_sys2_failed=1
+nvram commit
+mtd -e firmware -r write ß firmware
+```
+
+![image-5](images/KIe9tiIMDugn5zcmExpfN.webp)
+
+大功告成，等待重启，希望你玩得开心🤘
+
+# 参考
+
+- [[原创]红米AX6 SSH解锁和挂载overlay方法](https://www.right.com.cn/forum/forum.php?mod=viewthread&tid=4060726)
+- [OpenWRT 21.02.0-rc1 原版 for 小米CR6606 / CR6608 / CR6609](https://www.right.com.cn/forum/thread-4112402-1-1.html)
