@@ -2,8 +2,9 @@
 interface Props {
   selected?: boolean;
   class?: string;
+  maxWidth?: string;
 }
-const { selected = false, class: className } = Astro.props;
+const { selected = false, class: className, maxWidth = "100vw" } = Astro.props;
 ---
 
 <div
@@ -23,8 +24,9 @@ const { selected = false, class: className } = Astro.props;
   <div
     class:list={[
       className,
-      "inline-block max-w-[100vw] overflow-hidden text-ellipsis whitespace-nowrap group-[.selected]:text-orange-500",
+      "inline-block overflow-hidden text-ellipsis whitespace-nowrap group-[.selected]:text-orange-500",
     ]}
+    style=`max-width: ${maxWidth};`
   >
     <slot />
   </div>
