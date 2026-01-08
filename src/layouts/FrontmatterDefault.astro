@@ -61,4 +61,10 @@ const { frontmatter, i18n, url } = Astro.props;
   article :global(code) {
     @apply bg-gray-100 px-1;
   }
+  article :global(pre code) {
+    @apply bg-inherit;
+  }
+  article :global(pre) {
+    @apply p-2 rounded-lg;
+  }
 </style>
