@@ -15,6 +15,7 @@ const zhRes: I18nResource = {
   playing_para: "正在玩",
   socials_para: "社交媒体",
   asterisk_bad_at_gaming_span: "*不懂玩游戏",
+  via_span: (provider: string) => `通过${provider}`,
 };
 
 export default zhRes;

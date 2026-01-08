@@ -15,6 +15,7 @@ const enRes: I18nResource = {
   playing_para: "Playing",
   socials_para: "Socials",
   asterisk_bad_at_gaming_span: "*bad at gaming",
+  via_span: (provider: string) => `via ${provider}`,
 };
 
 export default enRes;

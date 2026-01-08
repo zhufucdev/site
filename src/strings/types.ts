@@ -1,4 +1,4 @@
-export type i18nKeys =
+export type i18nStringKeys =
   | "all_articles_para"
   | "highlights_para"
   | "about_me_para"
@@ -12,9 +12,13 @@ export type i18nKeys =
   | "playing_para"
   | "socials_para"
   | "asterisk_bad_at_gaming_span";
+export type i18nFunctionKeys = "via_span";
+export type i18nKeys = i18nStringKeys | i18nFunctionKeys;
 export const supportedLocales = ["en", "zh", "zh-tw"] as const;
 export type SupportedLocale = (typeof supportedLocales)[number];
-export type I18nKv = { [key in i18nKeys]: string };
+export type I18nKv = { [key in i18nStringKeys]: string } & {
+  [key in i18nFunctionKeys]: (...args: string[]) => string;
+};
 export type I18nResource = I18nKv & {
   localeName: SupportedLocale;
 };

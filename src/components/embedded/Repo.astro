@@ -1,0 +1,48 @@
+---
+import type { SupportedLocale, I18nResource } from "../../strings/types";
+import getI18nResByLocale from "../../utils/i18n-res-by-locale";
+interface Props {
+  id: string;
+  provider?: "github";
+  i18n?: I18nResource;
+}
+const {
+  id,
+  provider = "github",
+  i18n = getI18nResByLocale(Astro.currentLocale as SupportedLocale),
+} = Astro.props;
+let providerName!: string;
+let url!: string;
+switch (provider) {
+  case "github":
+    url = `https://github.com/${id}`;
+    providerName = "GitHub";
+    break;
+}
+---
+
+<div
+  class="flex flex-row items-center rounded-lg border-2 border-gray-500 bg-gray-300 p-4"
+>
+  <div>
+    <span class="font-mono font-bold">{id}</span>
+    <p class="text-sm">{i18n.via_span(providerName)}</p>
+  </div>
+  <div class="flex-1"></div>
+  <a href={url} target="_blank">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="size-6 text-black"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+      ></path>
+    </svg>
+  </a>
+</div>
