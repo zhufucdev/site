@@ -1,45 +1,59 @@
 ---
 import Master from "../layouts/Master.astro";
-import i18n from "../strings/en.ts";
+import type { I18nResource } from "../strings/types";
+import enRes from "../strings/en.ts";
 import Topbar from "../components/Topbar.astro";
 import TitleSummary from "../components/TitleSummary.astro";
 import UnderliningTextButton from "../components/UnderliningTextButton.astro";
 import BottomFooter from "../components/BottomFooter.astro";
-const data = [
-  [
-    2025,
+import { getAbsoluteLocaleUrl } from "astro:i18n";
+interface Props {
+  i18n?: I18nResource;
+  data: [[number, string[][]]];
+}
+const {
+  i18n = enRes,
+  data = [
     [
+      2025,
       [
-        "Liquid Glass Toolbar Flickering",
-        "It's high time for me to adapt the new design language for Apple platforms. However, my app uses an asynchronize data loading model, which is not how Apple does things.",
+        [
+          "Liquid Glass Toolbar Flickering",
+          "It's high time for me to adapt the new design language for Apple platforms. However, my app uses an asynchronize data loading model, which is not how Apple does things.",
+        ],
+        [
+          "Terrible Play Store Developer Experience",
+          "My plan is the flagship app to be released on Google Play store, which has taken well over 3 months, and is not going well. To be fair, I spent far less on marketing than developing. The former however, has taken so much more time than expected.",
+          "terrible-play-store-developer-experience",
+        ],
+        [
+          "As an AWS Engineer",
+          "I have been working for Amazon since 3 years ago, and I am 22. What a shocker.",
+        ],
+        [
+          "How to Program in Sea",
+          "Recently, I have been working on a project that requires me to program in sea. I am not sure if I will be able to finish it, but I am eager to learn.",
+        ],
+        [
+          "Apple Watch as a Service",
+          "Apple Watch has become an important part of people's life. Running AWaaS to provide a seamless experience for users is a great idea.",
+        ],
       ],
+    ],
+    [
+      2024,
       [
-        "As an AWS Engineer",
-        "I have been working for Amazon since 3 years ago, and I am 22. What a shocker.",
-      ],
-      [
-        "How to Program in Sea",
-        "Recently, I have been working on a project that requires me to program in sea. I am not sure if I will be able to finish it, but I am eager to learn.",
-      ],
-      [
-        "Apple Watch as a Service",
-        "Apple Watch has become an important part of people's life. Running AWaaS to provide a seamless experience for users is a great idea.",
+        [
+          "How to Get Hired",
+          "I challenge myself to get hired by a company. There're several candidates in my mind.",
+        ],
       ],
     ],
   ],
-  [
-    2024,
-    [
-      [
-        "How to Get Hired",
-        "I challenge myself to get hired by a company. There're several candidates in my mind.",
-      ],
-    ],
-  ],
-];
+} = Astro.props;
 ---
 
-<Master title={i18n.all_articles_para} lang="en">
+<Master title={i18n.all_articles_para} lang={i18n.localeName}>
   <Topbar slot="nav" i18n={i18n} currentItem="articles" />
   <BottomFooter slot="footer" i18n={i18n} currentNavItem="articles" />
   <div class="flex flex-col gap-6 px-2 sm:px-6">
@@ -57,7 +71,14 @@ const data = [
           </h1>
           {(articles as string[][]).map(([title, summary, href]) => (
             <>
-              <a href={href ? `/article/${href}` : "#"} class="group">
+              <a
+                href={
+                  href
+                    ? getAbsoluteLocaleUrl(i18n.localeName, `/article/${href}`)
+                    : "#"
+                }
+                class="group"
+              >
                 <h2 class="flex flex-row wrap-break-word">
                   <UnderliningTextButton slot="title">
                     {title}

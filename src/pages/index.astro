@@ -9,48 +9,61 @@ import RssSection from "../components/RssSection.tsx";
 import SourceSection from "../components/SourceSection.tsx";
 import TracePhotoCamera from "../icons/TracePhotoCamera.svg";
 import BottomFooter from "../components/BottomFooter.astro";
-import i18n from "../strings/en";
+import type { I18nResource } from "../strings/types";
+import type Post from "../post";
+import enRes from "../strings/en";
 import { createHighlighter } from "shiki";
+import formatDate from "../utils/dateformat";
 const highlighter = await createHighlighter({
   themes: ["one-light"],
   langs: ["xml"],
 });
+interface Props {
+  i18n?: I18nResource;
+  posts: Post[];
+}
+const {
+  i18n = enRes,
+  posts = [
+    {
+      created: 1675363200000,
+      header: "Status update",
+      mask: "url(/ElevenSidedStar.svg)",
+      cover: "url(/quick-brown-fox-jumping-over-a-dog.jpg)",
+      title: "Did the quick brown fox really jump over the lazy dog?",
+      summary:
+        "I did say, but can I really eat glass? Should have known before it's too late.",
+    },
+    {
+      created: 1679363200000,
+      header: "News",
+      mask: "url(/TiltedRectangle.svg)",
+      cover: "url(/ferris-with-knief.png)",
+      title: "Binder CVE",
+      summary:
+        "There was a piece of Rust code in the Linux kernel that led to a potential race condition.",
+    },
+  ],
+} = Astro.props;
 ---
 
 <Master title={i18n.highlights_para} lang="en">
   <Topbar slot="nav" i18n={i18n} currentItem="" />
   <BottomFooter slot="footer" i18n={i18n} currentNavItem="/" />
   <div class="flex flex-row flex-wrap gap-4 px-2 sm:px-6">
-    <CoveredPostCard
-      cover="url(/quick-brown-fox-jumping-over-a-dog.jpg)"
-      mask="url(/ElevenSidedStar.svg)"
-      class="flex-1"
-    >
-      <Fragment slot="header-leading" set:text="Status update" />
-      <Fragment slot="header-tailing" set:text="28th Dec." />
-      <Fragment
-        slot="title"
-        set:text="Did the quick brown fox really jump over the lazy dog?"
-      />
-      <Fragment
-        slot="summary"
-        set:text="I did say, but can I really eat glass? Should have known before it's too late."
-      />
-    </CoveredPostCard>
-
-    <CoveredPostCard
-      cover="url(/ferris-with-knief.png)"
-      mask="url(/TiltedRectangle.svg)"
-      class="flex-1"
-    >
-      <Fragment slot="header-leading" set:text="News" />
-      <Fragment slot="header-tailing" set:text="22th Dec." />
-      <Fragment slot="title" set:text="Binder CVE" />
-      <Fragment
-        slot="summary"
-        set:text="There was a piece of Rust code in the Linux kernel that led to a potential race condition."
-      />
-    </CoveredPostCard>
+    {
+      posts.map(({ created, cover, mask, header, title, summary }) => (
+        <CoveredPostCard cover={cover} mask={mask} class="flex-1">
+          <Fragment slot="header-leading" set:text={header} />
+          <Fragment
+            slot="header-tailing"
+            set:text={formatDate(created, i18n.localeName, "short")}
+          />
+          <Fragment slot="title" set:text={title} />
+          <Fragment slot="summary" set:text={summary} />
+        </CoveredPostCard>
+      ))
+    }
   </div>
 
   <div
@@ -120,7 +133,7 @@ const highlighter = await createHighlighter({
       />
     </div>
   </div>
-  <div class="relative pt-12 px-2 sm:px-6">
+  <div class="relative px-2 pt-12 sm:px-6">
     <TracePhotoCamera class="absolute -top-10 right-0 max-w-60 text-gray-200" />
     <div
       class="flex flex-row flex-wrap items-start gap-2 overflow-clip rounded-2xl"

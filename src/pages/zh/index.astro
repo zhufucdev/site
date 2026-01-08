@@ -1,12 +1,28 @@
 ---
-import Master from "../../layouts/Master.astro";
-import Topbar from "../../components/Topbar.astro";
-import BottomFooter from "../../components/BottomFooter.astro";
+import IndexDefault from "../index.astro";
 import i18n from "../../strings/zh.ts";
 ---
 
-<Master lang="zh" title="亮点">
-  <Topbar slot="nav" i18n={i18n} currentItem="" />
-  <BottomFooter slot="footer" i18n={i18n} currentNavItem="/" />
-  亮点在此
-</Master>
+<IndexDefault
+  i18n={i18n}
+  posts={[
+    {
+      created: 1675363200000,
+      header: "状态更新",
+      mask: "url(/ElevenSidedStar.svg)",
+      cover: "url(/quick-brown-fox-jumping-over-a-dog.jpg)",
+      title: "敏捷的棕色狐狸真的跨过了懒狗吗？",
+      summary:
+        "I did say, but can I really eat glass? Should have known before it's too late.",
+    },
+    {
+      created: 1679363200000,
+      header: "新闻",
+      mask: "url(/TiltedRectangle.svg)",
+      cover: "url(/ferris-with-knief.png)",
+      title: "Binder CVE",
+      summary:
+        "There was a piece of Rust code in the Linux kernel that led to a potential race condition.",
+    },
+  ]}
+/>

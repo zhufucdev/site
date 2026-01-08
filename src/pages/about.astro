@@ -4,36 +4,52 @@ import Topbar from "../components/Topbar.astro";
 import BottomFooter from "../components/BottomFooter.astro";
 import CoveredPostCard from "../components/CoveredPostCard.astro";
 import LineExtendedHeader from "../components/LineExtendedHeader.astro";
-import i18n from "../strings/en.ts";
+import type { I18nResource } from "../strings/types";
+import type QnaPost from "../qna";
+import enRes from "../strings/en.ts";
 
-const content = [
-  [
-    "",
-    "SixSidedStar.svg",
-    "Who are you?",
-    "Random person hanging out on the internet, probably nonbinary. Professional Android developer at Tencent working on WeChat Work.",
+interface Props {
+  i18n?: I18nResource;
+  qnaPosts?: QnaPost[];
+}
+
+const {
+  i18n = enRes,
+  qnaPosts = [
+    {
+      mask: "SixSidedStar.svg",
+      question: "Who are you?",
+      answer:
+        "Random person hanging out on the internet, probably nonbinary. Professional Android developer. Amature 2D designer. Sometimes posts video on YouTube.",
+    },
+    {
+      mask: "TiltedOval.svg",
+      question: "Why is it Jesus on your profile?",
+      answer:
+        "TLDR; It's funny. Long story short, one of my friends was suspected. To avoid getting involved, it's better to change my profile, and Jesus is the perfectly moral human (or god) who would never do any harm, so here you are.",
+    },
+    {
+      mask: "TiltedPentagon.svg",
+      question: "Are you religious?",
+      answer: "<b>No</b>. But I am open to the idea. Try persuading me.",
+    },
+    {
+      mask: "Clover.svg",
+      question: "Cats or dogs?",
+      answer: "Cats, definitely.",
+    },
+    {
+      mask: "ElevenSidedStar.svg",
+      question: "Do you love me?",
+      answer: "I love you all.",
+    },
+    {
+      mask: "TiltedRectangle.svg",
+      question: "How can I date you?",
+      answer: `Whether you are a man, woman or whatever, contact me on my <a class="text-orange-500" href="#socials">socials</a>.`,
+    },
   ],
-  [
-    "",
-    "TiltedOval.svg",
-    "Why is it Jesus on your profile?",
-    "TLDR; It's funny. Long story short, one of my friends was suspected. To avoid getting involved, it's better to change my profile, and Jesus is the perfectly moral human (or god) who would never do any harm, so here you are.",
-  ],
-  [
-    "",
-    "TiltedPentagon.svg",
-    "Are you religious?",
-    "<b>No</b>. But I am open to the idea. Try persuading me.",
-  ],
-  ["", "Clover.svg", "Cats or dogs?", "Cats, definitely."],
-  ["", "ElevenSidedStar.svg", "Do you love me?", "I love you all."],
-  [
-    "",
-    "TiltedRectangle.svg",
-    "How can I date you?",
-    `Whether you are a man, woman or whatever, contact me on my <a class="text-orange-500" href="#socials">socials</a>.`,
-  ],
-];
+} = Astro.props;
 ---
 
 <Master title={i18n.about_me_para} lang="en">
@@ -43,24 +59,25 @@ const content = [
     class="no-scrollbar flex min-h-[calc(100vh-72px)] snap-x snap-mandatory flex-row overflow-x-scroll pb-12"
   >
     {
-      content.map(([cover, mask, title, summary], index) => (
+      qnaPosts.map(({ mask, question, answer }, index) => (
         <CoveredPostCard
-          cover={cover}
           mask={`url(/${mask})`}
           customColors
           class:list={[
             "ml-6 w-96 snap-center border-gray-100 bg-gray-50 max-sm:w-[calc(100vw-48px)]",
-            index == content.length - 1 ? "mr-6" : "",
+            index == qnaPosts.length - 1 ? "mr-6" : "",
           ]}
         >
-          <Fragment slot="title" set:text={title} />
-          <Fragment slot="summary" set:html={summary} />
+          <Fragment slot="title" set:text={question} />
+          <Fragment slot="summary" set:html={answer} />
         </CoveredPostCard>
       ))
     }
   </div>
 
-  <LineExtendedHeader href="reading" class="mb-2">Reading</LineExtendedHeader>
+  <LineExtendedHeader href="reading" class="mb-2"
+    >{i18n.reading_para}</LineExtendedHeader
+  >
   <div
     class="flex flex-row content-around items-center justify-center gap-4 self-center px-6 pb-12"
   >
@@ -70,7 +87,9 @@ const content = [
         class="h-12 rounded-sm sm:h-18"
         alt="book cover"
       />
-      <div class="absolute -right-1 -bottom-1 -z-10 size-full bg-amber-100 rounded-sm">
+      <div
+        class="absolute -right-1 -bottom-1 -z-10 size-full rounded-sm bg-amber-100"
+      >
       </div>
     </div>
     <div class="flex-1">
@@ -79,7 +98,7 @@ const content = [
       <p class="font-sans">Mei Hachimoku</p>
     </div>
   </div>
-  <LineExtendedHeader href="playing">Playing</LineExtendedHeader>
+  <LineExtendedHeader href="playing">{i18n.playing_para}</LineExtendedHeader>
   <div
     class="flex flex-row flex-wrap items-center justify-center py-2 sepia-10"
   >
@@ -89,10 +108,12 @@ const content = [
     >
     <img src="/celeste.png" class="w-32 p-2 sm:w-40" alt="celeste" />
   </div>
-  <p class="self-center pb-12 font-sans text-gray-500">*bad at gaming</p>
+  <p class="self-center pb-12 font-sans text-gray-500">{i18n.asterisk_bad_at_gaming_span}</p>
 
-  <LineExtendedHeader href="socials" class="mb-2">Socials</LineExtendedHeader>
-  <div class="space-x-4 self-center px-6 sm:py-2 text-center">
+  <LineExtendedHeader href="socials" class="mb-2"
+    >{i18n.socials_para}</LineExtendedHeader
+  >
+  <div class="space-x-4 self-center px-6 text-center sm:py-2">
     <a
       class="ci ci-youtube ci-2x"
       href="https://www.youtube.com/@zhufucdev"

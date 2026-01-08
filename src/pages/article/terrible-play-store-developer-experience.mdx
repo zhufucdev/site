@@ -1,0 +1,59 @@
+---
+title: Terrible Play Store Developer Experience
+summary: My plan is the flagship app to be released on Google Play store, which has taken well over 3 months, and is not going well. To be fair, I spent far less on marketing than developing. The former however, has taken so much more time than expected.
+layout: ../../layouts/FrontmatterEn.astro
+created: 1747450084015
+---
+
+```
+This article is to be translated.
+```
+
+我的旗舰应用（`Practiso`）计划上架Play Store。从开始至今，三个半月过去了，这一计划没有可观的进展。公平来说，我花在开发的时间比运营的多得多，但后者，也就是我今天要谈论的Google Play，显然需要比我预先设想的多太多的时间。
+
+### 问题1：封闭测试
+根据[Google的帮助文档](https://support.google.com/googleplay/android-developer/answer/14151465)，**个人**开发者账号被要求：
+
+1. 创建封闭测试计划，上传AAR
+2. 邀请12人加入该测试计划
+3. 测试14天
+
+完成这些之后可以发布了吧？或许是的，我这么想。我邀请了12个人，这没问题，两天内完成。测试14天？这具体如何执行，我也不知道。我的做法是啥也不做，静置14天后，Play控制台显示任务都已完成。
+[image-1](xdKYzDzhAFsrGVasO9bdH)
+
+我兴冲冲点了申请按钮，被问到了这些问题：
+> Describe the engagement you received from testers during your closed test: include whether or not testers utilized all of the features in your app, and whether tester usage was consistent with how you would expect a real user to use your app. If not, describe the differences you would expect to see.
+
+Tester engagement？那自然是没有的。我只能让ChatGPT假装测试者回答这个问题。还有4个相关的问题，我概括一下：
+
+- 问题2：测试反馈的概要？
+- 问题3：应用准备好上架了吗？有多准备好？
+- 问题4：你怎么知道它准备好了？
+
+这些问题真你妈垃圾。我用AI填写了，等了四五天，结果自然是被拒绝的，他们的理由是：
+- Testers were not engaged with your app during your closed test
+- You didn't follow testing best practices, which may include gathering and acting on user feedback through updates to your app
+
+这鸡巴啥意思，怎么才能让测试者更加参与？下载次数更多？我是想不清楚。啥叫没有遵循最佳实践？我咋知道？
+
+### 问题2：控制台交互逻辑
+
+Play Console的使用十分令人困惑。兄弟导航栏里面里有个深度为4的树。
+
+[image-2](irl-vksrC8jr-HQKFI6bh)
+
+更新应用页面可以选择包含旧版本的资源文件，同时可以上传新版本，这就有三种结果：
+1. 选择发布旧版本 -> 这个更新包含空内容
+2. 选择发布新版本和旧版本 -> 这个更新的内容完全被旧版本的资源文件所替换
+3. 选择发布新版本 -> 通过
+
+兄弟真的想做一个全能面板。
+修改都可以存成草稿。恢复原始状态的时间不如删除重做。开发者真的需要知道自己在做什么。
+
+### 我会继续努力
+
+还存在其他问题，但我不想抱怨太多。至少我认识到需要花更多时间在这上面。另外，或许读者你可以帮我测试？或许得付钱找一个什么团队完成这次上架了。如果你有兴趣，点击下面这个链接，帮兄弟砍一刀。
+
+Android：https://play.google.com/store/apps/details?id=com.zhufucdev.practiso
+
+Web：https://play.google.com/apps/testing/com.zhufucdev.practiso

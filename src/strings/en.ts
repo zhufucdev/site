@@ -11,6 +11,10 @@ const enRes: I18nResource = {
   get_list_para: "Get list",
   get_source_code_para: "Get source code",
   license_para: "License",
+  reading_para: "Reading",
+  playing_para: "Playing",
+  socials_para: "Socials",
+  asterisk_bad_at_gaming_span: "*bad at gaming",
 };
 
 export default enRes;

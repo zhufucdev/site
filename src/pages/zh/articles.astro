@@ -1,12 +1,20 @@
 ---
-import Master from "../../layouts/Master.astro";
-import Topbar from "../../components/Topbar.astro";
-import BottomFooter from "../../components/BottomFooter.astro";
 import i18n from "../../strings/zh.ts";
+import ArticlesDefault from "../articles.astro";
 ---
 
-<Master title={i18n.all_articles_para} lang="zh">
-  <Topbar slot="nav" i18n={i18n} currentItem="articles" />
-  <BottomFooter slot="footer" i18n={i18n} currentNavItem="articles" />
-  文章列表在此
-</Master>
+<ArticlesDefault
+  i18n={i18n}
+  data={[
+    [
+      2025,
+      [
+        [
+          "糟糕的Google Play个人开发者发布体验",
+          "我的旗舰应用计划上架Play Store。从开始至今，三个半月过去了，这一计划没有可观的进展。公平来说，我花在开发的时间比运营的多得多，但后者，也就是我今天要谈论的Google Play，显然需要比我预先设想的多太多的时间。",
+          "terrible-play-store-developer-experience",
+        ],
+      ],
+    ],
+  ]}
+/>

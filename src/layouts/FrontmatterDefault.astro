@@ -3,7 +3,7 @@ import Master from "./Master.astro";
 import Topbar from "../components/Topbar.astro";
 import BottomFooter from "../components/BottomFooter.astro";
 import type { I18nResource } from "../strings/types";
-import { format } from "@formkit/tempo";
+import formatDate from "../utils/dateformat";
 interface Props {
   i18n: I18nResource;
   frontmatter: any;
@@ -24,7 +24,7 @@ const { frontmatter, i18n, url } = Astro.props;
       {frontmatter.title}
     </header>
     <p class="font-default">
-      {format(new Date(frontmatter.created), { date: "long" }, i18n.localeName)}
+      {formatDate(frontmatter.created, i18n.localeName, "long")}
     </p>
     <slot />
   </article>
@@ -65,6 +65,6 @@ const { frontmatter, i18n, url } = Astro.props;
     @apply bg-inherit;
   }
   article :global(pre) {
-    @apply p-2 rounded-lg;
+    @apply rounded-lg p-2;
   }
 </style>

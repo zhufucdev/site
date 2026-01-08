@@ -1,12 +1,42 @@
 ---
-import Master from "../../layouts/Master.astro";
-import Topbar from "../../components/Topbar.astro";
-import BottomFooter from "../../components/BottomFooter.astro";
+import AboutDefault from "../about.astro";
 import i18n from "../../strings/zh.ts";
 ---
 
-<Master title={i18n.about_me_para} lang="zh">
-  <Topbar slot="nav" i18n={i18n} currentItem="about" />
-  <BottomFooter slot="footer" i18n={i18n} currentNavItem="about" />
-  个人信息在此
-</Master>
+<AboutDefault
+  i18n={i18n}
+  qnaPosts={[
+    {
+      mask: "SixSidedStar.svg",
+      question: "你是谁？",
+      answer:
+        "互联网上闲逛的草民，大概是非二元。专业Android开发、业余2D设计、偶尔在YouTube发视频",
+    },
+    {
+      mask: "TiltedOval.svg",
+      question: "你头像为什么是耶稣？",
+      answer:
+        "TLDR；很搞笑。简而言之，一个朋友被炎上了，为避免受波及，我改了个人信息。耶稣是道德最正派的人（或神），他从不害人，这就是为什么",
+    },
+    {
+      mask: "TiltedPentagon.svg",
+      question: "你有宗教信仰吗？",
+      answer: "<b>没有</b>，不过我对此保持开放心态。试试说服我",
+    },
+    {
+      mask: "Clover.svg",
+      question: "喜欢猫还是喜欢狗？",
+      answer: "肯定是猫",
+    },
+    {
+      mask: "ElevenSidedStar.svg",
+      question: "你爱我吗？",
+      answer: "我爱你们所有人",
+    },
+    {
+      mask: "TiltedRectangle.svg",
+      question: "怎么才能和你约会？",
+      answer: `不管你是男人、女人还是其他什么，请在<a class="text-orange-500" href="#socials">社交媒体</a>联系我`,
+    },
+  ]}
+/>
