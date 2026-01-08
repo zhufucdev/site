@@ -13,8 +13,19 @@ export const getStaticPaths = (async () => {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const embeddedComponents = Object.fromEntries(
+  Object.values(
+    import.meta.glob("../../../components/embedded/*", {
+      eager: true,
+    }),
+  ).map((module: any) => [module.default.name, module.default]), // FIXME: what the hell is the type
+);
 ---
 
-<FrontmatterDefault i18n={zhRes} url={`/zh/article/${post.id}`} frontmatter={post.data}>
-  <Content />
+<FrontmatterDefault
+  i18n={zhRes}
+  url={`/zh/article/${post.id}`}
+  frontmatter={post.data}
+>
+  <Content components={embeddedComponents} />
 </FrontmatterDefault>

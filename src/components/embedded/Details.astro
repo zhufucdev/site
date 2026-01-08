@@ -1,0 +1,32 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<custom-details class="group">
+  <p
+    class="text-right text-orange-500 group-[.expanded]:hidden hover:text-orange-600"
+  >
+    <button>{title}</button>
+  </p>
+  <div class="hidden group-[.expanded]:block text-gray-500"><slot /></div>
+</custom-details>
+
+<script>
+  class Details extends HTMLElement {
+    expanded = false;
+    connectedCallback() {
+      this.expanded = false;
+      this.querySelector("button")!.addEventListener("click", () => {
+        if (this.expanded) {
+          return;
+        }
+        this.expanded = true;
+        this.classList.add("expanded");
+      });
+    }
+  }
+  customElements.define("custom-details", Details);
+</script>
