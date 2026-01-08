@@ -48,7 +48,9 @@ const {
         "There was a piece of Rust code in the Linux kernel that led to a potential race condition.",
     },
   ],
-  articles = (await getCollection(`articles-${i18n.localeName}`)).slice(0, 2),
+  articles = (await getCollection(`articles-${i18n.localeName}`))
+    .sort((a, b) => b.data.created - a.data.created)
+    .slice(0, 2),
 } = Astro.props;
 ---
 
