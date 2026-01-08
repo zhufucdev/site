@@ -3,6 +3,7 @@ import FrontmatterDefault from "../../../layouts/FrontmatterDefault.astro";
 import zhRes from "../../../strings/zh.ts";
 import type { GetStaticPaths } from "astro";
 import { getCollection, render } from "astro:content";
+import getEmbeddedComponents from "../../../utils/embedded-components";
 export const getStaticPaths = (async () => {
   const posts = await getCollection("articles-zh");
   return posts.map((post) => ({
@@ -13,13 +14,7 @@ export const getStaticPaths = (async () => {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-const embeddedComponents = Object.fromEntries(
-  Object.values(
-    import.meta.glob("../../../components/embedded/*", {
-      eager: true,
-    }),
-  ).map((module: any) => [module.default.name, module.default]), // FIXME: what the hell is the type
-);
+const embeddedComponents = getEmbeddedComponents();
 ---
 
 <FrontmatterDefault
