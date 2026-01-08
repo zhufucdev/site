@@ -7,48 +7,55 @@ import TitleSummary from "../components/TitleSummary.astro";
 import UnderliningTextButton from "../components/UnderliningTextButton.astro";
 import BottomFooter from "../components/BottomFooter.astro";
 import { getAbsoluteLocaleUrl } from "astro:i18n";
+import type { ArticlesData } from "../article";
 interface Props {
   i18n?: I18nResource;
-  data: [[number, string[][]]];
+  data?: ArticlesData;
 }
 const {
   i18n = enRes,
   data = [
-    [
-      2025,
-      [
-        [
-          "Liquid Glass Toolbar Flickering",
-          "It's high time for me to adapt the new design language for Apple platforms. However, my app uses an asynchronize data loading model, which is not how Apple does things.",
-        ],
-        [
-          "Terrible Play Store Developer Experience",
-          "My plan is the flagship app to be released on Google Play store, which has taken well over 3 months, and is not going well. To be fair, I spent far less on marketing than developing. The former however, has taken so much more time than expected.",
-          "terrible-play-store-developer-experience",
-        ],
-        [
-          "As an AWS Engineer",
-          "I have been working for Amazon since 3 years ago, and I am 22. What a shocker.",
-        ],
-        [
-          "How to Program in Sea",
-          "Recently, I have been working on a project that requires me to program in sea. I am not sure if I will be able to finish it, but I am eager to learn.",
-        ],
-        [
-          "Apple Watch as a Service",
-          "Apple Watch has become an important part of people's life. Running AWaaS to provide a seamless experience for users is a great idea.",
-        ],
+    {
+      year: 2025,
+      articles: [
+        {
+          title: "Liquid Glass Toolbar Flickering",
+          summary:
+            "It's high time for me to adapt the new design language for Apple platforms. However, my app uses an asynchronize data loading model, which is not how Apple does things.",
+        },
+        {
+          title: "Terrible Play Store Developer Experience",
+          summary:
+            "My plan is the flagship app to be released on Google Play store, which has taken well over 3 months, and is not going well. To be fair, I spent far less on marketing than developing. The former however, has taken so much more time than expected.",
+          href: "terrible-play-store-developer-experience",
+        },
+        {
+          title: "As an AWS Engineer",
+          summary:
+            "I have been working for Amazon since 3 years ago, and I am 22. What a shocker.",
+        },
+        {
+          title: "How to Program in Sea",
+          summary:
+            "Recently, I have been working on a project that requires me to program in sea. I am not sure if I will be able to finish it, but I am eager to learn.",
+        },
+        {
+          title: "Apple Watch as a Service",
+          summary:
+            "Apple Watch has become an important part of people's life. Running AWaaS to provide a seamless experience for users is a great idea.",
+        },
       ],
-    ],
-    [
-      2024,
-      [
-        [
-          "How to Get Hired",
-          "I challenge myself to get hired by a company. There're several candidates in my mind.",
-        ],
+    },
+    {
+      year: 2024,
+      articles: [
+        {
+          title: "How to Get Hired",
+          summary:
+            "I challenge myself to get hired by a company. There're several candidates in my mind.",
+        },
       ],
-    ],
+    },
   ],
 } = Astro.props;
 ---
@@ -58,7 +65,7 @@ const {
   <BottomFooter slot="footer" i18n={i18n} currentNavItem="articles" />
   <div class="flex flex-col gap-6 px-2 sm:px-6">
     {
-      data.map(([year, articles]) => (
+      data.map(({ year, articles }) => (
         <>
           <h1 class="text-3xl font-semibold" id={String(year)}>
             <a
@@ -69,7 +76,7 @@ const {
               {year}
             </a>
           </h1>
-          {(articles as string[][]).map(([title, summary, href]) => (
+          {articles.map(({ title, summary, href }) => (
             <>
               <a
                 href={
