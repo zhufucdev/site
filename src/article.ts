@@ -14,5 +14,5 @@ interface ArticlesDatum {
 interface LinkedArticleMeta {
   title: string;
   summary: string;
-  href: string;
+  id: string;
 }

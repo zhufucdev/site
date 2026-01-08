@@ -3,6 +3,7 @@ import FrontmatterDefault from "../../layouts/FrontmatterDefault.astro";
 import enRes from "../../strings/en.ts";
 import type { GetStaticPaths } from "astro";
 import { getCollection, render } from "astro:content";
+import getArticleUrl from "../../utils/article-url";
 export const getStaticPaths = (async () => {
   const posts = await getCollection("articles-en");
   return posts.map((post) => ({
@@ -17,7 +18,7 @@ const { Content } = await render(post);
 
 <FrontmatterDefault
   i18n={enRes}
-  url={`/article/${post.id}`}
+  url={getArticleUrl(post.id, "en")}
   frontmatter={post.data}
 >
   <Content />

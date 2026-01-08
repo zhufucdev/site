@@ -1,4 +1,6 @@
 ---
+import type { I18nResource } from "../strings/types";
+import type Post from "../post";
 import Master from "../layouts/Master.astro";
 import Topbar from "../components/Topbar.astro";
 import CoveredPostCard from "../components/CoveredPostCard.astro";
@@ -9,11 +11,12 @@ import RssSection from "../components/RssSection.tsx";
 import SourceSection from "../components/SourceSection.tsx";
 import TracePhotoCamera from "../icons/TracePhotoCamera.svg";
 import BottomFooter from "../components/BottomFooter.astro";
-import type { I18nResource } from "../strings/types";
-import type Post from "../post";
 import enRes from "../strings/en";
 import { createHighlighter } from "shiki";
 import formatDate from "../utils/dateformat";
+import { getCollection } from "astro:content";
+import getArticleUrl from "../utils/article-url";
+
 const highlighter = await createHighlighter({
   themes: ["one-light"],
   langs: ["xml"],
@@ -21,6 +24,7 @@ const highlighter = await createHighlighter({
 interface Props {
   i18n?: I18nResource;
   posts: Post[];
+  articles?: { id: string; data: any }[];
 }
 const {
   i18n = enRes,
@@ -44,6 +48,7 @@ const {
         "There was a piece of Rust code in the Linux kernel that led to a potential race condition.",
     },
   ],
+  articles = (await getCollection(`articles-${i18n.localeName}`)).slice(0, 2),
 } = Astro.props;
 ---
 
@@ -73,31 +78,22 @@ const {
   <div
     class="flex flex-row flex-wrap gap-4 border-b-3 border-b-gray-100 bg-linear-to-b from-gray-100 via-gray-200 via-70% to-gray-300 px-2 pb-8 sm:px-6"
   >
-    <BlueprintSheet class="flex-2">
-      <TitleSummary>
-        <Fragment slot="title" set:text="Liquid Glass Toolbar Flickering" />
-        <Fragment
-          slot="summary"
-          set:text="It's high time for me to adapt the new design language for Apple platforms. However, my app uses an asynchronize data loading model, which is not how Apple does things."
-        />
-      </TitleSummary>
-      <ArrowHighlightingButton slot="bottom" href="#"
-        >{i18n.read_full_para}</ArrowHighlightingButton
-      >
-    </BlueprintSheet>
-
-    <BlueprintSheet class="flex-1">
-      <TitleSummary>
-        <Fragment slot="title" set:text="As an AWS Engineer" />
-        <Fragment
-          slot="summary"
-          set:text="I have been working for Amazon since 3 years ago, and I am 22. What a shocker."
-        />
-      </TitleSummary>
-      <ArrowHighlightingButton slot="bottom" href="#"
-        >{i18n.read_full_para}</ArrowHighlightingButton
-      >
-    </BlueprintSheet>
+    {
+      articles.map(({ id, data }) => (
+        <BlueprintSheet style={`flex: ${data.summary.length}`}>
+          <TitleSummary>
+            <Fragment slot="title" set:text={data.title} />
+            <Fragment slot="summary" set:text={data.summary} />
+          </TitleSummary>
+          <ArrowHighlightingButton
+            slot="bottom"
+            href={getArticleUrl(id, i18n.localeName)}
+          >
+            {i18n.read_full_para}
+          </ArrowHighlightingButton>
+        </BlueprintSheet>
+      ))
+    }
   </div>
   <div class="relative flex overflow-clip max-sm:flex-col sm:flex-row">
     <RssSection class="flex-1 p-6" i18n={i18n} client:idle />
