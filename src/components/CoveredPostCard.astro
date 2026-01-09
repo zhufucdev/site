@@ -1,10 +1,13 @@
 ---
+import { Image } from "astro:assets";
 import TitleSummary from "./TitleSummary.astro";
+import type { ImageMetadata } from "astro";
 interface Props {
-  cover?: string;
+  cover?: [ImageMetadata, string];
   mask: string;
   class?: string;
   customColors?: boolean;
+  coverAlt?: string;
 }
 const { cover, mask, class: className, customColors = false } = Astro.props;
 ---
@@ -24,7 +27,7 @@ const { cover, mask, class: className, customColors = false } = Astro.props;
       </p>
     )
   }
-  <div class="relative min-h-72 flex-1 @max-md:pb-72 z-0">
+  <div class="relative z-0 min-h-72 flex-1 @max-md:pb-72">
     <div class="space-y-4 @md:mr-72">
       <TitleSummary>
         <slot name="title" slot="title" />
@@ -32,14 +35,12 @@ const { cover, mask, class: className, customColors = false } = Astro.props;
       </TitleSummary>
     </div>
     <div
-      class="absolute -right-24 -bottom-24 h-96 w-96 bg-orange-100 bg-cover -z-10"
-      style={[
-        cover ? `background-image: ${cover}` : "",
-        mask ? `mask-image: ${mask}` : "",
-      ]
+      class="absolute -right-24 -bottom-24 -z-10 h-96 w-96 overflow-clip bg-orange-100 bg-cover"
+      style={[mask ? `mask-image: ${mask}` : ""]
         .filter((p) => Boolean(p))
         .join(";")}
     >
+      {cover && <Image src={cover[0]} alt={cover[1]} class="size-full object-cover" />}
     </div>
   </div>
 </div>

@@ -19,6 +19,9 @@ import getArticleUrl from "../utils/article-url";
 import { getRssResponse } from "../utils/rss-template";
 import xmlFormat from "xml-formatter";
 
+import stormcrew from "../images/storm-crew-clothing-wrapper.jpeg";
+import ferriesWithKnief from "../images/ferris-with-knief.png";
+
 const highlighter = await createHighlighter({
   themes: ["one-light"],
   langs: ["xml"],
@@ -32,19 +35,19 @@ const {
   i18n = enRes,
   posts = [
     {
-      created: 1675363200000,
+      created: 1768001767000,
       header: "Status update",
       mask: "url(/ElevenSidedStar.svg)",
-      cover: "url(/quick-brown-fox-jumping-over-a-dog.jpg)",
-      title: "Did the quick brown fox really jump over the lazy dog?",
+      cover: { image: stormcrew, alt: "StormCrew clothing wrapper" },
+      title: "Bought some StormCrew clothes",
       summary:
-        "I did say, but can I really eat glass? Should have known before it's too late.",
+        "It's become a trend or something. My boss and coworkers wore this last dinner party. We don't work for Tim, mind you.",
     },
     {
-      created: 1679363200000,
+      created: 1766532967000,
       header: "News",
       mask: "url(/TiltedRectangle.svg)",
-      cover: "url(/ferris-with-knief.png)",
+      cover: { image: ferriesWithKnief, alt: "Ferris with knief" },
       title: "Binder CVE",
       summary:
         "There was a piece of Rust code in the Linux kernel that led to a potential race condition.",
@@ -62,7 +65,11 @@ const {
   <div class="flex flex-row flex-wrap gap-4 px-2 sm:px-6">
     {
       posts.map(({ created, cover, mask, header, title, summary }) => (
-        <CoveredPostCard cover={cover} mask={mask} class="flex-1">
+        <CoveredPostCard
+          cover={cover && [cover.image, cover.alt]}
+          mask={mask}
+          class="flex-1"
+        >
           <Fragment slot="header-leading" set:text={header} />
           <Fragment
             slot="header-tailing"

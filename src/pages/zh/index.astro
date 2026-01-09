@@ -1,28 +1,31 @@
 ---
 import IndexDefault from "../index.astro";
 import i18n from "../../strings/zh.ts";
+
+import stormcrew from "../../images/storm-crew-clothing-wrapper.jpeg";
+import ferriesWithKnief from "../../images/ferris-with-knief.png";
 ---
 
 <IndexDefault
   i18n={i18n}
   posts={[
     {
-      created: 1675363200000,
+      created: 1768001767000,
       header: "状态更新",
       mask: "url(/ElevenSidedStar.svg)",
-      cover: "url(/quick-brown-fox-jumping-over-a-dog.jpg)",
-      title: "敏捷的棕色狐狸真的跨过了懒狗吗？",
+      cover: { image: stormcrew, alt: "StormCrew服装包装" },
+      title: "买了StromCrew的衣服",
       summary:
-        "I did say, but can I really eat glass? Should have known before it's too late.",
+        "不知不觉好像变成一种流行了。我老板跟同事上次聚餐也都有穿。先说清楚，我们没在帮 Tim 工作。",
     },
     {
-      created: 1679363200000,
+      created: 1766532967000,
       header: "新闻",
       mask: "url(/TiltedRectangle.svg)",
-      cover: "url(/ferris-with-knief.png)",
+      cover: { image: ferriesWithKnief, alt: "Ferris with knief" },
       title: "Binder CVE",
       summary:
-        "There was a piece of Rust code in the Linux kernel that led to a potential race condition.",
+        "Linux kernel 里有一段 Rust 写的代码，可能会造成 race condition",
     },
   ]}
 />
