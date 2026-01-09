@@ -4,6 +4,23 @@
 
 I post long form articles here.
 
+## Project Structure
+
+This project follows a standard Astro project structure:
+
+- `public/`: Static assets that are copied directly to the build output.
+- `src/`: The main source code of the application.
+  - `components/`: Reusable UI components.
+  - `content/`: Markdown/MDX content collections.
+  - `layouts/`: Astro layout components that define the page structure.
+  - `pages/`: Files here define the routes of the site. Supports multi-language (e.g., `zh/`, `zh-tw/`).
+  - `styles/`: Global CSS and styling configurations.
+  - `utils/`: Utility functions and shared logic.
+  - `icons/`: Custom icon components.
+  - `strings/`: Localized string constants.
+- `astro.config.mjs`: Astro configuration file.
+- `package.json`: Project dependencies and scripts.
+
 ## Commands
 
 All commands are run from the root of the project, from a terminal:
