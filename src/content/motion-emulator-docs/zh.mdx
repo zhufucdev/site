@@ -1,0 +1,316 @@
+---
+title: 运动模拟器文档
+summary: 运动模拟器是一个Android应用，阅读此文章了解更多
+created: 1692055701313
+---
+
+# 说明
+
+运动模拟器是基于Xposed框架的定位模拟应用。它胜过其他应用的点在于对以下功能的支持：
+
+- 传感器和基站数据的收集和模拟
+- 路径修改和混淆
+- 同时对root和非root设备的支持
+- 地图和坐标系转化
+
+<HelperCard title="下载">
+此文章提供了几种下载方式，你可以决定从哪个链接下载。
+</HelperCard>
+
+# 开始下载
+
+[GitHub Releases](https://github.com/zhufucdev/MotionEmulator/releases)
+[OneDrive](https://nuistedu-my.sharepoint.cn/:f:/g/personal/202283270243_nuist_edu_cn/Ejuxvnw4-8xFh9HhibzqPqcB1wD09Qr48wvukFZzSiisig?e=1txPvb)
+
+
+<HelperCard title="发行注记v1.2.2">
+### 漏洞修复
+- 导出（分享）已记录的数据时崩溃
+- 记录界面和模拟界面的视觉错误
+- 在基于Compose的页面中缺少`导航到上一层级`的提示
+</HelperCard>
+
+<Details title="旧版本的发行注记">
+
+## 发行注记`v1.2.1`
+
+### 漏洞修复
+
+- 无法拖动刚下载的插件。
+
+### 给博客用户的通知
+
+从这个版本开始，将不包含其他插件，因为可以从主程序下载。
+
+## 发行注记 `v1.2.0`
+
+
+### 插件系统
+
+新加入的插件系统让运动模拟器功能更加强大。
+
+- 主应用从Xposed解耦，不再是Xposed模块。
+- 基于Xposed的插件实现了完整功能。
+- 在插件界面可以找到所有可用插件。
+- 下载、安装和管理插件的方法十分简单，只需几个点击和手势。
+
+插件的能力体现在
+- 灵活性：插件可以为特定应用优化，以提供最佳体验；
+- 兼容性：宿主与模块之间的通信层与运动模拟器本身分离，因而特殊应用也可以被纳入这一体系；
+- 先进性：不同模块平行更新，从容修复bug，提供改进。
+
+### 基于WebSocket的协议
+
+- 实现了宿主app与模块的实时通信。
+- 使用了高效的ProtoBuf协议。
+
+### 更好的模拟
+- 修复了上一个版本（v1.1.7）的严重bug。
+- 鉴于以上更改，Websocket插件实现了最新的改进。
+ 
+</Details>
+
+# 开始使用
+
+要开始使用运动模拟器，只需以下几个步骤。
+
+## 选择合适的插件
+
+不同插件以不同的方式实现运动模拟器的部分或全部功能。根据条件选择合适的插件。
+
+|插件名|平台|实现方式|适用于|位置模拟|传感器模拟|基站模拟|
+|:--|:--|:--|:--|:--:|:--:|:--:|
+|模拟位置插件|原生Android|<Details variant="dialog">Websocket➡️开发者选项</Details>|不屏蔽模拟位置的应用|✅🅱️|❎|❎|
+|Websocket插件|Xposed|<Details variant="dialog">Mixin➡️Websocket</Details>|大部分应用|✅🅰️|✅|✅|
+|内容提供器插件|Xposed|<Details variant="dialog">Mixin➡️ContentProvider➡️Websocket转发</Details>|大部分目标SDK不高于30的应用|✅🅰️|✅|✅|
+
+## 激活插件
+
+在软件主界面，选择`找不到插件`卡片，进入插件管理器。
+
+从`已禁用`列表中，点击需要的插件，开始下载。下载完成后，可能需要给予软件安装未知应用的权限。软件会自动要求安装下载好的插件。
+
+将插件拖放到`已启用`列表，激活该插件。
+
+<HelperCard title="插件指定设置" variant="warn">
+基于Xposed的插件需要在你使用的框架中进行额外设置。
+
+模拟位置插件需要按照内部的提示进行额外设置。
+</HelperCard>
+
+## 绘制路径
+
+回到主界面。选择`绘制路径`卡片。第一次使用，需要设置地图选项。
+
+<HelperCard title="选择合适的地图">
+对于大陆用户，如果你不知道自己在做什么，请选择高德地图。
+</HelperCard>
+
+注意，地图已以你的粗略位置为中心。点击屏幕下方的`新路径`按钮，开始路径创建。软件提供两种方法绘制新路径。
+
+### 手绘
+
+不妨移动地图，寻找大致区域。可以点击屏幕上方的搜索按钮，快速跳转到兴趣点。
+
+要开始手绘路径，选择屏幕下方的`绘制路径`按钮，然后点击`选择`。与地图交互将不能移动地图，而是在地图上留下痕迹。
+
+需要撤销上一次操作，点击屏幕下方的撤销按钮。需要清除路径，点击清除按钮。
+
+绘制完成后，点击屏幕下方的返回按钮。
+
+### GPS采样
+
+要记录实际位置为路径存档，点击屏幕下方的GPS采样。
+
+<HelperCard title="寻找信号">
+
+找到卫星信号较好的地点，通常是户外开阔地。软件将在信号较优时开始记录。
+
+</HelperCard>
+
+要暂停记录，点击屏幕下方的暂停按钮。要恢复记录，点击继续按钮。要撤销至上次暂停的状态，点击撤销按钮。
+
+完成记录后，点击暂停按钮，然后点击返回按钮。
+
+## 开始模拟
+
+回到主界面。选择`模拟`卡片。根据需要，配置路径、重复次数、速度等参数。在对配置感到自信之后，点击屏幕下方的`开始模拟`按钮。
+
+
+# 使用传感器数据
+
+## 开始记录
+
+在主界面，选择`记录`卡片。选择需要的传感器类型。点击`继续`。软件生成使用的传感器对应的图表。在记录完成后，点击屏幕底部的`停止`按钮。不使用停止按钮而直接返回上一界面，将**舍弃**记录好的数据。
+
+## 合适的数据
+
+不同软件算法不同。如果你不知道自己在做什么，通常以步频为标准。
+回到主页，选择`管理`卡片，在`传感器`页面可以找到记录。步频的估计速度应接近模拟时的目标速度。
+
+<HelperCard title="重放方式">
+重放时，运动模拟器对数据有特殊处理。对于时间不够长的记录，将重复已有片段。对与目标速度不匹配的步频，将加速或减速该片段。这样的操作可能产生不自然的数据。
+</HelperCard>
+
+## 讨论
+
+传感器模拟是经过最少测试的功能。大部分软件的检测手段不是很强。相反，手段强的软件最好做专门的适配。
+
+
+# 给路径添加随机性
+
+在主界面，选择`管理`卡片。导航到`路径`页面。选择要编辑的路径。在`随机因子`中，点击新建，选择随机因子。
+展开新建的随机因子。随机因子的名称是任何不含空格的字母组合。因子的图像反应其结果的概率分布。
+
+![image-1](images/5b2hLX02ipc_jva4OB8vl.png)
+
+图像的工作方式是，在横轴随机选择一个点，在曲线上对应的纵坐标就是计算结果。
+
+<Details title="图像举例">
+
+![结果靠近两端的例子](images/snG6xORGZAb5MbnLK6Sc0.png)
+
+<p style={{textAlign: 'center'}}>随机因子x的计算结果更容易达到0或1</p>
+
+![结果靠近中间的例子](images/xm-Ltu75ZAervMx__pxng.png)
+
+<p style={{textAlign: 'center'}}>随机因子x的计算结果更容易达到0.5</p>
+</Details>
+
+点击`新建`，在旋转、缩放和平移中选择需要的变换。
+
+## 旋转
+
+从`加盐`菜单中选择旋转。展开该变换。点击右侧的Σ按钮，选择使用输入。
+在`弧度制角度`输入框内，输入以下文本。
+```plain
+2 * pi * x
+```
+
+<HelperCard title="为什么">
+pi = π。* = ×。在弧度制角度中，2π是一周。x的范围是[0, 1]。这个随机变换至多让路径旋转一周。
+</HelperCard>
+
+## 平移
+
+从`加盐`菜单中选择平移。展开该变换。在`x`和`y`输入框内输入以下文本。
+
+```plain
+x * 10 ^ -4
+```
+
+<HelperCard title="为什么">
+^是指数运算符。10 ^ -4表示十的负四次幂。这个随机变换至多让路径沿纬线方向平移十的负四次方度。
+</HelperCard>
+
+## 缩放
+
+从`加盐`菜单中选择缩放。展开该变换。在`x轴比例`中输入以下内容。
+
+```plain
+e ^ -x
+```
+
+<HelperCard title="为什么">
+e是自然对数的底数。这样做只是好玩。
+</HelperCard>
+
+
+# 贡献代码
+
+## 克隆项目
+
+从GitHub克隆项目源代码。
+
+```shell
+git clone https://github.com/zhufucdev/MotionEmulator
+```
+
+`main`为开发分支，在达到稳定后合并进`stable`。不接受提交至`stable`分支的拉取请求。
+
+## 下载和配置Android Studio
+
+这个项目十分激进。最新的Android Studio Cancary被用来编写和调试这个项目。你可以从[Android Developers](https://developer.android.com/studio/preview)获得一份它的副本。请安装最新的编译工具和SDK。下表是经过测试的工具版本。
+
+|名称|版本号|
+|:----|:-------|
+|Android Studio  |Android Studio Iguana 2023.2.1 Canary 1|
+|SDK Build Tools|34|
+|SDK Platforms|34 revision 2|
+|JDK|Amazon Corretto 17|
+
+## 配置项目
+
+用Android Studio打开克隆的项目。如果没有自动同步，点击右上角的`Sync Project with Gradle Files`按钮。
+
+### 环境变量
+
+在根目录下新建local.properties。所需字段如下表所示。
+
+|名称|格式|说明|
+|:----|:-----|:----|
+|sdk.dir|文件系统路径|<div class="flex items-center">Android SDK文件夹根目录 <Details title="该值是可选的" variant="dialog" inline>可以不填写此字段，当且仅当设置了`ANDROID_HOME`环境变量作为替代。</Details></div>|
+|amap.web.key|32位十六进制数|高德地图Web API密钥·[文档](https://lbs.amap.com/api/webservice/summary/)|
+|AMAP_SDK_KEY|32位十六进制数|高德地图Android SDK密钥·[文档](https://lbs.amap.com/api/android-sdk/summary/)|
+|GCP_MAPS_KEY|/[a-zA-Z0-9_]*/|谷歌地图SDK密钥·[文档](https://developers.google.com/maps/documentation/android-sdk/cloud-setup)|
+
+<Details title="我不想申请密钥" sx={{mt: 2}}>
+将各密钥值留空，可以通过编译。通常不建议这么做，除非你知道自己在做什么。
+</Details>
+
+### 更新服务（可选）
+
+运动模拟器主程序和模拟位置插件具有自检查更新功能。如果你希望发布自己的运动模拟器发行版，可自建服务器。在app和mock_location_plugin目录下创建server.properties。填入以下字段。
+
+|名称|格式|说明|
+|:----|:----|:-----|
+|PRODUCT|无空格字符串|用于自索引的项目ID|
+|SERVER_URI|HTTP URL|服务器地址。项目使用的Ktor仅支持HTTP(S)协议。|
+
+要自建服务器，就要实现特定的RESTful API。参考我的实现。
+
+<Repo id="zhufucdev/api.zhufucdev" provide="github" />
+
+# 代码规范及注意事项
+
+在提交前，至少在推送前，请留意IDE的警告，特别是对冗余引入(unused import directive)的警告。
+
+请保持提交的代码被正确格式化。统一使用4空格缩进。单行100字符。禁止大量无意义空行。
+
+如果有破坏性更改(breaking changes)，例如修改了stub API的参数，请修改或添加文档。
+
+接受大规模重构，当且仅当新的实现更加规范或便于维护。
+
+<HelperCard title="大规模重构">
+大规模重构，是指重新实现了应用框架，因为原先的框架不是最佳实践。前端的大规模重构可能是改变了主页面的整理方式。后端的大规模重构可能是重新实现了通讯桥。
+</HelperCard>
+
+## 单元测试
+
+该项目对单元测试没有强制要求。仅在自动化比手动测试节约时间时编写和运行测试，例如进程间通信。该项目不以单元测试的通过率为标准评价拉取请求的质量。
+
+## 界面设计
+
+请遵循[M3设计指南](https://m3.material.io)。尽可能使用Jetpack Compose编写新页面。UI美观，UX流畅、符合直觉。
+
+请使用ViewModel或遵循其设计模式(designing pattern)，注意资源回收、作用域和生命周期。
+
+页面相关的文件，整理在.ui包下。一个Activity衍生的不同Fragment或Composable，整理在同一子目录下。
+
+## 扩展函数
+
+避免使用全局扩展。请使用DSL模式限制作用域。
+
+<HelperCard title="Do" variant="success">
+```kotlin
+fun String.toInt(): Int {...}
+```
+</HelperCard>
+
+<HelperCard title="Don't" variant="error">
+```kotlin
+fun parseInt(str: String): Int {...}
+```
+</HelperCard>
+
+将相关的扩展整理在同一个文件。避免Utility.kt。
