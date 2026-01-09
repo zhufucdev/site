@@ -1,0 +1,11 @@
+---
+import i18n from "../../strings/zh-tw.ts";
+import ArticlesDefault from "../articles.astro";
+import getArticlesDataFromCollection from "../../utils/article-data-from-collection";
+import { getCollection } from "astro:content";
+---
+
+<ArticlesDefault
+  i18n={i18n}
+  data={getArticlesDataFromCollection(await getCollection("articles-zh-tw"))}
+/>

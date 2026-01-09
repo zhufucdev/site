@@ -1,6 +1,6 @@
 ---
 import FrontmatterDefault from "../../layouts/FrontmatterDefault.astro";
-import enRes from "../../strings/en.ts";
+import i18n from "../../strings/en.ts";
 import type { GetStaticPaths } from "astro";
 import { getCollection, render } from "astro:content";
 import getArticleUrl from "../../utils/article-url";
@@ -19,7 +19,7 @@ const embeddedComponents = getEmbeddedComponents();
 ---
 
 <FrontmatterDefault
-  i18n={enRes}
+  i18n={i18n}
   url={getArticleUrl(post.id, "en")}
   frontmatter={post.data}
 >

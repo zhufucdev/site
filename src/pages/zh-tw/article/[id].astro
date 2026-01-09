@@ -1,11 +1,11 @@
 ---
 import FrontmatterDefault from "../../../layouts/FrontmatterDefault.astro";
-import i18n from "../../../strings/zh.ts";
+import i18n from "../../../strings/zh-tw.ts";
 import type { GetStaticPaths } from "astro";
 import { getCollection, render } from "astro:content";
 import getEmbeddedComponents from "../../../utils/embedded-components";
 export const getStaticPaths = (async () => {
-  const posts = await getCollection("articles-zh");
+  const posts = await getCollection("articles-zh-tw");
   return posts.map((post) => ({
     params: { id: post.id },
     props: { post },

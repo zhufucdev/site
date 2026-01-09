@@ -1,0 +1,42 @@
+---
+import AboutDefault from "../about.astro";
+import i18n from "../../strings/zh-tw.ts";
+---
+
+<AboutDefault
+  i18n={i18n}
+  qnaPosts={[
+    {
+      mask: "SixSidedStar.svg",
+      question: "你是誰？",
+      answer:
+        "網路上閒晃的草民，大概是非二元。專業Android開發、業餘2D設計、偶爾在YouTube上發視頻",
+    },
+    {
+      mask: "TiltedOval.svg",
+      question: "你頭像為什麼是耶穌？",
+      answer:
+        "簡而言之，一個朋友被炎上了，為避免受波及我改了個人資訊。因為耶穌道德值點滿，不會害人。就這樣。",
+    },
+    {
+      mask: "TiltedPentagon.svg",
+      question: "你有宗教信仰嗎？",
+      answer: "<b>沒有</b>，不過我對此保持開放心態。試試說服我",
+    },
+    {
+      mask: "Clover.svg",
+      question: "喜歡貓還是狗？",
+      answer: "肯定是貓",
+    },
+    {
+      mask: "ElevenSidedStar.svg",
+      question: "你愛我嗎？",
+      answer: "我愛你們所有人",
+    },
+    {
+      mask: "TiltedRectangle.svg",
+      question: "怎麼才能跟你約會？",
+      answer: `不管你是男人、女人還是其他什麼，請在<a class="text-orange-500" href="#socials">社群媒體</a>聯絡`,
+    },
+  ]}
+/>
