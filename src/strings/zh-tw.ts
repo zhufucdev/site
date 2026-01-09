@@ -3,8 +3,8 @@ import type { I18nResource } from "./types";
 const zhTwRes: I18nResource = {
   localeName: "zh-tw",
   all_articles_para: "所有文章",
-  highlights_para: "亮点",
-  about_me_para: "亮點",
+  highlights_para: "亮點",
+  about_me_para: "關於我",
   read_full_para: "閱讀全文",
   subsribe_via_rss_para: "透過 RSS 訂閱",
   copy_link_para: "複製連結",
