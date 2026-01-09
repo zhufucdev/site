@@ -16,6 +16,8 @@ import { createHighlighter } from "shiki";
 import formatDate from "../utils/dateformat";
 import { getCollection } from "astro:content";
 import getArticleUrl from "../utils/article-url";
+import { getRssResponse } from "../utils/rss-template";
+import xmlFormat from "xml-formatter";
 
 const highlighter = await createHighlighter({
   themes: ["one-light"],
@@ -107,25 +109,13 @@ const {
       client:idle
     />
     <div
-      class="absolute right-1/2 -z-10 translate-x-1/2 mask-b-from-0 mask-l-from-0 text-sm max-sm:bottom-0 sm:top-1/2 sm:-translate-y-1/2"
+      class="absolute right-1/2 -z-10 max-w-full translate-x-1/2 overflow-clip mask-b-from-0 mask-l-from-0 text-sm max-sm:bottom-0 sm:top-1/2 sm:-translate-y-1/2"
     >
       <Fragment
         set:html={highlighter.codeToHtml(
-          `<channel>
-  <title>Example dot Come</title>
-  <link>http://www.example.com</link>
-  <description>Example domain that is free to quote</description>
-  <item>
-    <title>Sample title</title>
-    <link>http://www.example.com/sample</link>
-    <description>New Sample is Coming</description>
-  </item>
-  <item>
-    <title>Vaperware</title>
-    <link>http://www.example.com/vaperware</link>
-    <description>Just a Vaperware</description>
-  </item>
-</channel>`,
+          xmlFormat(
+            await (await getRssResponse(i18n, Astro.site!.toString())).text(),
+          ),
           { lang: "xml", theme: "one-light" },
         )}
       />

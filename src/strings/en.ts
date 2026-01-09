@@ -16,6 +16,9 @@ const enRes: I18nResource = {
   socials_para: "Socials",
   asterisk_bad_at_gaming_span: "*bad at gaming",
   via_span: (provider: string) => `via ${provider}`,
+  steve_reeds_blog_para: "Steve Reed's blog",
+  oops_para: "Oops",
+  copy_failed_you_may_go_manual_para: "Copy failed. You may manually copy the content below."
 };
 
 export default enRes;

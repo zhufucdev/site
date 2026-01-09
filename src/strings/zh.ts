@@ -16,6 +16,9 @@ const zhRes: I18nResource = {
   socials_para: "社交媒体",
   asterisk_bad_at_gaming_span: "*不懂玩游戏",
   via_span: (provider: string) => `通过${provider}`,
+  steve_reeds_blog_para: "Steve Reed的博客",
+  oops_para: "哎呀，出错了",
+  copy_failed_you_may_go_manual_para: "复制失败，你可以手动复制以下内容"
 };
 
 export default zhRes;

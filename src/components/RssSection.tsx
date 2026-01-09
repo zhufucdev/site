@@ -1,6 +1,8 @@
-import { createSignal, type JSX } from "solid-js";
+import { createSignal, createMemo, type JSX } from "solid-js";
 import type { I18nResource } from "../strings/types";
 import ChunkyIconButton from "./ChunkyIconButton";
+import Modal from "./Modal";
+import { getAbsoluteLocaleUrl } from "astro:i18n";
 
 interface RssSectionProps {
   i18n: I18nResource;
@@ -10,50 +12,99 @@ interface RssSectionProps {
 export default function RssSection(props: RssSectionProps) {
   const { i18n, class: className } = props;
 
+  const rssUrl = createMemo(() =>
+    getAbsoluteLocaleUrl(i18n.localeName, "/rss.xml"),
+  );
+
   let buttonElement!: HTMLButtonElement;
   const [copied, setCopied] = createSignal<boolean>();
-  function handleCopyButtonClick() {
-    setCopied(!copied());
-    setTimeout(() => {
-      setCopied(false);
+  const [showModal, setShowModel] = createSignal<boolean>();
+  async function handleCopyButtonClick() {
+    try {
+      const clipboard = new Clipboard();
+      await clipboard.writeText(rssUrl());
+
+      setCopied(!copied());
+      setTimeout(() => {
+        setCopied(false);
+        buttonElement.blur();
+      }, 2000);
+    } catch {
       buttonElement.blur();
-    }, 2000);
+      setShowModel(true);
+    }
   }
   return (
-    <div class={`flex flex-row flex-wrap content-around gap-6 ${className}`}>
-      <RssIcon class="size-16 rounded-2xl border-2 border-gray-700 bg-orange-500 text-white" />
-      <div class="flex flex-col items-start">
-        <p class="text-3xl">{i18n.subsribe_via_rss_para}</p>
-        <div class="flex-1" />
-        <div class="flex flex-row gap-4">
-          <ChunkyIconButton
-            ref={buttonElement}
-            onClick={handleCopyButtonClick}
-            icon={
-              <>
-                <ClipboardIcon
-                  class="size-4"
-                  classList={{
-                    "transition-all": !copied(),
-                    "transition-discrete": !copied(),
-                    "opacity-0": copied(),
-                  }}
-                />
-                <CheckIcon
-                  class="absolute top-0 left-0 size-4 transition-all transition-discrete"
-                  classList={{
-                    "opacity-0": !copied(),
-                  }}
-                />
-              </>
-            }
-          >
-            {i18n.copy_link_para}
-          </ChunkyIconButton>
-          <ChunkyIconButton>{i18n.get_list_para}</ChunkyIconButton>
+    <>
+      <Modal
+        open={showModal()}
+        onClose={() => setShowModel(false)}
+        class="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 space-y-2 rounded-2xl border-2 border-gray-700 p-6 max-sm:w-[calc(100vw-24px)]"
+      >
+        <div class="flex flex-row items-start justify-between">
+          <span class="text-2xl font-semibold">{i18n.oops_para}</span>
+
+          <button onClick={() => setShowModel(false)} class="cursor-pointer">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <p class="font-sans">{i18n.copy_failed_you_may_go_manual_para}</p>
+        <input
+          class="w-full font-mono outline-orange-500 focus:outline-2"
+          readonly
+          value={rssUrl()}
+        ></input>
+      </Modal>
+      <div class={`flex flex-row flex-wrap content-around gap-6 ${className}`}>
+        <RssIcon class="size-16 rounded-2xl border-2 border-gray-700 bg-orange-500 text-white" />
+        <div class="flex flex-col items-start">
+          <p class="text-3xl">{i18n.subsribe_via_rss_para}</p>
+          <div class="flex-1" />
+          <div class="flex flex-row gap-4">
+            <ChunkyIconButton
+              ref={buttonElement}
+              onClick={handleCopyButtonClick}
+              icon={
+                <>
+                  <ClipboardIcon
+                    class="size-4"
+                    classList={{
+                      "transition-all": !copied(),
+                      "transition-discrete": !copied(),
+                      "opacity-0": copied(),
+                    }}
+                  />
+                  <CheckIcon
+                    class="absolute top-0 left-0 size-4 transition-all transition-discrete"
+                    classList={{
+                      "opacity-0": !copied(),
+                    }}
+                  />
+                </>
+              }
+            >
+              {i18n.copy_link_para}
+            </ChunkyIconButton>
+            <a href={getAbsoluteLocaleUrl(i18n.localeName, "articles")}>
+              <ChunkyIconButton>{i18n.get_list_para}</ChunkyIconButton>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

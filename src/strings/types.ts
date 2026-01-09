@@ -11,7 +11,10 @@ export type i18nStringKeys =
   | "reading_para"
   | "playing_para"
   | "socials_para"
-  | "asterisk_bad_at_gaming_span";
+  | "asterisk_bad_at_gaming_span"
+  | "steve_reeds_blog_para"
+  | "oops_para"
+  | "copy_failed_you_may_go_manual_para";
 export type i18nFunctionKeys = "via_span";
 export type i18nKeys = i18nStringKeys | i18nFunctionKeys;
 export const supportedLocales = ["en", "zh", "zh-tw"] as const;
