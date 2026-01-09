@@ -21,15 +21,15 @@ export default function RssSection(props: RssSectionProps) {
   const [showModal, setShowModel] = createSignal<boolean>();
   async function handleCopyButtonClick() {
     try {
-      const clipboard = new Clipboard();
-      await clipboard.writeText(rssUrl());
+      await navigator.clipboard.writeText(rssUrl());
 
       setCopied(!copied());
       setTimeout(() => {
         setCopied(false);
         buttonElement.blur();
       }, 2000);
-    } catch {
+    } catch (e) {
+      console.error(e);
       buttonElement.blur();
       setShowModel(true);
     }
