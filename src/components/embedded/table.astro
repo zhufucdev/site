@@ -1,0 +1,16 @@
+<div class="max-w-[calc(100vw-1rem)] overflow-x-scroll">
+  <table class="max-w-none break-keep"><slot /></table>
+</div>
+
+<style>
+  @import "../../styles/global.css";
+  table :global(thead) {
+    @apply bg-gray-300;
+  }
+  table :global(tr) {
+    @apply border-b-2 border-gray-300;
+  }
+  table :global(th, td) {
+    @apply p-2;
+  }
+</style>
