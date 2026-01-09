@@ -53,7 +53,7 @@ const { frontmatter, i18n, url } = Astro.props;
     @apply list-inside list-disc;
   }
   article :global(a) {
-    @apply inline max-w-[calc(100vw-2rem)] overflow-clip text-ellipsis whitespace-nowrap text-orange-500 transition-colors hover:text-orange-600 focus:underline;
+    @apply inline-block -mb-1.5 max-w-[calc(100vw-2rem)] overflow-clip text-ellipsis whitespace-nowrap text-orange-500 transition-colors hover:text-orange-600 focus:underline;
   }
   article :global(blockquote) {
     @apply rounded-e-lg border-l-4 border-l-orange-500 bg-orange-50 px-2 py-1;
