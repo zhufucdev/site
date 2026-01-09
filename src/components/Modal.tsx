@@ -11,7 +11,6 @@ export default function Modal(props: ModalProps) {
   let ref!: HTMLDialogElement;
   const open = () => props.open;
   createEffect(() => {
-    console.log(open());
     if (open()) {
       ref.showModal();
     } else {
