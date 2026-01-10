@@ -3,7 +3,7 @@ import FrontmatterDefault from "../../layouts/FrontmatterDefault.astro";
 import i18n from "../../strings/en.ts";
 import type { GetStaticPaths } from "astro";
 import { getCollection, render } from "astro:content";
-import getArticleUrl from "../../utils/article-url";
+import { getRelativeArticleUrl } from "../../utils/article-url";
 import getEmbeddedComponents from "../../utils/embedded-components";
 export const getStaticPaths = (async () => {
   const posts = await getCollection("articles-en");
@@ -20,7 +20,7 @@ const embeddedComponents = getEmbeddedComponents();
 
 <FrontmatterDefault
   i18n={i18n}
-  url={getArticleUrl(post.id, "en")}
+  url={getRelativeArticleUrl(post.id, "en")}
   frontmatter={post.data}
 >
   <Content components={embeddedComponents} />

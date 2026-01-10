@@ -1,5 +1,9 @@
-import { getAbsoluteLocaleUrl } from "astro:i18n";
+import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from "astro:i18n";
 
-export default function getArticleUrl(id: string, locale: string) {
+export function getAbsoluteArticleUrl(id: string, locale: string) {
   return getAbsoluteLocaleUrl(locale, `/article/${id}`);
+}
+
+export function getRelativeArticleUrl(id: string, locale: string) {
+  return getRelativeLocaleUrl(locale, `/article/${id}`);
 }

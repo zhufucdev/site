@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import type { I18nResource } from "../strings/types";
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
-import getArticleUrl from "./article-url";
+import { getAbsoluteArticleUrl } from "./article-url";
 
 export async function getRssResponse(i18n: I18nResource, site: string) {
   const posts = await getCollection(`articles-${i18n.localeName}`);
@@ -14,7 +14,7 @@ export async function getRssResponse(i18n: I18nResource, site: string) {
       title: data.title,
       pubDate: data.created,
       description: data.summary,
-      link: getArticleUrl(id, i18n.localeName),
+      link: getAbsoluteArticleUrl(id, i18n.localeName),
     })),
     customData: `<language>${i18n.localeName}</language>`,
   });
