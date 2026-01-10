@@ -1,0 +1,391 @@
+---
+title: I Installed a GPU in My NAS and Streamed Games to My Laptop
+summary: A robust streaming solution under Arch Linux
+created: 1709775247601
+---
+
+# Goals
+
+- Stream desktop and games over the network (wireless)
+- No physical monitor or display emulator (dummy plug) required
+- Unattended operation
+
+# Prerequisites
+
+I assume there is an **NVIDIA** GPU in the machine. I believe AMD GPUs can also be used, but the only issue is they might not support virtual displays, so you might have to purchase a display emulator.
+
+<HelperCard title="Display emulator">
+  Also known as dummy plugs. They pretend to be a monitor so the system renders
+  from the GPU instead of CPU emulation, like `xserver-xorg-video-dummy`.
+</HelperCard>
+
+I assume the machine is running Arch Linux, simply because it's the best Linux distribution.
+
+<HelperCard title="I'm not running Arch Linux">
+  If your machine isn't running Arch, I suggest you install it.
+</HelperCard>
+
+Furthermore, I don't assume the machine has a monitor, mouse, or keyboard connected. Linux doesn't need those. However, I do assume your machine is connected to the network, for obvious reasons.
+
+## Logging into the Machine
+
+You can log in via SSH or a TTY.
+
+## Installing Software and Patching Drivers
+
+The NVIDIA proprietary drivers must be installed. Xorg must be used instead of Wayland due to virtual display requirements. You will likely need a desktop environment; I'll choose Mate here.
+
+```shell
+paru -S nvidia-utils xorg-init mate
+```
+
+<Details title="Installing NVIDIA Proprietary Drivers">
+You will need nvbfc and nvenc. Open-source drivers do not include these
+modules. Regarding the installation itself, please refer to the
+[ArchWiki](https://wiki.archlinux.org/title/NVIDIA#Installation).
+</Details>
+
+Basically, NVIDIA consumer drivers block nvbfc, so Sunshine cannot directly capture the frames in video memory. The great thing about Arch Linux is the AUR, where you can easily find scripts to patch the drivers.
+
+```shell
+# Enable nvbfc and unlock the nvenc session limit
+paru -S nvidia-patch
+```
+
+## Verifying Drivers
+
+Verify that the drivers are working using `nvidia-smi`. Note that processes running on the GPU are shown under `Processes`.
+
+```log
+zhufu@zhufusarch ~> nvidia-smi
+Thu Mar  7 13:16:04 2024
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.54.14              Driver Version: 550.54.14      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce GTX 1080 Ti     Off |   00000000:29:00.0 Off |                  N/A |
+| 27%   34C    P8             12W /  250W |     341MiB /  11264MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A      1167      G   /usr/lib/Xorg                                 160MiB |
+|    0   N/A  N/A      1170    C+G   sunshine                                      174MiB |
++-----------------------------------------------------------------------------------------+
+
+```
+
+# Configuring Sunshine and Virtual Display
+
+## Sunshine
+
+Let's start with the easy part. Download Sunshine from the AUR.
+
+```shell
+paru -S sunshine-bin
+# You can also choose `sunshine`, which compiles from source.
+```
+
+`sunshine` will be added to your PATH. I'll run it from tmux so the process stays alive when I log out of SSH.
+
+```log
+zhufu@zhufusarch ~> tmux
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+zhufu@zhufusarch ~> sunshine
+[2024:03:07:13:29:03]: Info: Sunshine version: v0.22.0
+[2024:03:07:13:29:03]: Warning: Failed to create system tray
+[2024:03:07:13:29:03]: Error: Failed to create session: Unable to open display
+[2024:03:07:13:29:03]: Error: Failed to gain CAP_SYS_ADMIN
+[2024:03:07:13:29:03]: Error: Environment variable WAYLAND_DISPLAY has not been defined
+[2024:03:07:13:29:03]: Error: Unable to initialize capture method
+[2024:03:07:13:29:03]: Error: Platform failed to initialize
+[2024:03:07:13:29:03]: Info: // Testing for available encoders, this may generate errors. You can safely ignore those errors. //
+[2024:03:07:13:29:03]: Info: Trying encoder [nvenc]
+[2024:03:07:13:29:04]: Info: Encoder [nvenc] failed
+[2024:03:07:13:29:04]: Info: Trying encoder [vaapi]
+[2024:03:07:13:29:04]: Info: Encoder [vaapi] failed
+[2024:03:07:13:29:04]: Info: Trying encoder [software]
+[2024:03:07:13:29:04]: Info: Encoder [software] failed
+[2024:03:07:13:29:04]: Fatal: Unable to find display or encoder during startup.
+[2024:03:07:13:29:04]: Fatal: Please check that a display is connected and powered on.
+[2024:03:07:13:29:04]: Error: Video failed to find working encoder
+[2024:03:07:13:29:04]: Info: Adding avahi service Sunshine
+[2024:03:07:13:29:04]: Info: Configuration UI available at [https://localhost:47990]
+[2024:03:07:13:29:05]: Info: Avahi service Sunshine successfully established.
+```
+
+Notice `Configuration UI available at [https://localhost:47990]`. This is actually a lie. Sunshine's Web UI listens on `0.0.0.0:47990`. My NAS hostname is `zhufusarch`, so I can access `https://zhufusarch.local:47990` from my laptop.
+If your NAS is not on the same subnet, you'll need its public IP address or SSH port forwarding, but I won't go into detail about that.
+
+In the Web UI:
+
+<HelperCard title="Attention!" variant="error">
+Sunshine detected these errors during startup. We **STRONGLY RECOMMEND** fixing them before streaming.
+
+- Fatal: Unable to find display or encoder during startup.
+
+- Fatal: Please check that a display is connected and powered on.
+
+</HelperCard>
+
+We'll resolve these errors later.
+
+## Moonlight
+
+Install Moonlight from [Moonlight Game Streaming: Play Your PC Game remotely](https://moonlight-stream.org). This step happens on the receiving device. Moonlight supports many platforms, including but not limited to:
+
+- PC / Mac
+- Android / iOS
+- TV / Nintendo Switch?
+
+## Xorg Virtual Display
+
+Modern Xorg is smart. It doesn't need a template generated by `nvidia-xconfig` to make monitors and input devices work. However, special configuration is required for virtual displays. Here is a minimal configuration template:
+
+```shell
+zhufu@zhufusarch ~> cat /etc/X11/xorg.conf
+Section "Device"
+    Identifier     "Device0"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    Option         "ConnectedMonitor" "DFP"
+    Option         "UseDisplayDevice" "DFP"
+    Option         "AllowEmptyInitialConfiguration" "True"
+    Option         "NoPowerConnectorCheck" "True"
+    Option         "ModeValidation" "NoDFPNativeResolutionCheck,NoVirtualSizeCheck,NoMaxPClkCheck,NoHorizSyncCheck,NoVertRefreshCheck,NoWidthAlignmentCheck AllowNonEdidModes"
+EndSection
+
+Section "Screen"
+    Identifier  "nvidiascreen"
+    Device      "Device0"
+    Option      "ConnectedMonitor" "DP-0"
+    SubSection  "Display"
+        Modes     "2400x1500"
+    EndSubSection
+EndSection
+```
+
+`"DP-0"` is an identifier for any output port on the GPU. It will likely be `DP-X` or `HDMI-X`. If none of them work, the only thing you can do is actually connect a monitor or dummy plug, start the X server, and check the available ports:
+
+```log
+zhufu@zhufusarch ~> paru -S xterm
+zhufu@zhufusarch ~> startx &
+zhufu@zhufusarch ~> xrandr
+Screen 0: minimum 8 x 8, current 2268 x 1473, maximum 32767 x 32767
+DVI-D-0 disconnected (normal left inverted right x axis y axis)
+HDMI-0 disconnected (normal left inverted right x axis y axis)
+DP-0 disconnected (normal left inverted right x axis y axis)
+DP-1 disconnected (normal left inverted right x axis y axis)
+DP-2 disconnected (normal left inverted right x axis y axis)
+DP-3 disconnected (normal left inverted right x axis y axis)
+DP-4 disconnected (normal left inverted right x axis y axis)
+DP-5 disconnected (normal left inverted right x axis y axis)
+```
+
+## Configuring xinit
+
+First, get a template from `/etc`:
+
+```shell
+cp /etc/X11/xinit/xinitrc ~/.xinitrc
+```
+
+I want to have a desktop environment when streaming, similar to remote desktop. I use Mate. The configuration involves adding the startup command to the end of `xinitrc`:
+
+```shell
+echo 'exec mate-session' >> ~/.xinitrc
+```
+
+<HelperCard title="I'm not running Mate">
+  In the [Desktop environment -
+  ArchWiki](https://wiki.archlinux.org/title/Desktop_environment), find the
+  entry for your DE, which should explain how to configure it with `xinitrc`.
+</HelperCard>
+
+# Starting Sunshine
+
+## Elevating Permissions
+
+You need to change the permissions of `/dev/uinput` and `/dev/dri/cardX` because of how udev works in unattended scenarios. It's far from elegant, but there's no better way—at least none I can think of.
+
+```shell
+sudo chown $(id -nu):$(id -ng) /dev/uinput
+sudo chown $(id -nu):$(id -ng) /dev/dri/card*
+```
+
+You'll have to enable `sudo nopasswd` because rebooting the system resets these file permissions. You could also put these two commands into a script and give only that script `nopasswd` permissions, which sounds safer.
+
+```shell
+echo "${USER} ALL=(ALL:ALL) ALL, NOPASSWD: $(pwd)/sunshine-setup.sh" \
+  | sudo tee /etc/sudoers.d/${USER}
+```
+
+Additionally, Xorg has permission thresholds. You need to enable root privileges for normal users:
+
+```shell
+zhufu@zhufusarch ~> cat /etc/X11/Xwrapper.config
+allowed_users = anybody
+needs_root_rights = yes
+```
+
+## Running Desktop and Stream Server Manually
+
+Start the xserver and sunshine from the command line. Now, Sunshine can utilize the `nvenc` encoder.
+
+```log
+zhufu@zhufusarch ~> startx &
+zhufu@zhufusarch ~> sunshine
+[2024:03:07:14:42:58]: Info: Sunshine version: v0.22.0
+[2024:03:07:14:42:58]: Info: System tray created
+-- snippet --
+[2024:03:07:14:43:01]: Info: // Ignore any errors mentioned above, they are not relevant. //
+[2024:03:07:14:43:01]: Info:
+[2024:03:07:14:43:01]: Info: Found H.264 encoder: h264_nvenc [nvenc]
+[2024:03:07:14:43:01]: Info: Found HEVC encoder: hevc_nvenc [nvenc]
+[2024:03:07:14:43:01]: Info: Adding avahi service Sunshine
+[2024:03:07:14:43:01]: Info: Configuration UI available at [https://localhost:47990]
+[2024:03:07:14:43:01]: Info: Avahi service Sunshine successfully established.
+```
+
+In Moonlight, you should see the computer and its hostname—in my case, `zhufusarch`.
+![image-1](images/6tcVBx_TaU2leq7kr__pA.webp)
+
+Connect to the desktop and test the usability. Use `Control - Option - Shift - S` to check the frame rate and other stats.
+![image-2](images/CG2bDeGZboCrEX35vnvIj.webp)
+
+## Unattended Operation
+
+You need to modify the `loginctl` configuration so Sunshine and Xorg can stay alive without an SSH login:
+
+```shell
+sudo loginctl enable-linger $(id -nu)
+```
+
+Find a place for your user scripts, as we'll be using three of them. I like to put them in `~/.local/share/scripts`:
+
+```shell
+zhufu@zhufusarch ~> mkdir -p ~/.local/share/scripts && cd ~/.local/share/scripts
+zhufu@zhufusarch ~> vim virtdisplay.sh
+#!/bin/bash
+dbus-launch
+
+# Check existing X server
+ps -e | grep X >/dev/null
+[[ ${?} -ne 0 ]] && {
+ echo "Starting X server"
+ startx
+} || echo "X server already running"
+```
+
+```shell
+zhufu@zhufusarch ~> vim sunshine.sh
+#!/bin/bash
+
+sudo $HOME/.local/share/scripts/sunshine-setup.sh
+echo "Starting Sunshine!"
+sunshine
+```
+
+```shell
+zhufu@zhufusarch ~> echo "sudo chown $(id -nu):$(id -ng) /dev/uinput \
+&& sudo chown $(id -nu):$(id -ng) /dev/dri/card*" > sunshine-setup.sh
+zhufu@zhufusarch ~> chmod +x *.sh
+```
+
+Create user-level systemd units so Xorg and Sunshine can start with the system:
+
+```log
+zhufu@zhufusarch ~> systemctl --user edit --full --force xorg-virtdisplay
+[Unit]
+Description=Xorg virtual display
+
+[Service]
+ExecStart=/home/zhufu/.local/share/scripts/virtdisplay.sh
+Type=simple
+
+[Install]
+WantedBy=default.target
+```
+
+```shell
+zhufu@zhufusarch ~> systemctl --user edit --full sunshine
+[Unit]
+Description=Sunshine is a self-hosted game stream host for Moonlight.
+StartLimitIntervalSec=500
+StartLimitBurst=5
+Wants=xorg-virtdisplay.target
+After=xorg-virtdisplay.target
+
+[Service]
+ExecStart=/home/zhufu/.local/share/scripts/sunshine.sh
+Restart=on-failure
+RestartSec=5s
+Environment=DISPLAY=:0
+
+[Install]
+WantedBy=default.target
+```
+
+Enable these units:
+
+```shell
+systemctl --user enable --now xorg-virtdisplay sunshine
+```
+
+# Increasing Robustness
+
+## The Problem
+
+Sunshine isn't the most stable on my machine; it panics after four or five reconnections.
+
+```log
+[2024:03:09:15:00:30]: Error: Couldn't set default-sink [auto_null]: No such entity
+[2024:03:09:15:00:30]: Error: Couldn't destroy session handle: Unable to cleanup NvFBC
+[2024:03:09:15:00:30]: Error: Couldn't release NvFBC context from current thread: Unable to cleanup NvFBC
+[2024:03:09:15:00:30]: Error: CreateBitstreamBuffer failed: out of memory
+```
+
+I don't have definitive proof, but I suspect it's hardware-related. I only write software, so here's my solution.
+
+## Sunflower
+
+Sunflower uses top-tier programming techniques to make Sunshine robust. Its approach is to detect when Sunshine is not working properly and tell it to restart.
+
+<Repo id="zhufucdev/sunflower" />
+
+Conditions to trigger a restart:
+
+- Output contains `CreateBitstreamBuffer failed: out of memory`
+- Cannot access the HTTP console
+
+You can compile Sunflower with the following commands:
+
+```shell
+paru -S rustup
+rustup default
+
+git clone https://github.com/zhufucdev/sunflower
+cd sunflower
+cargo build --release
+```
+
+Sunflower is a wrapper for Sunshine. In `sunshine.sh`, call `sunflower` instead:
+
+```diff
+#!/bin/bash
+
+sudo $HOME/.local/share/scripts/sunshine-setup.sh
+echo "Starting Sunshine!"
+- sunshine
++ sunflower https://localhost
+```
+
+You can modify the code to fit your specific situation.

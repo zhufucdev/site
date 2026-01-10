@@ -1,0 +1,83 @@
+---
+title: I Made a Calendar with an E-Paper Display
+summary: Seriously, why are there so many telecom classes?
+created: 1681349606847
+---
+
+# Background
+
+> - Friend: I have a Raspberry Pi 3B here, wanna play with it?
+> - Me: OK
+
+Then it sat in my dorm gathering dust for ages.
+
+Anyway, this Linux development board is ARM-based; letting it gather dust seems like a waste. So, I made this thing.
+
+# What Did I Actually Make?
+
+First, you have a screen, specifically an E-ink (aka e-paper) display. These screens have one major advantage: they can maintain the displayed content even after power is disconnected.
+
+![A broken e-paper screen](images/Zfva5sLO2mqYCrVj3zdy-.jpg)
+
+But these screens also have a disadvantage: the refresh rate is quite low, around 0.05Hz.
+
+I thought about drawing something on it—like putting a webpage on it—but that might not be very friendly to this kind of screen. So, I wrote a UI library specifically for generating static content.
+
+## EPUI
+
+Introducing E-Paper User Interface, the most awesome, fully customizable drawing library I designed for e-paper displays.
+
+<Repo id="zhufucdev/epui" />
+
+How should I put it... draw some weather?
+
+```python
+from ui import *
+from weather import *
+
+canvas = Image.new('L', CANVAS_SIZE, 255)
+context = Context(ImageDraw.Draw(canvas), CANVAS_SIZE)
+weather_api_provider = CaiYunAPIProvider(
+    api_key='you will never know',
+    location=Location(
+        latitude=3.1415926,
+        longitude=2.7182818
+    )
+)
+weather_provider = CaiYunWeatherProvider(
+    weather_api_provider
+)
+
+context.root_group.add_view(
+    LargeWeatherView(
+        context,
+        provider=weather_provider
+    )
+)
+
+context.redraw_once()
+canvas.show()
+```
+
+Introducing: Nanjing Weather
+
+![Drawing result](images/4duCkkYf5bxby_5T8BJsq.jpg)
+
+Introducing: Debug Mode
+
+```diff
++ View.draw_bounds_box = True
+canvas = Image.new('L', CANVAS_SIZE, 255)
+context = Context(ImageDraw.Draw(canvas), CANVAS_SIZE)
+```
+
+See that? A compositional UI framework—it's just awesome.
+
+# Technology
+
+Not everyone cares about technology. If you're a nerd, you can check out my [repository](https://github.com/zhufucdev/Diss). I'll mention a few things here.
+
+I abstracted the driver and the drawing separately so that the display could be anything, even a printer.
+Additionally, I used some APIs from CaiYun and Google Calendar to display useful information.
+
+My own evaluation is that the entire codebase is highly abstracted and decoupled. You could say I've mastered Python.

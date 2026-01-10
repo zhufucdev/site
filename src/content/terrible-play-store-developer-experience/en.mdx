@@ -1,58 +1,58 @@
 ---
-title: Terrible Play Store Developer Experience
-summary: My plan is the flagship app to be released on Google Play store, which has taken well over 3 months, and is not going well. To be fair, I spent far less on marketing than developing. The former however, has taken so much more time than expected.
+title: The Terrible Google Play Store Experience for Individual Developers
+summary: I planned to launch my flagship app on the Play Store. Three and a half months later, there's still no significant progress. To be fair, I spent much more time on development than on marketing, but the latter—Google Play, which I'm talking about today—clearly demands far more time than I had anticipated.
 created: 1747450084015
 ---
 
-```
-This article is to be translated.
-```
+I planned to launch my flagship app (Practiso) on the Play Store. Three and a half months later, there's still no significant progress. To be fair, I spent much more time on development than on marketing, but the latter—Google Play, which I'm talking about today—clearly demands far more time than I had anticipated.
 
-我的旗舰应用（`Practiso`）计划上架Play Store。从开始至今，三个半月过去了，这一计划没有可观的进展。公平来说，我花在开发的时间比运营的多得多，但后者，也就是我今天要谈论的Google Play，显然需要比我预先设想的多太多的时间。
+### Problem 1: Closed Testing
 
-### 问题1：封闭测试
-根据[Google的帮助文档](https://support.google.com/googleplay/android-developer/answer/14151465)，**个人**开发者账号被要求：
+According to [Google's help documentation](https://support.google.com/googleplay/android-developer/answer/14151465), **individual** developer accounts are required to:
 
-1. 创建封闭测试计划，上传AAR
-2. 邀请12人加入该测试计划
-3. 测试14天
+1. Create a closed testing release and upload an AAB.
+2. Invite 12 people to join the testing program.
+3. Test for 14 continuous days.
 
-完成这些之后可以发布了吧？或许是的，我这么想。我邀请了12个人，这没问题，两天内完成。测试14天？这具体如何执行，我也不知道。我的做法是啥也不做，静置14天后，Play控制台显示任务都已完成。
+I figured I'd be able to release after that, right? I invited 12 people—no problem, done within two days. Testing for 14 days? I wasn't sure exactly how that was enforced. I decided to do nothing and just let it sit. After 14 days, the Play Console showed the tasks as completed.
 ![image-1](images/xdKYzDzhAFsrGVasO9bdH.webp)
 
-我兴冲冲点了申请按钮，被问到了这些问题：
+I excitedly clicked the application button, only to be hit with these questions:
+
 > Describe the engagement you received from testers during your closed test: include whether or not testers utilized all of the features in your app, and whether tester usage was consistent with how you would expect a real user to use your app. If not, describe the differences you would expect to see.
 
-Tester engagement？那自然是没有的。我只能让ChatGPT假装测试者回答这个问题。还有4个相关的问题，我概括一下：
+Tester engagement? There was none, obviously. I had to use ChatGPT to roleplay as testers to answer the question. There were four more questions, which I'll summarize:
 
-- 问题2：测试反馈的概要？
-- 问题3：应用准备好上架了吗？有多准备好？
-- 问题4：你怎么知道它准备好了？
+- Question 2: Summary of tester feedback?
+- Question 3: Is the app ready for production? How ready?
+- Question 4: How do you know it's ready?
 
-这些问题真你妈垃圾。我用AI填写了，等了四五天，结果自然是被拒绝的，他们的理由是：
-- Testers were not engaged with your app during your closed test
-- You didn't follow testing best practices, which may include gathering and acting on user feedback through updates to your app
+These questions are absolute garbage. I filled them out using AI and waited for four or five days. Naturally, I was rejected. Their reasons were:
 
-这鸡巴啥意思，怎么才能让测试者更加参与？下载次数更多？我是想不清楚。啥叫没有遵循最佳实践？我咋知道？
+- Testers were not engaged with your app during your closed test.
+- You didn't follow testing best practices, which may include gathering and acting on user feedback through updates to your app.
 
-### 问题2：控制台交互逻辑
+What the hell does that even mean? How do I get testers "more engaged"? More downloads? I have no idea. And what "best practices" didn't I follow? How am I supposed to know?
 
-Play Console的使用十分令人困惑。兄弟导航栏里面里有个深度为4的树。
+### Problem 2: Console Interaction Logic
+
+The Play Console's UX is incredibly confusing. There's a sidebar that basically contains a tree with a depth of four.
 
 ![image-2](images/irl-vksrC8jr-HQKFI6bh.webp)
 
-更新应用页面可以选择包含旧版本的资源文件，同时可以上传新版本，这就有三种结果：
-1. 选择发布旧版本 -> 这个更新包含空内容
-2. 选择发布新版本和旧版本 -> 这个更新的内容完全被旧版本的资源文件所替换
-3. 选择发布新版本 -> 通过
+On the app update page, you can choose to include resource files from old versions while uploading a new version, which leads to three possible outcomes:
 
-兄弟真的想做一个全能面板。
-修改都可以存成草稿。恢复原始状态的时间不如删除重做。开发者真的需要知道自己在做什么。
+1. Choose to release the old version -> The update contains empty content.
+2. Choose to release both the new and old versions -> The update content is completely replaced by the old version's resource files.
+3. Choose to release only the new version -> Success.
 
-### 我会继续努力
+They really wanted to make an "all-in-one" panel.
+Changes can be saved as drafts, but reverting to the original state takes more time than just deleting and starting over. Developers really need to know exactly what they are doing.
 
-还存在其他问题，但我不想抱怨太多。至少我认识到需要花更多时间在这上面。另外，或许读者你可以帮我测试？或许得付钱找一个什么团队完成这次上架了。如果你有兴趣，点击下面这个链接，帮兄弟砍一刀。
+### I'll Keep Trying
 
-Android：https://play.google.com/store/apps/details?id=com.zhufucdev.practiso
+There are other issues, but I don't want to complain too much. At the very least, I've realized I need to spend more time on this. Also, maybe you, the reader, could help me test? Or maybe I'll have to pay a team to get this launch finished. If you're interested, click the link below to help me out.
 
-Web：https://play.google.com/apps/testing/com.zhufucdev.practiso
+Android: https://play.google.com/store/apps/details?id=com.zhufucdev.practiso
+
+Web: https://play.google.com/apps/testing/com.zhufucdev.practiso

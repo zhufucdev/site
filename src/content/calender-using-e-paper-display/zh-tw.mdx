@@ -1,0 +1,83 @@
+---
+title: 我用電子紙螢幕做了個日曆
+summary: 所以這破電信課怎麼這麼多
+created: 1681349606847
+---
+
+# 前情提要
+
+> - 朋友：我這有個樹莓派 3B，借你玩玩
+> - 我：OK
+
+然後放在宿舍吃了一萬年灰。
+
+再怎麼說，這 Linux 開發板又是 ARM 架構的，放在那邊積灰塵是不是有點浪費？所以我做了這麼個玩意。
+
+# 我到底做了個啥
+
+首先呢，你有一塊螢幕，是電子墨水 aka 電子紙的。這種螢幕有一個優點，斷電之後能保持上面的內容。
+
+![一塊壞掉的電子紙螢幕](images/Zfva5sLO2mqYCrVj3zdy-.jpg)
+
+但這種螢幕也有個缺點，更新率比較低，差不多 0.05Hz。
+
+我想著，我要在上面畫點東西，比如我放個網頁在上面，是不是對這種螢幕不太友善，所以我寫了一個 UI 函式庫，專門用來產生靜態內容。
+
+## EPUI
+
+向你介紹，E-Paper User Interface，我為電子紙螢幕設計的、完全可自訂的、最超強的繪圖 library。
+
+<Repo id="zhufucdev/epui" />
+
+怎麼說呢，畫一些天氣？
+
+```python
+from ui import *
+from weather import *
+
+canvas = Image.new('L', CANVAS_SIZE, 255)
+context = Context(ImageDraw.Draw(canvas), CANVAS_SIZE)
+weather_api_provider = CaiYunAPIProvider(
+    api_key='you will never know',
+    location=Location(
+        latitude=3.1415926,
+        longitude=2.7182818
+    )
+)
+weather_provider = CaiYunWeatherProvider(
+    weather_api_provider
+)
+
+context.root_group.add_view(
+    LargeWeatherView(
+        context,
+        provider=weather_provider
+    )
+)
+
+context.redraw_once()
+canvas.show()
+```
+
+向你介紹，南京天氣
+
+![繪製結果](images/4duCkkYf5bxby_5T8BJsq.jpg)
+
+向你介紹：偵錯模式
+
+```diff
++ View.draw_bounds_box = True
+canvas = Image.new('L', CANVAS_SIZE, 255)
+context = Context(ImageDraw.Draw(canvas), CANVAS_SIZE)
+```
+
+看到沒？組合式 UI 框架，就是強。
+
+# 技術
+
+不是所有人都在乎技術。如果你是個 nerd，可以去看我的[repo](https://github.com/zhufucdev/Diss)。我這裡簡單提兩句
+
+我把驅動和繪圖分別抽象出來，好讓顯示器可以是任何東西，比如印表機。
+此外，我用了一些彩雲和 Google 日曆的 API，好顯示一些真的有用的東西。
+
+我自己的評價是，整個程式碼庫高度抽象，功能解耦。可以說，我已經掌握 Python 了。

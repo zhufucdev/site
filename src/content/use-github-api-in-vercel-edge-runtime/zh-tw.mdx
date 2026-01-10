@@ -1,0 +1,168 @@
+---
+title: 在 Vercel Edge Runtime 使用 GitHub API
+summary: 真不簡單
+created: 1683948138425
+---
+
+<HelperCard title="這不是一個教學" variant="warn">
+  我沒有 Edge 開發的資質。有些時候，我也不知道自己在做什麼。但這就是網路。
+</HelperCard>
+
+# 背景
+
+我知道 Edge Computing 也是近一年的事。~說實話，除非真的要用，沒人想去做 Web 前端~
+
+Edge Computing 大概就是，把你的程式碼放在 CDN 執行。
+
+這種執行方式總得有優點吧：
+
+- 很快
+- 不用管理伺服器
+- 按需計費
+
+我覺得它挺酷的，但從來沒試過。最近為了做一些事，想來試試。
+
+# 思路
+
+我想做一些統一的 API，方便我的軟體自我檢查更新（很多人都直接把 GitHub API hardcode 在軟體裡面，我覺得不夠優雅）。
+
+Vercel 提供了一些 [Edge Functions](https://vercel.com/docs/concepts/functions/edge-functions)，免費額度是五十萬次請求，差不多夠了。
+
+# 嘗試
+
+首先呢，Vercel 這個 Edge 執行階段是 V8 寫的，所以我們要準備一些 JavaScript。
+
+```shell
+mkdir api.zhufucdev && cd api.zhufucdev
+npm install octokit query-string
+```
+
+那個 `query-string` 是隨便找的。
+
+根據 Vercel 的 [說明文件](https://vercel.com/docs/concepts/functions/edge-functions/quickstart)，可以不用自家的 Next.js，但腳本都要放在 /api 目錄裡。
+
+<Details title="說明文件">
+  First, create a new project and add an /api directory and a hello.ts file
+  inside it. This is where the code that will be deployed as an Edge Function
+  will live. The file extension can be .ts or .js. Alternatively, you can add an
+  Edge Function to your existing project by adding a new file within the /api
+  directory. The important part to note here is that while the file itself can
+  be named anything, it should be located inside the /api directory.
+</Details>
+
+我根據 [另一些 Vercel 的說明文件](https://vercel.com/docs/concepts/projects/project-configuration)，用 `vercel.json` 重新導向了網站的 URL：
+
+```shell
+cat vercel.json
+
+{
+  "rewrites": [
+    {
+      "source": "/:match*",
+      "destination": "/api/:match*"
+    },
+    {
+      "source": "/",
+      "destination": "/api/index"
+    }
+  ]
+}
+```
+
+在 /api/index.ts，首先得匯出一個 config，宣告自己是要在 Edge 執行：
+
+```typescript
+export const config = {
+  runtime: "edge",
+};
+```
+
+要真的做一些事，匯出一個預設函式：
+
+```typescript
+export default (_: Request) => {
+  return new Response(
+    `Welcome to Steve's API. If you have no idea what are you doing, just let go.`,
+  );
+};
+```
+
+![image-1](images/xEGe1NH_QTT0dyT80duRg.webp)
+
+整個 Edge Function 都是基於 ES Module 的；如果想匯入一些不是或不標準的 ES Module：
+
+```typescript
+import querystring from "query-string";
+import { Octokit } from "octokit";
+```
+
+```log
+[09:22:40.656] Error: The Edge Function "api/release" is referencing unsupported modules:
+[09:22:40.656] 	- api/release.js: querystring
+[09:22:40.656] 	- @octokit: @octokit/auth-app
+[09:22:41.547] Deployment completed
+[09:22:41.497] NOW_SANDBOX_WORKER_EDGE_FUNCTION_UNSUPPORTED_MODULES: The Edge Function "api/release" is referencing unsupported modules:
+	- api/release.js: querystring
+	- @octokit: @octokit/auth-app
+
+```
+
+[說明文件](https://vercel.com/docs/concepts/functions/edge-functions/edge-runtime#unsupported-apis)是這麼寫的：
+
+> node_modules can be used, as long as they implement ES Modules and do not use native Node.js APIs
+
+octokit 和 query-string 這兩個 module 都可以跑在瀏覽器上，但因為沒有標註自己可以跑在瀏覽器上（也就是不是標準的 ES Module），部署失敗了。
+
+怎麼辦呢，我自己實作 GitHub API 的 parser：
+
+```diff
+- const latest = await octokit.rest.repos.getLatestRelease({
+-     owner: 'zhufucdev',
+-     repo: alias[this.product],
+- });
++ const response =
++  await fetch(
++      `https://api.github.com/repos/zhufucdev/${alias[this.product]}/releases/latest`,
++      {
++          headers: {
++              'Accept': 'application/vnd.github+json',
++              'Authorization': `Bearer ${ghToken}`,
++              'X-GitHub-Api-Version': '2022-11-28'
++          }
++      }
++  )
++ if (!response.ok) return undefined
++ const latest = await response.json() as ReleaseMeta
+```
+
+再用一些標準函式庫解析 query：
+
+```typescript
+const query = new URLSearchParams(/.*\?(.*)/g.exec(req.url)![1]);
+```
+
+這樣就差不多了。
+
+如果你想知道詳細的實作，可以看這個儲存庫：
+
+<Repo id="zhufucdev/api.zhufucdev" />
+
+# 討論
+
+我得說，Edge Computing 還是一個很小眾的東西：
+
+- 這是一個新興概念，沒有得到市場的充分檢驗
+- 網路上能找到的資料不多
+
+相對地，能用的資源很少：
+
+- 128MB 記憶體
+- 50ms 超時
+- 每次執行限制 950 次 fetch
+- 受限制的 API
+
+Vercel 是這樣的，其他代管商估計也差不多。
+
+不管怎麼說，Edge Computing 是對分散式運算的一次探索，值得關注和支持。
+
+我還得說，Node.js 真的亂。大家趕快都去用 Deno 吧。
