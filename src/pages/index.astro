@@ -91,7 +91,7 @@ const {
   >
     {
       articles.map(({ id, data }) => (
-        <BlueprintSheet style={`flex: ${data.summary.length}`}>
+        <BlueprintSheet style={`flex: ${data.summary.length + data.title.length * 3.3}`}>
           <TitleSummary>
             <Fragment slot="title" set:text={data.title} />
             <Fragment slot="summary" set:text={data.summary} />
