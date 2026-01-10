@@ -47,10 +47,10 @@ const { frontmatter, i18n, url } = Astro.props;
     @apply text-lg;
   }
   article :global(ul) {
-    @apply list-inside list-decimal;
+    @apply list-inside list-disc;
   }
   article :global(ol) {
-    @apply list-inside list-disc;
+    @apply list-inside list-decimal;
   }
   article :global(a) {
     @apply -mb-1.5 inline-block max-w-[calc(100vw-2rem)] overflow-clip text-ellipsis whitespace-nowrap text-orange-500 transition-colors hover:text-orange-600 focus:underline;
