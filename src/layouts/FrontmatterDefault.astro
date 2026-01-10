@@ -73,4 +73,7 @@ const { frontmatter, i18n, url } = Astro.props;
   article :global(table) {
     @apply max-w-[calc(100vw-2rem)] overflow-x-scroll;
   }
+  article :global(li p) {
+    @apply inline;
+  }
 </style>
