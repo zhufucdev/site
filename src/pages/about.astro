@@ -64,7 +64,7 @@ const {
           mask={`url(/${mask})`}
           customColors
           class:list={[
-            "ml-6 w-96 snap-center border-gray-100 bg-gray-50 max-sm:w-[calc(100vw-48px)]",
+            "ml-6 w-96 snap-center border-gray-100 bg-gray-50 max-sm:w-[calc(100vw-48px)] dark:bg-neutral-900 dark:border-neutral-800",
             index == qnaPosts.length - 1 ? "mr-6" : "",
           ]}
         >
@@ -88,7 +88,7 @@ const {
         alt="book cover"
       />
       <div
-        class="absolute -right-1 -bottom-1 -z-10 size-full rounded-sm bg-amber-100"
+        class="absolute -right-1 -bottom-1 -z-10 size-full rounded-sm bg-amber-100 dark:bg-stone-800"
       >
       </div>
     </div>
@@ -108,7 +108,7 @@ const {
     >
     <img src="/celeste.png" class="w-32 p-2 sm:w-40" alt="celeste" />
   </div>
-  <p class="self-center pb-12 font-sans text-gray-500">{i18n.asterisk_bad_at_gaming_span}</p>
+  <p class="self-center pb-12 font-sans text-gray-500 dark:text-neutral-500">{i18n.asterisk_bad_at_gaming_span}</p>
 
   <LineExtendedHeader href="socials" class="mb-2"
     >{i18n.socials_para}</LineExtendedHeader
@@ -134,12 +134,12 @@ const {
       href="https://bsky.app/profile/zhufucdev.bsky.social"
       target="_blank">bluesky</a
     >
-    <a class="ci ci-x ci-2x" href="https://x.com/zhufucdev" target="_blank"
+    <a class="ci ci-x ci-2x dark:bg-white" href="https://x.com/zhufucdev" target="_blank"
       >twitter / x</a
     >
     <a
       href="https://matrix.to/#/@zhufucdev:matrix.org"
-      class="content-[url(/matrix.svg)]"
+      class="content-[url(/matrix.svg)] dark:bg-zinc-100"
       target="_blank">matrix</a
     >
   </div>

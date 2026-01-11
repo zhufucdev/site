@@ -17,7 +17,7 @@ export default function SourceSection({
 }: SourceSectionProps) {
   return (
     <div class={`flex flex-row flex-wrap content-around gap-6 ${className}`}>
-      <div class="stroke-gray-700-2 size-16 bg-[url(/git-icon.png)] bg-cover" />
+      <div class="stroke-custom size-16 bg-[url(/git-icon.png)] bg-cover" />
       <div class="flex flex-col items-start">
         <p class="text-3xl">{i18n.get_source_code_para}</p>
         <div class="flex-1" />

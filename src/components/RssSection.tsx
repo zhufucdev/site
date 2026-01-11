@@ -22,6 +22,7 @@ export default function RssSection(props: RssSectionProps) {
   async function handleCopyButtonClick() {
     try {
       await navigator.clipboard.writeText(rssUrl());
+      throw "shee";
 
       setCopied(!copied());
       setTimeout(() => {
@@ -39,7 +40,7 @@ export default function RssSection(props: RssSectionProps) {
       <Modal
         open={showModal()}
         onClose={() => setShowModel(false)}
-        class="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 space-y-2 rounded-2xl border-2 border-gray-700 p-6 max-sm:w-[calc(100vw-24px)]"
+        class="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 space-y-2 rounded-2xl border-2 border-gray-700 p-6 max-sm:w-[calc(100vw-24px)] dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
       >
         <div class="flex flex-row items-start justify-between">
           <span class="text-2xl font-semibold">{i18n.oops_para}</span>
@@ -69,7 +70,7 @@ export default function RssSection(props: RssSectionProps) {
         ></input>
       </Modal>
       <div class={`flex flex-row flex-wrap content-around gap-6 ${className}`}>
-        <RssIcon class="size-16 rounded-2xl border-2 border-gray-700 bg-orange-500 text-white" />
+        <RssIcon class="size-16 rounded-2xl border-2 border-gray-700 bg-orange-500 text-white dark:border-neutral-500" />
         <div class="flex flex-col items-start">
           <p class="text-3xl">{i18n.subsribe_via_rss_para}</p>
           <div class="flex-1" />

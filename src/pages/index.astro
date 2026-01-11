@@ -15,7 +15,7 @@ import enRes from "../strings/en";
 import { createHighlighter } from "shiki";
 import formatDate from "../utils/dateformat";
 import { getCollection } from "astro:content";
-import {getAbsoluteArticleUrl} from "../utils/article-url";
+import { getAbsoluteArticleUrl } from "../utils/article-url";
 import { getRssResponse } from "../utils/rss-template";
 import xmlFormat from "xml-formatter";
 
@@ -23,7 +23,7 @@ import stormcrew from "../images/storm-crew-clothing-wrapper.jpeg";
 import ferriesWithKnief from "../images/ferris-with-knief.png";
 
 const highlighter = await createHighlighter({
-  themes: ["one-light"],
+  themes: ["one-light", "vitesse-black"],
   langs: ["xml"],
 });
 interface Props {
@@ -83,15 +83,17 @@ const {
   </div>
 
   <div
-    class="mt-2 h-20 w-full bg-gray-100 mask-[url(/WaveSegment.svg)] bg-repeat-x"
+    class="mt-2 h-20 w-full bg-gray-100 mask-[url(/WaveSegment.svg)] bg-repeat-x dark:bg-zinc-800"
   >
   </div>
   <div
-    class="flex flex-row flex-wrap gap-4 border-b-3 border-b-gray-100 bg-linear-to-b from-gray-100 via-gray-200 via-70% to-gray-300 px-2 pb-8 sm:px-6"
+    class="flex flex-row flex-wrap gap-4 border-b-3 border-b-gray-100 bg-linear-to-b from-gray-100 via-gray-200 to-gray-300 px-2 pb-8 not-dark:via-70% sm:px-6 dark:border-b-zinc-800 dark:from-zinc-800 dark:via-zinc-900 dark:via-30% dark:to-zinc-950"
   >
     {
       articles.map(({ id, data }) => (
-        <BlueprintSheet style={`flex: ${data.summary.length + data.title.length * 3.3}`}>
+        <BlueprintSheet
+          style={`flex: ${data.summary.length + data.title.length * 3.3}`}
+        >
           <TitleSummary>
             <Fragment slot="title" set:text={data.title} />
             <Fragment slot="summary" set:text={data.summary} />
@@ -113,23 +115,26 @@ const {
       source="https://github.com/zhufucdev/site.git"
       license="https://www.apache.org/licenses/LICENSE-2.0.txt"
       i18n={i18n}
-      client:idle
     />
     <div
-      class="absolute right-1/2 -z-10 max-w-full translate-x-1/2 overflow-clip mask-b-from-0 mask-l-from-0 text-sm max-sm:bottom-0 sm:top-1/2 sm:-translate-y-1/2"
+      class="absolute -z-10 size-full overflow-clip mask-b-from-0 mask-l-from-0 text-sm"
     >
-      <Fragment
-        set:html={highlighter.codeToHtml(
-          xmlFormat(
-            await (await getRssResponse(i18n, Astro.site!.toString())).text(),
-          ),
-          { lang: "xml", theme: "one-light" },
-        )}
-      />
+      <div
+        class="absolute top-0 right-1/2 left-0 translate-x-1/2 max-sm:bottom-0 sm:top-1/2 sm:-translate-y-1/2"
+      >
+        <Fragment
+          set:html={highlighter.codeToHtml(
+            xmlFormat(
+              await (await getRssResponse(i18n, Astro.site!.toString())).text(),
+            ),
+            { lang: "xml", themes: { light: "one-light", dark: "vitesse-black" } },
+          )}
+        />
+      </div>
     </div>
   </div>
   <div class="relative px-2 pt-12 sm:px-6">
-    <TracePhotoCamera class="absolute -top-10 right-0 max-w-60 text-gray-200" />
+    <TracePhotoCamera class="absolute -top-10 right-0 max-w-60 text-gray-200 dark:text-zinc-800" />
     <div
       class="flex flex-row flex-wrap items-start gap-2 overflow-clip rounded-2xl"
     >

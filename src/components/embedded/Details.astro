@@ -11,7 +11,11 @@ const { title } = Astro.props;
   >
     <button>{title}</button>
   </p>
-  <div class="hidden group-[.expanded]:block text-gray-500"><slot /></div>
+  <div
+    class="hidden text-gray-500 group-[.expanded]:block dark:text-neutral-500"
+  >
+    <slot />
+  </div>
 </custom-details>
 
 <script>
