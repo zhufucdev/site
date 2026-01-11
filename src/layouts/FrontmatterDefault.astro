@@ -12,7 +12,7 @@ interface Props {
 const { frontmatter, i18n, url } = Astro.props;
 ---
 
-<Master lang={i18n.localeName} title={frontmatter.title} class="px-6 font-sans">
+<Master lang={i18n.localeName} title={frontmatter.title} description={frontmatter.summary}  class="px-6 font-sans">
   <Topbar
     slot="nav"
     i18n={i18n}

@@ -5,12 +5,14 @@ import { ClientRouter } from "astro:transitions";
 interface Props {
   title: string;
   lang: string;
+  description?: string;
   disableTopPadding?: boolean;
   class?: string;
 }
 const {
   title,
   lang,
+  description,
   disableTopPadding = false,
   class: className,
 } = Astro.props;
@@ -23,6 +25,7 @@ const {
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    {description && (<meta name="description" content={description} />)}
     <style>
       @import url("https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@100..900&display=swap");
       @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=WDXL+Lubrifont+SC&display=swap");
