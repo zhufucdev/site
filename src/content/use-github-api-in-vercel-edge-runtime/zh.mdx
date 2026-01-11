@@ -3,8 +3,9 @@ title: 在Vercel Edge Runtime使用Github API
 summary: 真不简单
 created: 1683948138425
 ---
+
 <HelperCard title="这不是一个教程" variant="warn">
-我没有Edge开发的资质。有些时候，我也不知道自己在干什么。但这就是互联网。
+  我没有Edge开发的资质。有些时候，我也不知道自己在干什么。但这就是互联网。
 </HelperCard>
 
 # 背景
@@ -23,11 +24,10 @@ Edge Computing大概就是，把你的代码放在CDN运行
 
 # 思路
 
-我想做一些统一接口，方便我的软件自检查更新（很多人都直接把Github API hardcode在软件里面，
-我觉得不够优雅）
+我想做一些统一接口，方便我的软件自检查更新（很多人都直接把Github API
+hardcode在软件里面，我觉得不够优雅）
 
-Vercel提供了一些[Edge Functions](https://vercel.com/docs/concepts/functions/edge-functions)，
-免费容量是五十万次请求，差不多够了
+Vercel提供了一些[Edge Functions](https://vercel.com/docs/concepts/functions/edge-functions)，免费容量是五十万次请求，差不多够了
 
 # 尝试
 
@@ -43,9 +43,12 @@ npm install octokit query-string
 根据Vercel的[文档](https://vercel.com/docs/concepts/functions/edge-functions/quickstart)，可以不用自家的Next.js，但脚本都要放在/api目录里
 
 <Details title="文档">
-First, create a new project and add an /api directory and a hello.ts file inside it. This is where the code that will be deployed as an Edge Function will live. The file extension can be .ts or .js.
-Alternatively, you can add an Edge Function to your existing project by adding a new file within the /api directory.
-The important part to note here is that while the file itself can be named anything, it should be located inside the /api directory.
+  First, create a new project and add an /api directory and a hello.ts file
+  inside it. This is where the code that will be deployed as an Edge Function
+  will live. The file extension can be .ts or .js. Alternatively, you can add an
+  Edge Function to your existing project by adding a new file within the /api
+  directory. The important part to note here is that while the file itself can
+  be named anything, it should be located inside the /api directory.
 </Details>
 
 我根据[另一些Vercel的文档](https://vercel.com/docs/concepts/projects/project-configuration)，用`vercel.json`重定向了网站的URL
@@ -71,23 +74,27 @@ cat vercel.json
 
 ```typescript
 export const config = {
-    runtime: 'edge'
-}
+  runtime: "edge",
+};
 ```
 
 要真的做一些事情，导出一个默认项函数，
+
 ```typescript
 export default (_: Request) => {
-    return new Response(`Welcome to Steve's API. If you have no idea what are you doing, just let go.`)
-}
+  return new Response(
+    `Welcome to Steve's API. If you have no idea what are you doing, just let go.`,
+  );
+};
 ```
+
 ![image-1](images/xEGe1NH_QTT0dyT80duRg.webp)
 
 整个Edge Function都是基于ES Module的；如果想导入一些不是或不标准的ES Module：
 
 ```typescript
-import querystring from "query-string"
-import { Octokit } from "octokit"
+import querystring from "query-string";
+import { Octokit } from "octokit";
 ```
 
 ```log
@@ -102,11 +109,15 @@ import { Octokit } from "octokit"
 ```
 
 [文档](https://vercel.com/docs/concepts/functions/edge-functions/edge-runtime#unsupported-apis)是这么写的
-> node_modules can be used, as long as they implement ES Modules and do not use native Node.js APIs
 
-octokit和query-string这两个module都可以跑在浏览器上，但因为没有标自己可以跑在浏览器上，aka不是标准的ES Module，部署失败了
+> node_modules can be used, as long as they implement ES Modules and do not use
+> native Node.js APIs
+
+octokit和query-string这两个module都可以跑在浏览器上，但因为没有标自己可以跑在浏览器上，aka不是标准的ES
+Module，部署失败了
 
 咋办呢，我自己实现Github API的parser
+
 ```diff
 - const latest = await octokit.rest.repos.getLatestRelease({
 -     owner: 'zhufucdev',
@@ -128,15 +139,16 @@ octokit和query-string这两个module都可以跑在浏览器上，但因为没�
 ```
 
 再用一些标准库parse query
+
 ```typescript
-const query = new URLSearchParams(/.*\?(.*)/g.exec(req.url)![1])
+const query = new URLSearchParams(/.*\?(.*)/g.exec(req.url)![1]);
 ```
 
 这样就差不多了
 
 如果你想知道详细的实现，可以看这个仓库
 
-<Repo id="zhufucdev/api.zhufucdev"/>
+<Repo id="zhufucdev/api.zhufucdev" />
 
 # 讨论
 

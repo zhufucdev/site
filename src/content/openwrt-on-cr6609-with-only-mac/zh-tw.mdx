@@ -18,8 +18,7 @@ OpenWrt 是什麼？你問。
 - 手機，要支援 Wi-Fi 上網的型號
 - 你的 ROM，如果不確定，[這裡](https://openwrt.org/toh/hwdata/xiaomi/xiaomi_mi_router_cr6609)有一個連結
 
-我不想用原版 ROM，你說。那你或許會想看我的這個repo，
-用 Docker 來跑 LEDE 編譯器
+我不想用原版 ROM，你說。那你或許會想看我的這個repo，用 Docker 來跑 LEDE 編譯器
 
 <Repo id="zhufucdev/lede_compiler" />
 
@@ -76,7 +75,8 @@ if __name__ == '__main__':
 
 ## 偽造被換機路由器
 
-啟動你用了一萬年的老路由器，進入後台，關閉 Wi-Fi 4/5 二合一（如果有的話），關閉 DHCP，並把閘道改成比如 `169.254.31.11`。
+啟動你用了一萬年的老路由器，進入後台，關閉 Wi-Fi
+4/5 二合一（如果有的話），關閉 DHCP，並把閘道改成比如 `169.254.31.11`。
 
 用 MacBook 連接，修改靜態 IP 到 `169.254.31.1`。
 ![image-1](images/oHKkdpZQJb01PmGOaLcMx.webp)
@@ -87,9 +87,12 @@ if __name__ == '__main__':
 
 ## 破解
 
-掏出你 Wi-Fi 上網的手機，連接 CR6609，用瀏覽器存取比如 `192.168.2.1`（或者其他閘道，你自己看）。
+掏出你 Wi-Fi 上網的手機，連接 CR6609，用瀏覽器存取比如
+`192.168.2.1`（或者其他閘道，你自己看）。
 
-輸入管理員密碼（寫在路由器背面，或許你改過），注意瀏覽器網址列，有以 `http://192.168.2.1/cgi-bin/luci/;stok=` 開頭的東西，`=` 到下一個 `/` 中間是明文 Token（非常超強的設計 btw），記下來。
+輸入管理員密碼（寫在路由器背面，或許你改過），注意瀏覽器網址列，有以
+`http://192.168.2.1/cgi-bin/luci/;stok=` 開頭的東西，`=` 到下一個 `/`
+中間是明文 Token（非常超強的設計 btw），記下來。
 
 再開一個瀏覽器分頁，編輯網址：
 
@@ -105,9 +108,11 @@ http://192.168.2.1/cgi-bin/luci/;stok=∂/api/misystem/extendwifi_connect?ssid=�
 |  ß   | 用了一萬年的老路由器的熱點 ID |
 |  µ   | 對應的 Wi-Fi 密碼             |
 
-過個 10s，順利的話，CR6609 就連上了老路由器，頁面會顯示一坨 JSON，其中有 `"code": 0`。
+過個 10s，順利的話，CR6609 就連上了老路由器，頁面會顯示一坨 JSON，其中有
+`"code": 0`。
 
-如果沒有，得再想想 DHCP 有沒有關閉，熱點 ID、密碼錯沒錯，還有沒有其他設備連著，試試 Wi-Fi 4 熱點，或許相容性會好點。
+如果沒有，得再想想 DHCP 有沒有關閉，熱點 ID、密碼錯沒錯，還有沒有其他設備連著，試試 Wi-Fi
+4 熱點，或許相容性會好點。
 
 接著，編輯網址：
 
@@ -120,7 +125,8 @@ http://192.168.2.1/cgi-bin/luci/;stok=∂/api/xqsystem/oneclick_get_remote_token
 順利的話，會顯示類似這樣的東西（不完全是，但至少有 `"code": 0`）：
 ![image-3](images/J9UZqH0uttR80X9deBoyl.webp)
 
-觀察 Mac 的控制台，會有 CR6609 的存取記錄。順便說一句，Python 程式碼裡，`token` 就是注入的腳本：
+觀察 Mac 的控制台，會有 CR6609 的存取記錄。順便說一句，Python 程式碼裡，`token`
+就是注入的腳本：
 
 ```shell
 nvram set ssh_en=1

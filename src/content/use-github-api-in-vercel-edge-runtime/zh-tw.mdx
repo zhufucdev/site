@@ -10,7 +10,8 @@ created: 1683948138425
 
 # 背景
 
-我知道 Edge Computing 也是近一年的事。~說實話，除非真的要用，沒人想去做 Web 前端~
+我知道 Edge
+Computing 也是近一年的事。~說實話，除非真的要用，沒人想去做 Web 前端~
 
 Edge Computing 大概就是，把你的程式碼放在 CDN 執行。
 
@@ -24,9 +25,11 @@ Edge Computing 大概就是，把你的程式碼放在 CDN 執行。
 
 # 思路
 
-我想做一些統一的 API，方便我的軟體自我檢查更新（很多人都直接把 GitHub API hardcode 在軟體裡面，我覺得不夠優雅）。
+我想做一些統一的 API，方便我的軟體自我檢查更新（很多人都直接把 GitHub API
+hardcode 在軟體裡面，我覺得不夠優雅）。
 
-Vercel 提供了一些 [Edge Functions](https://vercel.com/docs/concepts/functions/edge-functions)，免費額度是五十萬次請求，差不多夠了。
+Vercel 提供了一些
+[Edge Functions](https://vercel.com/docs/concepts/functions/edge-functions)，免費額度是五十萬次請求，差不多夠了。
 
 # 嘗試
 
@@ -39,7 +42,8 @@ npm install octokit query-string
 
 那個 `query-string` 是隨便找的。
 
-根據 Vercel 的 [說明文件](https://vercel.com/docs/concepts/functions/edge-functions/quickstart)，可以不用自家的 Next.js，但腳本都要放在 /api 目錄裡。
+根據 Vercel 的
+[說明文件](https://vercel.com/docs/concepts/functions/edge-functions/quickstart)，可以不用自家的 Next.js，但腳本都要放在 /api 目錄裡。
 
 <Details title="說明文件">
   First, create a new project and add an /api directory and a hello.ts file
@@ -50,7 +54,9 @@ npm install octokit query-string
   be named anything, it should be located inside the /api directory.
 </Details>
 
-我根據 [另一些 Vercel 的說明文件](https://vercel.com/docs/concepts/projects/project-configuration)，用 `vercel.json` 重新導向了網站的 URL：
+我根據
+[另一些 Vercel 的說明文件](https://vercel.com/docs/concepts/projects/project-configuration)，用
+`vercel.json` 重新導向了網站的 URL：
 
 ```shell
 cat vercel.json
@@ -89,7 +95,8 @@ export default (_: Request) => {
 
 ![image-1](images/xEGe1NH_QTT0dyT80duRg.webp)
 
-整個 Edge Function 都是基於 ES Module 的；如果想匯入一些不是或不標準的 ES Module：
+整個 Edge Function 都是基於 ES Module 的；如果想匯入一些不是或不標準的 ES
+Module：
 
 ```typescript
 import querystring from "query-string";
@@ -109,9 +116,11 @@ import { Octokit } from "octokit";
 
 [說明文件](https://vercel.com/docs/concepts/functions/edge-functions/edge-runtime#unsupported-apis)是這麼寫的：
 
-> node_modules can be used, as long as they implement ES Modules and do not use native Node.js APIs
+> node_modules can be used, as long as they implement ES Modules and do not use
+> native Node.js APIs
 
-octokit 和 query-string 這兩個 module 都可以跑在瀏覽器上，但因為沒有標註自己可以跑在瀏覽器上（也就是不是標準的 ES Module），部署失敗了。
+octokit 和 query-string 這兩個 module 都可以跑在瀏覽器上，但因為沒有標註自己可以跑在瀏覽器上（也就是不是標準的 ES
+Module），部署失敗了。
 
 怎麼辦呢，我自己實作 GitHub API 的 parser：
 

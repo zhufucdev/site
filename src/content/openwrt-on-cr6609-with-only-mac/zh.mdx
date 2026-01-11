@@ -3,6 +3,7 @@ title: 我用Mac、仅通过无线网给CR6609刷了OpenWrt
 summary: 关于软路由，程序员怎么看（第一次玩
 created: 1675177804874
 ---
+
 OpenWrt是什么？你问
 
 想象刷机之于Android，就像是软路由之于路由器
@@ -17,10 +18,9 @@ OpenWrt是什么？你问
 - 手机，要支持Wi-Fi上网的型号
 - 你的ROM，如果不确定，[这儿](https://openwrt.org/toh/hwdata/xiaomi/xiaomi_mi_router_cr6609)是一些链接
 
-我不想用原版ROM，你说。那你或许会想看我的这个项目，
-用一些Docker来跑LEDE编译器
+我不想用原版ROM，你说。那你或许会想看我的这个项目，用一些Docker来跑LEDE编译器
 
-<Repo id="zhufucdev/lede_compiler"/>
+<Repo id="zhufucdev/lede_compiler" />
 
 # 开干
 
@@ -75,7 +75,8 @@ if __name__ == '__main__':
 
 ## 伪造被换机路由器
 
-启动你用了一万年的老路由器，进入后台，关闭Wi-Fi 4 Wi-Fi 5二合一（如果有的话），关闭DHCP，并把网关改成比如`169.254.31.11`
+启动你用了一万年的老路由器，进入后台，关闭Wi-Fi 4 Wi-Fi
+5二合一（如果有的话），关闭DHCP，并把网关改成比如`169.254.31.11`
 
 用马克布克连接，修改静态IP到`169.254.31.1`
 ![image-1](images/oHKkdpZQJb01PmGOaLcMx.webp)
@@ -91,25 +92,30 @@ if __name__ == '__main__':
 输入管理员密码（写在路由器反面，或许你改过），注意浏览器地址栏，有以`http://192.168.2.1/cgi-bin/luci/;stok=`开头的东西，`=`到下一个`/`中间是明文令牌（非常牛逼的设计btw），记下来
 
 再开一个浏览器标签，编辑地址
+
 ```plain
 http://192.168.2.1/cgi-bin/luci/;stok=∂/api/misystem/extendwifi_connect?ssid=ß&password=µ
 ```
+
 其中
 
-|标记|含义|
-|:---:|:-----|
-|∂|刚刚记下的明文令牌|
-|ß|用了一万年的老路由器的热点ID|
-|µ|对应的Wi-Fi密码|
+| 标记 | 含义                         |
+| :--: | :--------------------------- |
+|  ∂   | 刚刚记下的明文令牌           |
+|  ß   | 用了一万年的老路由器的热点ID |
+|  µ   | 对应的Wi-Fi密码              |
 
 过个10s，顺利的话，CR6609就连上了老路由器，页面会显示一坨JSON，其中有`"code": 0`
 
-如果没有，得再想想DHCP有没有关闭，热点ID、密码错没错，还有没有其他设备连着，试试Wi-Fi 4热点，或许兼容性会好点
+如果没有，得再想想DHCP有没有关闭，热点ID、密码错没错，还有没有其他设备连着，试试Wi-Fi
+4热点，或许兼容性会好点
 
 接着，编辑地址
+
 ```plain
 http://192.168.2.1/cgi-bin/luci/;stok=∂/api/xqsystem/oneclick_get_remote_token?username=ß&password=ß&nonce=ß
 ```
+
 其中，∂还是那个明文令牌，ß无所谓填什么
 
 顺利的话，会显示类似这样的东西（不完全是，但至少有`"code": 0`）
@@ -130,17 +136,21 @@ sed -i \'s/channel=.*/channel="debug"/g\'
 恭喜🎉
 
 ## 连接
+
 把马克布克换回DHCP，连上CR6609的热点，运行
+
 ```shell
 $ ssh root@192.168.2.1 # 或者其他什么网关，你知道的
 ```
 
 如果出错
+
 ```plain
 Unable to negotiate with 192.168.2.1 port 22: no matching host key type found. Their offer: ssh-rsa
 ```
 
 修改~/.ssh/config
+
 ```shell
 $ vim ~/.ssh/config
 
@@ -159,6 +169,7 @@ root密码，CR6609就写在背面，6606跟6608据说要用什么SN算，我也
 可以把ROM放到http server的static目录下（或许你没有）
 
 看一下马克布克的IP，比如说`Ω`，再看一下ROM的文件名，比如`ß`，在路由器执行
+
 ```shell
 cd /tmp
 curl -O http://Ω/static/ß

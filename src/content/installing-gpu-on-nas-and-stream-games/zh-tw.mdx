@@ -12,7 +12,8 @@ created: 1709775247601
 
 # 前提條件
 
-我假設機器裡有一張 **NVIDIA** 顯示卡。我相信 AMD 顯示卡也可以用，唯一的問題是它不能做虛擬顯示器，所以你不得不購買一個虛擬插頭。
+我假設機器裡有一張 **NVIDIA**
+顯示卡。我相信 AMD 顯示卡也可以用，唯一的問題是它不能做虛擬顯示器，所以你不得不購買一個虛擬插頭。
 
 <HelperCard title="顯示虛擬插頭">
   也叫 dummy plugs。它們假裝自己是一個顯示器，所以系統會從 GPU 渲染，而不是 CPU
@@ -44,7 +45,8 @@ paru -S nvidia-utils xorg-init mate
   [ArchWiki](https://wiki.archlinux.org/title/NVIDIA#Installation)
 </Details>
 
-基本上，NVIDIA 消費級驅動屏蔽了 nvbfc，所以 Sunshine 不能直接捕捉視訊記憶體（VRAM）裡面的畫面。Arch Linux 超強的地方就是 AUR，在那裡輕鬆找到修改驅動的腳本。
+基本上，NVIDIA 消費級驅動屏蔽了 nvbfc，所以 Sunshine 不能直接捕捉視訊記憶體（VRAM）裡面的畫面。Arch
+Linux 超強的地方就是 AUR，在那裡輕鬆找到修改驅動的腳本。
 
 ```shell
 # 啟用 nvbfc 和解鎖 nvenc 單元數量限制
@@ -53,7 +55,8 @@ paru -S nvidia-patch
 
 ## 驗證驅動程式
 
-透過 `nvidia-smi` 驗證驅動是否運作。注意執行在 GPU 上的程序會顯示在 `Processes`。
+透過 `nvidia-smi` 驗證驅動是否運作。注意執行在 GPU 上的程序會顯示在
+`Processes`。
 
 ```log
 zhufu@zhufusarch ~> nvidia-smi
@@ -92,7 +95,8 @@ paru -S sunshine-bin
 # 你也可以選擇 `sunshine`。那個套件會從源碼編譯安裝。
 ```
 
-`sunshine` 會被添加到 PATH。我會從 tmux 執行，所以登出 SSH 的時候程序還活在那裡。
+`sunshine`
+會被添加到 PATH。我會從 tmux 執行，所以登出 SSH 的時候程序還活在那裡。
 
 ```log
 zhufu@zhufusarch ~> tmux
@@ -121,7 +125,11 @@ zhufu@zhufusarch ~> sunshine
 [2024:03:07:13:29:05]: Info: Avahi service Sunshine successfully established.
 ```
 
-注意到 `Configuration UI available at [https://localhost:47990]`。這其實是個謊言。Sunshine 的 Web UI 監聽在 `0.0.0.0:47990`，我的 NAS 主機名是 zhufusarch，所以我可以在我的筆電存取 https://zhufusarch.local:47990
+注意到
+`Configuration UI available at [https://localhost:47990]`。這其實是個謊言。Sunshine 的 Web
+UI 監聽在
+`0.0.0.0:47990`，我的 NAS 主機名是 zhufusarch，所以我可以在我的筆電存取
+https://zhufusarch.local:47990
 如果你的 NAS 和你不在同一個子網路，你需要它的公網位址，或者從 SSH 埠號映射，但這方面我不想講太多。
 
 在 Web UI，
@@ -139,7 +147,9 @@ Sunshine detected these errors during startup. We **STRONGLY RECOMMEND** fixing 
 
 ## Moonlight
 
-從 [Moonlight Game Streaming: Play Your PC Game remotely](https://moonlight-stream.org) 安裝 Moonlight。這一步發生在接收端。Moonlight 支援很多平台，包括但不限於
+從
+[Moonlight Game Streaming: Play Your PC Game remotely](https://moonlight-stream.org)
+安裝 Moonlight。這一步發生在接收端。Moonlight 支援很多平台，包括但不限於
 
 - PC / Mac
 - Android / iOS
@@ -172,7 +182,8 @@ Section "Screen"
 EndSection
 ```
 
-`"DP-0"` 是 GPU 任意一個輸出介面的識別碼。大概率會是 DP-X 或者 HDMI-X。如果它們都不運作，唯一能做的事情就是真的連接一個螢幕或者虛擬插頭、啟動 X 伺服器、查看可用的介面。
+`"DP-0"`
+是 GPU 任意一個輸出介面的識別碼。大概率會是 DP-X 或者 HDMI-X。如果它們都不運作，唯一能做的事情就是真的連接一個螢幕或者虛擬插頭、啟動 X 伺服器、查看可用的介面。
 
 ```log
 zhufu@zhufusarch ~> paru -S xterm
@@ -220,7 +231,8 @@ sudo chown $(id -nu):$(id -ng) /dev/uinput
 sudo chown $(id -nu):$(id -ng) /dev/dri/card*
 ```
 
-不得不啟用 sudo nopasswd，因為重啟系統會重置這些檔案的權限。你也可以將這兩條指令作為腳本，單獨給它 nopasswd 權限，這聽起來更安全。
+不得不啟用 sudo
+nopasswd，因為重啟系統會重置這些檔案的權限。你也可以將這兩條指令作為腳本，單獨給它 nopasswd 權限，這聽起來更安全。
 
 ```shell
 echo "${USER} ALL=(ALL:ALL) ALL, NOPASSWD: $(pwd)/sunshine-setup.sh" \
@@ -268,7 +280,8 @@ zhufu@zhufusarch ~> sunshine
 sudo loginctl enable-linger $(id -nu)
 ```
 
-找一個放使用者腳本的地方，因為要用三個腳本。我喜歡放在 `~/.local/share/scripts` 裡。
+找一個放使用者腳本的地方，因為要用三個腳本。我喜歡放在 `~/.local/share/scripts`
+裡。
 
 ```shell
 zhufu@zhufusarch ~> mkdir -p ~/.local/share/scripts && cd ~/.local/share/scripts
@@ -359,8 +372,7 @@ Sunshine 在我的機器上不是最穩定的，四五次重新連接，它會 p
 
 ## Sunflower
 
-Sunflower 用最頂尖的編程技術，讓 Sunshine 變得強健。它的做法是，
-檢測到 Sunshine 運作不正常，叫它重啟。
+Sunflower 用最頂尖的編程技術，讓 Sunshine 變得強健。它的做法是，檢測到 Sunshine 運作不正常，叫它重啟。
 
 <Repo id="zhufucdev/sunflower" />
 

@@ -12,20 +12,25 @@ created: 1709775247601
 
 # Prerequisites
 
-I assume there is an **NVIDIA** GPU in the machine. I believe AMD GPUs can also be used, but the only issue is they might not support virtual displays, so you might have to purchase a display emulator.
+I assume there is an **NVIDIA** GPU in the machine. I believe AMD GPUs can also
+be used, but the only issue is they might not support virtual displays, so you
+might have to purchase a display emulator.
 
 <HelperCard title="Display emulator">
   Also known as dummy plugs. They pretend to be a monitor so the system renders
   from the GPU instead of CPU emulation, like `xserver-xorg-video-dummy`.
 </HelperCard>
 
-I assume the machine is running Arch Linux, simply because it's the best Linux distribution.
+I assume the machine is running Arch Linux, simply because it's the best Linux
+distribution.
 
 <HelperCard title="I'm not running Arch Linux">
   If your machine isn't running Arch, I suggest you install it.
 </HelperCard>
 
-Furthermore, I don't assume the machine has a monitor, mouse, or keyboard connected. Linux doesn't need those. However, I do assume your machine is connected to the network, for obvious reasons.
+Furthermore, I don't assume the machine has a monitor, mouse, or keyboard
+connected. Linux doesn't need those. However, I do assume your machine is
+connected to the network, for obvious reasons.
 
 ## Logging into the Machine
 
@@ -33,19 +38,23 @@ You can log in via SSH or a TTY.
 
 ## Installing Software and Patching Drivers
 
-The NVIDIA proprietary drivers must be installed. Xorg must be used instead of Wayland due to virtual display requirements. You will likely need a desktop environment; I'll choose Mate here.
+The NVIDIA proprietary drivers must be installed. Xorg must be used instead of
+Wayland due to virtual display requirements. You will likely need a desktop
+environment; I'll choose Mate here.
 
 ```shell
 paru -S nvidia-utils xorg-init mate
 ```
 
 <Details title="Installing NVIDIA Proprietary Drivers">
-You will need nvbfc and nvenc. Open-source drivers do not include these
-modules. Regarding the installation itself, please refer to the
-[ArchWiki](https://wiki.archlinux.org/title/NVIDIA#Installation).
+  You will need nvbfc and nvenc. Open-source drivers do not include these
+  modules. Regarding the installation itself, please refer to the
+  [ArchWiki](https://wiki.archlinux.org/title/NVIDIA#Installation).
 </Details>
 
-Basically, NVIDIA consumer drivers block nvbfc, so Sunshine cannot directly capture the frames in video memory. The great thing about Arch Linux is the AUR, where you can easily find scripts to patch the drivers.
+Basically, NVIDIA consumer drivers block nvbfc, so Sunshine cannot directly
+capture the frames in video memory. The great thing about Arch Linux is the AUR,
+where you can easily find scripts to patch the drivers.
 
 ```shell
 # Enable nvbfc and unlock the nvenc session limit
@@ -54,7 +63,8 @@ paru -S nvidia-patch
 
 ## Verifying Drivers
 
-Verify that the drivers are working using `nvidia-smi`. Note that processes running on the GPU are shown under `Processes`.
+Verify that the drivers are working using `nvidia-smi`. Note that processes
+running on the GPU are shown under `Processes`.
 
 ```log
 zhufu@zhufusarch ~> nvidia-smi
@@ -93,7 +103,8 @@ paru -S sunshine-bin
 # You can also choose `sunshine`, which compiles from source.
 ```
 
-`sunshine` will be added to your PATH. I'll run it from tmux so the process stays alive when I log out of SSH.
+`sunshine` will be added to your PATH. I'll run it from tmux so the process
+stays alive when I log out of SSH.
 
 ```log
 zhufu@zhufusarch ~> tmux
@@ -122,8 +133,11 @@ zhufu@zhufusarch ~> sunshine
 [2024:03:07:13:29:05]: Info: Avahi service Sunshine successfully established.
 ```
 
-Notice `Configuration UI available at [https://localhost:47990]`. This is actually a lie. Sunshine's Web UI listens on `0.0.0.0:47990`. My NAS hostname is `zhufusarch`, so I can access `https://zhufusarch.local:47990` from my laptop.
-If your NAS is not on the same subnet, you'll need its public IP address or SSH port forwarding, but I won't go into detail about that.
+Notice `Configuration UI available at [https://localhost:47990]`. This is
+actually a lie. Sunshine's Web UI listens on `0.0.0.0:47990`. My NAS hostname is
+`zhufusarch`, so I can access `https://zhufusarch.local:47990` from my laptop.
+If your NAS is not on the same subnet, you'll need its public IP address or SSH
+port forwarding, but I won't go into detail about that.
 
 In the Web UI:
 
@@ -140,7 +154,10 @@ We'll resolve these errors later.
 
 ## Moonlight
 
-Install Moonlight from [Moonlight Game Streaming: Play Your PC Game remotely](https://moonlight-stream.org). This step happens on the receiving device. Moonlight supports many platforms, including but not limited to:
+Install Moonlight from
+[Moonlight Game Streaming: Play Your PC Game remotely](https://moonlight-stream.org).
+This step happens on the receiving device. Moonlight supports many platforms,
+including but not limited to:
 
 - PC / Mac
 - Android / iOS
@@ -148,7 +165,9 @@ Install Moonlight from [Moonlight Game Streaming: Play Your PC Game remotely](ht
 
 ## Xorg Virtual Display
 
-Modern Xorg is smart. It doesn't need a template generated by `nvidia-xconfig` to make monitors and input devices work. However, special configuration is required for virtual displays. Here is a minimal configuration template:
+Modern Xorg is smart. It doesn't need a template generated by `nvidia-xconfig`
+to make monitors and input devices work. However, special configuration is
+required for virtual displays. Here is a minimal configuration template:
 
 ```shell
 zhufu@zhufusarch ~> cat /etc/X11/xorg.conf
@@ -173,7 +192,10 @@ Section "Screen"
 EndSection
 ```
 
-`"DP-0"` is an identifier for any output port on the GPU. It will likely be `DP-X` or `HDMI-X`. If none of them work, the only thing you can do is actually connect a monitor or dummy plug, start the X server, and check the available ports:
+`"DP-0"` is an identifier for any output port on the GPU. It will likely be
+`DP-X` or `HDMI-X`. If none of them work, the only thing you can do is actually
+connect a monitor or dummy plug, start the X server, and check the available
+ports:
 
 ```log
 zhufu@zhufusarch ~> paru -S xterm
@@ -198,7 +220,9 @@ First, get a template from `/etc`:
 cp /etc/X11/xinit/xinitrc ~/.xinitrc
 ```
 
-I want to have a desktop environment when streaming, similar to remote desktop. I use Mate. The configuration involves adding the startup command to the end of `xinitrc`:
+I want to have a desktop environment when streaming, similar to remote desktop.
+I use Mate. The configuration involves adding the startup command to the end of
+`xinitrc`:
 
 ```shell
 echo 'exec mate-session' >> ~/.xinitrc
@@ -214,21 +238,26 @@ echo 'exec mate-session' >> ~/.xinitrc
 
 ## Elevating Permissions
 
-You need to change the permissions of `/dev/uinput` and `/dev/dri/cardX` because of how udev works in unattended scenarios. It's far from elegant, but there's no better way—at least none I can think of.
+You need to change the permissions of `/dev/uinput` and `/dev/dri/cardX` because
+of how udev works in unattended scenarios. It's far from elegant, but there's no
+better way—at least none I can think of.
 
 ```shell
 sudo chown $(id -nu):$(id -ng) /dev/uinput
 sudo chown $(id -nu):$(id -ng) /dev/dri/card*
 ```
 
-You'll have to enable `sudo nopasswd` because rebooting the system resets these file permissions. You could also put these two commands into a script and give only that script `nopasswd` permissions, which sounds safer.
+You'll have to enable `sudo nopasswd` because rebooting the system resets these
+file permissions. You could also put these two commands into a script and give
+only that script `nopasswd` permissions, which sounds safer.
 
 ```shell
 echo "${USER} ALL=(ALL:ALL) ALL, NOPASSWD: $(pwd)/sunshine-setup.sh" \
   | sudo tee /etc/sudoers.d/${USER}
 ```
 
-Additionally, Xorg has permission thresholds. You need to enable root privileges for normal users:
+Additionally, Xorg has permission thresholds. You need to enable root privileges
+for normal users:
 
 ```shell
 zhufu@zhufusarch ~> cat /etc/X11/Xwrapper.config
@@ -238,7 +267,8 @@ needs_root_rights = yes
 
 ## Running Desktop and Stream Server Manually
 
-Start the xserver and sunshine from the command line. Now, Sunshine can utilize the `nvenc` encoder.
+Start the xserver and sunshine from the command line. Now, Sunshine can utilize
+the `nvenc` encoder.
 
 ```log
 zhufu@zhufusarch ~> startx &
@@ -255,21 +285,24 @@ zhufu@zhufusarch ~> sunshine
 [2024:03:07:14:43:01]: Info: Avahi service Sunshine successfully established.
 ```
 
-In Moonlight, you should see the computer and its hostname—in my case, `zhufusarch`.
-![image-1](images/6tcVBx_TaU2leq7kr__pA.webp)
+In Moonlight, you should see the computer and its hostname—in my case,
+`zhufusarch`. ![image-1](images/6tcVBx_TaU2leq7kr__pA.webp)
 
-Connect to the desktop and test the usability. Use `Control - Option - Shift - S` to check the frame rate and other stats.
+Connect to the desktop and test the usability. Use
+`Control - Option - Shift - S` to check the frame rate and other stats.
 ![image-2](images/CG2bDeGZboCrEX35vnvIj.webp)
 
 ## Unattended Operation
 
-You need to modify the `loginctl` configuration so Sunshine and Xorg can stay alive without an SSH login:
+You need to modify the `loginctl` configuration so Sunshine and Xorg can stay
+alive without an SSH login:
 
 ```shell
 sudo loginctl enable-linger $(id -nu)
 ```
 
-Find a place for your user scripts, as we'll be using three of them. I like to put them in `~/.local/share/scripts`:
+Find a place for your user scripts, as we'll be using three of them. I like to
+put them in `~/.local/share/scripts`:
 
 ```shell
 zhufu@zhufusarch ~> mkdir -p ~/.local/share/scripts && cd ~/.local/share/scripts
@@ -344,7 +377,8 @@ systemctl --user enable --now xorg-virtdisplay sunshine
 
 ## The Problem
 
-Sunshine isn't the most stable on my machine; it panics after four or five reconnections.
+Sunshine isn't the most stable on my machine; it panics after four or five
+reconnections.
 
 ```log
 [2024:03:09:15:00:30]: Error: Couldn't set default-sink [auto_null]: No such entity
@@ -353,11 +387,14 @@ Sunshine isn't the most stable on my machine; it panics after four or five recon
 [2024:03:09:15:00:30]: Error: CreateBitstreamBuffer failed: out of memory
 ```
 
-I don't have definitive proof, but I suspect it's hardware-related. I only write software, so here's my solution.
+I don't have definitive proof, but I suspect it's hardware-related. I only write
+software, so here's my solution.
 
 ## Sunflower
 
-Sunflower uses top-tier programming techniques to make Sunshine robust. Its approach is to detect when Sunshine is not working properly and tell it to restart.
+Sunflower uses top-tier programming techniques to make Sunshine robust. Its
+approach is to detect when Sunshine is not working properly and tell it to
+restart.
 
 <Repo id="zhufucdev/sunflower" />
 
