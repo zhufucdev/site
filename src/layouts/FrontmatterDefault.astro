@@ -12,7 +12,12 @@ interface Props {
 const { frontmatter, i18n, url } = Astro.props;
 ---
 
-<Master lang={i18n.localeName} title={frontmatter.title} description={frontmatter.summary}  class="px-6 font-sans">
+<Master
+  lang={i18n.localeName}
+  title={frontmatter.title}
+  description={frontmatter.summary}
+  class="px-6 font-sans"
+>
   <Topbar
     slot="nav"
     i18n={i18n}
@@ -31,49 +36,3 @@ const { frontmatter, i18n, url } = Astro.props;
   <div class="h-6"></div>
   <BottomFooter slot="footer" i18n={i18n} currentNavItem={url} />
 </Master>
-
-<style>
-  @import "../styles/global.css";
-  article :global(h1) {
-    @apply text-3xl;
-  }
-  article :global(h2) {
-    @apply text-2xl;
-  }
-  article :global(h3) {
-    @apply text-xl;
-  }
-  article :global(h4) {
-    @apply text-lg;
-  }
-  article :global(ul) {
-    @apply list-inside list-disc;
-  }
-  article :global(ol) {
-    @apply list-inside list-decimal;
-  }
-  article :global(a) {
-    @apply -mb-1.5 inline-block max-w-[calc(100vw-2rem)] overflow-clip text-ellipsis whitespace-nowrap text-orange-500 transition-colors hover:text-orange-600 focus:underline;
-  }
-  article :global(blockquote) {
-    @apply rounded-e-lg border-l-4 border-l-orange-500 bg-orange-50 dark:bg-stone-800 px-2 py-1;
-  }
-  article :global(code) {
-    @apply bg-gray-100 px-1 dark:bg-neutral-900;
-  }
-  article :global(pre code) {
-    @apply bg-inherit;
-  }
-  article :global(pre) {
-    @apply max-w-[calc(100vw-2rem)] rounded-lg p-2;
-  }
-  article :global(img) {
-    @apply m-auto max-h-96 max-w-full object-contain;
-  }
-  article :global(table) {
-    @apply max-w-[calc(100vw-2rem)] overflow-x-scroll;
-  }
-  article :global(li p) {
-    @apply inline;
-  }
-</style>
