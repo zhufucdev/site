@@ -7,25 +7,31 @@ const { class: className } = Astro.props;
 
 <navigation-indicator
   class:list={["fixed z-100 h-1 w-full", className]}
-  style="display: none"
   transition:persist
+  style="display: none"
 >
-  <div class="h-full bg-orange-500 animate-[10s_ease-in-out_both_progress]"></div>
+  <div id="bar" class="h-full bg-orange-500"></div>
 </navigation-indicator>
 
-<script>
+<script is:inline>
   class NavigationIndicator extends HTMLElement {
     transitioning = false;
+    constructor() {
+      super();
+      this.bar = this.querySelector("#bar");
+    }
     beforePreparation = () => {
       this.transitioning = true;
       setTimeout(() => {
         if (this.transitioning) {
-          this.style.display = "block";
+          this.bar.style.animation = "10s ease-in-out both progress";
+          this.style.display = "inherit";
         }
       }, 300);
     };
     afterPreparation = () => {
       this.transitioning = false;
+      this.bar.style.animation = "";
       this.style.display = "none";
     };
     connectedCallback() {
