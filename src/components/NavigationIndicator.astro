@@ -1,0 +1,70 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<navigation-indicator
+  class:list={["fixed z-100 h-1 w-full", className]}
+  style="display: none"
+  transition:persist
+>
+  <div class="h-full bg-orange-500 animate-[10s_ease-in-out_both_progress]"></div>
+</navigation-indicator>
+
+<script>
+  class NavigationIndicator extends HTMLElement {
+    transitioning = false;
+    beforePreparation = () => {
+      this.transitioning = true;
+      setTimeout(() => {
+        if (this.transitioning) {
+          this.style.display = "block";
+        }
+      }, 300);
+    };
+    afterPreparation = () => {
+      this.transitioning = false;
+      this.style.display = "none";
+    };
+    connectedCallback() {
+      document.addEventListener(
+        "astro:before-preparation",
+        this.beforePreparation,
+      );
+      document.addEventListener(
+        "astro:after-preparation",
+        this.afterPreparation,
+      );
+    }
+    disconnectedCallback() {
+      document.removeEventListener(
+        "astro:before-preparation",
+        this.beforePreparation,
+      );
+      document.removeEventListener(
+        "astro:after-preparation",
+        this.afterPreparation,
+      );
+    }
+  }
+  customElements.define("navigation-indicator", NavigationIndicator);
+</script>
+
+<style>
+  @keyframes progress {
+    from {
+      width: 0;
+    }
+    5% {
+      width: 30%;
+    }
+    50% {
+      width: 90%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+</style>
