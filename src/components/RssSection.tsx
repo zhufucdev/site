@@ -22,7 +22,6 @@ export default function RssSection(props: RssSectionProps) {
   async function handleCopyButtonClick() {
     try {
       await navigator.clipboard.writeText(rssUrl());
-      throw "shee";
 
       setCopied(!copied());
       setTimeout(() => {
