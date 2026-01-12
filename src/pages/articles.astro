@@ -5,7 +5,7 @@ import enRes from "../strings/en.ts";
 import Topbar from "../components/Topbar.astro";
 import UnderliningTextButton from "../components/UnderliningTextButton.astro";
 import BottomFooter from "../components/BottomFooter.astro";
-import { getAbsoluteArticleUrl } from "../utils/article-url";
+import { getRelativeArticleUrl } from "../utils/article-url";
 import type { ArticlesData } from "../article";
 import getArticlesDataFromCollection from "../utils/article-data-from-collection";
 import { getCollection } from "astro:content";
@@ -38,7 +38,7 @@ const {
           {articles.map(({ title, summary, id }) => (
             <>
               <a
-                href={id ? getAbsoluteArticleUrl(id, i18n.localeName) : "#"}
+                href={id ? getRelativeArticleUrl(id, i18n.localeName) : "#"}
                 class="group"
               >
                 <h2 class="flex flex-row wrap-break-word">

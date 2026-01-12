@@ -15,7 +15,7 @@ import enRes from "../strings/en";
 import { createHighlighter } from "shiki";
 import formatDate from "../utils/dateformat";
 import { getCollection } from "astro:content";
-import { getAbsoluteArticleUrl } from "../utils/article-url";
+import { getRelativeArticleUrl } from "../utils/article-url";
 import { getRssResponse } from "../utils/rss-template";
 import xmlFormat from "xml-formatter";
 
@@ -100,7 +100,7 @@ const {
           </TitleSummary>
           <ArrowHighlightingButton
             slot="bottom"
-            href={getAbsoluteArticleUrl(id, i18n.localeName)}
+            href={getRelativeArticleUrl(id, i18n.localeName)}
           >
             {i18n.read_full_para}
           </ArrowHighlightingButton>

@@ -2,7 +2,7 @@ import { createSignal, createMemo, type JSX } from "solid-js";
 import type { I18nResource } from "../strings/types";
 import ChunkyIconButton from "./ChunkyIconButton";
 import Modal from "./Modal";
-import { getAbsoluteLocaleUrl } from "astro:i18n";
+import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from "astro:i18n";
 
 interface RssSectionProps {
   i18n: I18nResource;
@@ -99,7 +99,7 @@ export default function RssSection(props: RssSectionProps) {
             >
               {i18n.copy_link_para}
             </ChunkyIconButton>
-            <a href={getAbsoluteLocaleUrl(i18n.localeName, "articles")}>
+            <a href={getRelativeLocaleUrl(i18n.localeName, "articles")}>
               <ChunkyIconButton>{i18n.get_list_para}</ChunkyIconButton>
             </a>
           </div>

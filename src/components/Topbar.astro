@@ -1,5 +1,5 @@
 ---
-import { getAbsoluteLocaleUrl } from "astro:i18n";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import type { I18nResource } from "../strings/types";
 import ArrowUnderliningTextButton from "./ArrowUnderliningTextButton.astro";
 
@@ -37,7 +37,7 @@ interface Props {
         <a
           class="topbar-list-item"
           aria-busy={currentItem == href && !allowNavigateToCurrent}
-          href={getAbsoluteLocaleUrl(i18n.localeName, href)}
+          href={getRelativeLocaleUrl(i18n.localeName, href)}
         >
           <ArrowUnderliningTextButton selected={href == currentItem}>
             {name}
