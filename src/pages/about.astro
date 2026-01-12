@@ -5,51 +5,67 @@ import BottomFooter from "../components/BottomFooter.astro";
 import CoveredPostCard from "../components/CoveredPostCard.astro";
 import LineExtendedHeader from "../components/LineExtendedHeader.astro";
 import type { I18nResource } from "../strings/types";
+import { getImage, Image } from "astro:assets";
 import type QnaPost from "../qna";
 import enRes from "../strings/en.ts";
 
+import sixSidedStar from "/src/images/SixSidedStar.svg";
+import tiltedOval from "/src/images/TiltedOval.svg";
+import tiltedPentagon from "/src/images/TiltedPentagon.svg";
+import clover from "/src/images/Clover.svg";
+import elevenSidedStar from "/src/images/ElevenSidedStar.svg";
+import tiltedRectangle from "/src/images/TiltedRectangle.svg";
+import theTunnelToSummerTheExitOfGoodbyes from "/src/images/the-tunnel-to-summer-the-exit-of-goodbyes.jpg";
+import vividStasis from "/src/images/vivid-stasis.png";
+import osu from "/src/images/osu.png";
+import celeste from "/src/images/celeste.png";
+import matrix from "/src/images/matrix.svg";
+
 interface Props {
   i18n?: I18nResource;
-  qnaPosts?: QnaPost[];
+  qnaPosts?: Partial<QnaPost>[];
 }
 
-const {
-  i18n = enRes,
-  qnaPosts = [
-    {
-      mask: "SixSidedStar.svg",
-      question: "Who are you?",
-      answer:
-        "Random person hanging out on the internet, probably nonbinary. Professional Android developer. Amature 2D designer. Sometimes posts video on YouTube.",
-    },
-    {
-      mask: "TiltedOval.svg",
-      question: "Why is it Jesus on your profile?",
-      answer:
-        "TLDR; It's funny. Long story short, one of my friends was suspected. To avoid getting involved, it's better to change my profile, and Jesus is the perfectly moral human (or god) who would never do any harm, so here you are.",
-    },
-    {
-      mask: "TiltedPentagon.svg",
-      question: "Are you religious?",
-      answer: "<b>No</b>. But I am open to the idea. Try persuading me.",
-    },
-    {
-      mask: "Clover.svg",
-      question: "Cats or dogs?",
-      answer: "Cats, definitely.",
-    },
-    {
-      mask: "ElevenSidedStar.svg",
-      question: "Do you love me?",
-      answer: "I love you all.",
-    },
-    {
-      mask: "TiltedRectangle.svg",
-      question: "How can I date you?",
-      answer: `Whether you are a man, woman or whatever, contact me on my <a class="text-orange-500" href="#socials">socials</a>.`,
-    },
-  ],
-} = Astro.props;
+const defaultQnaPosts = [
+  {
+    mask: sixSidedStar,
+    question: "Who are you?",
+    answer:
+      "Random person hanging out on the internet, probably nonbinary. Professional Android developer. Amature 2D designer. Sometimes posts video on YouTube.",
+  },
+  {
+    mask: tiltedOval,
+    question: "Why is it Jesus on your profile?",
+    answer:
+      "TLDR; It's funny. Long story short, one of my friends was suspected. To avoid getting involved, it's better to change my profile, and Jesus is the perfectly moral human (or god) who would never do any harm, so here you are.",
+  },
+  {
+    mask: tiltedPentagon,
+    question: "Are you religious?",
+    answer: "<b>No</b>. But I am open to the idea. Try persuading me.",
+  },
+  {
+    mask: clover,
+    question: "Cats or dogs?",
+    answer: "Cats, definitely.",
+  },
+  {
+    mask: elevenSidedStar,
+    question: "Do you love me?",
+    answer: "I love you all.",
+  },
+  {
+    mask: tiltedRectangle,
+    question: "How can I date you?",
+    answer: `Whether you are a man, woman or whatever, contact me on my <a class="text-orange-500" href="#socials">socials</a>.`,
+  },
+];
+const { i18n = enRes, qnaPosts: qnaPostsProp } = Astro.props;
+const qnaPosts =
+  qnaPostsProp?.map((postOverride, index) => ({
+    ...defaultQnaPosts[index],
+    ...postOverride,
+  })) ?? defaultQnaPosts;
 ---
 
 <Master title={i18n.about_me_para} lang="en">
@@ -59,12 +75,19 @@ const {
     class="no-scrollbar flex min-h-[calc(100vh-190px)] snap-x snap-mandatory flex-row overflow-x-scroll pb-12"
   >
     {
-      qnaPosts.map(({ mask, question, answer }, index) => (
+      (
+        await Promise.all(
+          qnaPosts.map(async ({ mask, ...others }) => ({
+            ...others,
+            mask: `url(${(await getImage({ src: mask })).src})`,
+          })),
+        )
+      ).map(({ mask, question, answer }, index) => (
         <CoveredPostCard
-          mask={`url(/${mask})`}
+          mask={mask}
           customColors
           class:list={[
-            "ml-6 w-96 snap-center border-gray-100 bg-gray-50 max-sm:w-[calc(100vw-48px)] dark:bg-neutral-900 dark:border-neutral-800",
+            "ml-6 w-96 snap-center border-gray-100 bg-gray-50 max-sm:w-[calc(100vw-48px)] dark:border-neutral-800 dark:bg-neutral-900",
             index == qnaPosts.length - 1 ? "mr-6" : "",
           ]}
         >
@@ -82,9 +105,10 @@ const {
     class="flex flex-row content-around items-center justify-center gap-4 self-center px-6 pb-12"
   >
     <div class="relative flex-nowrap">
-      <img
-        src="/the-tunnel-to-summer-the-exit-of-goodbyes.jpg"
-        class="h-12 rounded-sm sm:h-18"
+      <Image
+        src={theTunnelToSummerTheExitOfGoodbyes}
+        class="rounded-sm"
+        width="48"
         alt="book cover"
       />
       <div
@@ -102,13 +126,15 @@ const {
   <div
     class="flex flex-row flex-wrap items-center justify-center py-2 sepia-10"
   >
-    <img src="/vivid-stasis.png" class="w-28 sm:w-32" alt="vivid/stasis" />
+    <Image src={vividStasis} width="128" alt="vivid/stasis" />
     <a href="https://osu.ppy.sh/users/32436131" target="_blank"
-      ><img src="/osu.png" class="h-12 sm:h-18" alt="osu" /></a
+      ><Image src={osu} width="48" alt="osu" /></a
     >
-    <img src="/celeste.png" class="w-32 p-2 sm:w-40" alt="celeste" />
+    <Image src={celeste} width="160" class="p-2" alt="celeste" />
   </div>
-  <p class="self-center pb-12 font-sans text-gray-500 dark:text-neutral-500">{i18n.asterisk_bad_at_gaming_span}</p>
+  <p class="self-center pb-12 font-sans text-gray-500 dark:text-neutral-500">
+    {i18n.asterisk_bad_at_gaming_span}
+  </p>
 
   <LineExtendedHeader href="socials" class="mb-2"
     >{i18n.socials_para}</LineExtendedHeader
@@ -134,12 +160,15 @@ const {
       href="https://bsky.app/profile/zhufucdev.bsky.social"
       target="_blank">bluesky</a
     >
-    <a class="ci ci-x ci-2x dark:bg-white" href="https://x.com/zhufucdev" target="_blank"
-      >twitter / x</a
+    <a
+      class="ci ci-x ci-2x dark:bg-white"
+      href="https://x.com/zhufucdev"
+      target="_blank">twitter / x</a
     >
     <a
       href="https://matrix.to/#/@zhufucdev:matrix.org"
-      class="content-[url(/matrix.svg)] dark:bg-zinc-100"
+      class="dark:bg-zinc-100"
+      style={`content: url(${(await getImage({ src: matrix })).src})`}
       target="_blank">matrix</a
     >
   </div>

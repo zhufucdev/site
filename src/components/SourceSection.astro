@@ -1,0 +1,34 @@
+---
+import { getImage } from "astro:assets";
+import ChunkyIconButton from "./ChunkyIconButton";
+import type { I18nResource } from "../strings/types";
+import gitIcon from "../images/git-icon.png";
+
+interface Props {
+  class?: string;
+  source: string;
+  license: string;
+  i18n: I18nResource;
+}
+const { source, license, class: className, i18n } = Astro.props;
+---
+
+<div class={`flex flex-row flex-wrap content-around gap-6 ${className}`}>
+  <div
+    class="stroke-custom size-16 bg-cover"
+    style={`background-image: url(${(await getImage({ src: gitIcon })).src})`}
+  >
+  </div>
+  <div class="flex flex-col items-start">
+    <p class="text-3xl">{i18n.get_source_code_para}</p>
+    <div class="flex-1"></div>
+    <div class="flex flex-row gap-4">
+      <a href={source} target="_blank">
+        <ChunkyIconButton>GitHub</ChunkyIconButton>
+      </a>
+      <a href={license} target="_blank">
+        <ChunkyIconButton>License</ChunkyIconButton>
+      </a>
+    </div>
+  </div>
+</div>

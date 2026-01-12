@@ -8,19 +8,23 @@ import ArrowHighlightingButton from "../components/ArrowHighlightingButton.astro
 import TitleSummary from "../components/TitleSummary.astro";
 import BlueprintSheet from "../components/BlueprintSheet.astro";
 import RssSection from "../components/RssSection.tsx";
-import SourceSection from "../components/SourceSection.tsx";
+import SourceSection from "../components/SourceSection.astro";
 import TracePhotoCamera from "../icons/TracePhotoCamera.svg";
 import BottomFooter from "../components/BottomFooter.astro";
 import enRes from "../strings/en";
 import { createHighlighter } from "shiki";
 import formatDate from "../utils/dateformat";
 import { getCollection } from "astro:content";
+import { getImage } from "astro:assets";
 import { getRelativeArticleUrl } from "../utils/article-url";
 import { getRssResponse } from "../utils/rss-template";
 import xmlFormat from "xml-formatter";
 
+import waveSegment from "../images/WaveSegment.svg";
 import stormcrew from "../images/storm-crew-clothing-wrapper.jpeg";
 import ferriesWithKnief from "../images/ferris-with-knief.png";
+import elevenSidedStar from "../images/ElevenSidedStar.svg";
+import tiltedRectangle from "../images/TiltedRectangle.svg";
 
 const highlighter = await createHighlighter({
   themes: ["one-light", "vitesse-black"],
@@ -28,35 +32,41 @@ const highlighter = await createHighlighter({
 });
 interface Props {
   i18n?: I18nResource;
-  posts: Post[];
+  posts: Partial<Post>[];
   articles?: { id: string; data: any }[];
 }
+const defaultPosts = [
+  {
+    created: 1768001767000,
+    header: "Status update",
+    mask: elevenSidedStar,
+    cover: { image: stormcrew, alt: "StormCrew clothing wrapper" },
+    title: "Bought some StormCrew clothes",
+    summary:
+      "It's become a trend or something. My boss and coworkers wore this last dinner party. We don't work for Tim, mind you.",
+  },
+  {
+    created: 1766532967000,
+    header: "News",
+    mask: tiltedRectangle,
+    cover: { image: ferriesWithKnief, alt: "Ferris with knief" },
+    title: "Binder CVE",
+    summary:
+      "There was a piece of Rust code in the Linux kernel that led to a potential race condition.",
+  },
+];
 const {
   i18n = enRes,
-  posts = [
-    {
-      created: 1768001767000,
-      header: "Status update",
-      mask: "url(/ElevenSidedStar.svg)",
-      cover: { image: stormcrew, alt: "StormCrew clothing wrapper" },
-      title: "Bought some StormCrew clothes",
-      summary:
-        "It's become a trend or something. My boss and coworkers wore this last dinner party. We don't work for Tim, mind you.",
-    },
-    {
-      created: 1766532967000,
-      header: "News",
-      mask: "url(/TiltedRectangle.svg)",
-      cover: { image: ferriesWithKnief, alt: "Ferris with knief" },
-      title: "Binder CVE",
-      summary:
-        "There was a piece of Rust code in the Linux kernel that led to a potential race condition.",
-    },
-  ],
+  posts: postsProps,
   articles = (await getCollection(`articles-${i18n.localeName}`))
     .sort((a, b) => b.data.created - a.data.created)
     .slice(0, 2),
 } = Astro.props;
+const posts =
+  postsProps?.map((postOverride, index) => ({
+    ...defaultPosts[index],
+    ...postOverride,
+  })) ?? defaultPosts;
 ---
 
 <Master title={i18n.highlights_para} lang="en">
@@ -64,7 +74,14 @@ const {
   <BottomFooter slot="footer" i18n={i18n} currentNavItem="/" />
   <div class="flex flex-row flex-wrap gap-4 px-2 sm:px-6">
     {
-      posts.map(({ created, cover, mask, header, title, summary }) => (
+      (
+        await Promise.all(
+          posts.map(async ({ mask, ...others }) => ({
+            ...others,
+            mask: `url(${(await getImage({ src: mask })).src})`,
+          })),
+        )
+      ).map(({ created, cover, mask, header, title, summary }) => (
         <CoveredPostCard
           cover={cover && [cover.image, cover.alt]}
           mask={mask}
@@ -83,7 +100,8 @@ const {
   </div>
 
   <div
-    class="mt-2 h-20 w-full bg-gray-100 mask-[url(/WaveSegment.svg)] bg-repeat-x dark:bg-zinc-800"
+    class="mt-2 h-20 w-full bg-gray-100 bg-repeat-x dark:bg-zinc-800"
+    style={`mask-image: url(${(await getImage({ src: waveSegment })).src})`}
   >
   </div>
   <div
@@ -127,14 +145,19 @@ const {
             xmlFormat(
               await (await getRssResponse(i18n, Astro.site!.toString())).text(),
             ),
-            { lang: "xml", themes: { light: "one-light", dark: "vitesse-black" } },
+            {
+              lang: "xml",
+              themes: { light: "one-light", dark: "vitesse-black" },
+            },
           )}
         />
       </div>
     </div>
   </div>
   <div class="relative px-2 pt-12 sm:px-6">
-    <TracePhotoCamera class="absolute -top-10 right-0 max-w-60 text-gray-200 dark:text-zinc-800" />
+    <TracePhotoCamera
+      class="absolute -top-10 right-0 max-w-60 text-gray-200 dark:text-zinc-800"
+    />
     <div
       class="flex flex-row flex-wrap items-start gap-2 overflow-clip rounded-2xl"
     >

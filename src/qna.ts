@@ -1,5 +1,7 @@
+import type { ImageMetadata } from "astro";
+
 export default interface QnaPost {
-  mask: string;
+  mask: ImageMetadata;
   question: string;
   answer: string;
 }
