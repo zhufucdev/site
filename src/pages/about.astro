@@ -5,7 +5,7 @@ import BottomFooter from "../components/BottomFooter.astro";
 import CoveredPostCard from "../components/CoveredPostCard.astro";
 import LineExtendedHeader from "../components/LineExtendedHeader.astro";
 import type { I18nResource } from "../strings/types";
-import { getImage, Image } from "astro:assets";
+import { getImage, Image, Picture } from "astro:assets";
 import type QnaPost from "../qna";
 import enRes from "../strings/en.ts";
 
@@ -109,6 +109,7 @@ const qnaPosts =
         src={theTunnelToSummerTheExitOfGoodbyes}
         class="rounded-sm"
         width="48"
+        densities={[1, 2]}
         alt="book cover"
       />
       <div
@@ -126,11 +127,22 @@ const qnaPosts =
   <div
     class="flex flex-row flex-wrap items-center justify-center py-2 sepia-10"
   >
-    <Image src={vividStasis} width="128" alt="vivid/stasis" />
+    <Image
+      src={vividStasis}
+      width="128"
+      alt="vivid/stasis"
+      densities={[1, 2]}
+    />
     <a href="https://osu.ppy.sh/users/32436131" target="_blank"
-      ><Image src={osu} width="48" alt="osu" /></a
+      ><Image src={osu} width="48" alt="osu" densities={[1, 2]} /></a
     >
-    <Image src={celeste} width="160" class="p-2" alt="celeste" />
+    <Image
+      src={celeste}
+      width="160"
+      class="p-2"
+      alt="celeste"
+      densities={[1, 2]}
+    />
   </div>
   <p class="self-center pb-12 font-sans text-gray-500 dark:text-neutral-500">
     {i18n.asterisk_bad_at_gaming_span}
