@@ -23,12 +23,8 @@ const { cover, mask, class: className, customColors = false } = Astro.props;
   {
     Astro.slots.has("header-leading") && Astro.slots.has("header-tailing") && (
       <p class="space-x-2 font-mono leading-8">
-        <span class="bg-orange-600 p-2 text-white">
-          <slot name="header-leading" />
-        </span>
-        <span>
-          <slot name="header-tailing" />
-        </span>
+        <span class="bg-orange-600 p-2 text-white"><slot name="header-leading" /></span>
+        <span><slot name="header-tailing" /></span>
       </p>
     )
   }
@@ -41,11 +37,7 @@ const { cover, mask, class: className, customColors = false } = Astro.props;
     </div>
     <div
       class="absolute -right-24 -bottom-24 -z-10 h-96 w-96 overflow-clip bg-orange-100 bg-cover dark:bg-stone-800"
-      style={[
-        mask
-          ? `mask-image: ${mask}`
-          : "",
-      ]
+      style={[mask ? `mask-image: ${mask}` : ""]
         .filter((p) => Boolean(p))
         .join(";")}
     >
