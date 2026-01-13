@@ -1,0 +1,21 @@
+---
+import Master from "../layouts/Master.astro";
+import Topbar from "../components/Topbar.astro";
+import UnderliningTextButton from "../components/UnderliningTextButton.astro";
+import type { I18nResource } from "../strings/types";
+import enRes from "../strings/en";
+interface Props {
+  i18n?: I18nResource;
+}
+const { i18n = enRes } = Astro.props;
+---
+
+<Master title="404" lang={i18n.localeName} class="justify-center space-y-4 p-6">
+  <p class="text-center text-4xl font-bold">404</p>
+  <p class="text-center font-sans">{i18n.page_not_found_para}</p>
+  <div class="flex flex-row justify-center">
+    <a href="/" class="text-center font-bold text-orange-500">
+      <UnderliningTextButton>{i18n.go_home_para}</UnderliningTextButton>
+    </a>
+  </div>
+</Master>

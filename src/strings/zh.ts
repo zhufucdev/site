@@ -18,7 +18,9 @@ const zhRes: I18nResource = {
   via_span: (provider: string) => `通过${provider}`,
   steve_reeds_blog_para: "Steve Reed的博客",
   oops_para: "哎呀，出错了",
-  copy_failed_you_may_go_manual_para: "复制失败，你可以手动复制以下内容"
+  copy_failed_you_may_go_manual_para: "复制失败，你可以手动复制以下内容",
+  page_not_found_para: "找不到指定页面",
+  go_home_para: "回到首页",
 };
 
 export default zhRes;

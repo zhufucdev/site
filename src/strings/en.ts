@@ -18,7 +18,10 @@ const enRes: I18nResource = {
   via_span: (provider: string) => `via ${provider}`,
   steve_reeds_blog_para: "Steve Reed's blog",
   oops_para: "Oops",
-  copy_failed_you_may_go_manual_para: "Copy failed. You may manually copy the content below."
+  copy_failed_you_may_go_manual_para:
+    "Copy failed. You may manually copy the content below.",
+  page_not_found_para: "The page you are looking for was not found",
+  go_home_para: "Go home"
 };
 
 export default enRes;
