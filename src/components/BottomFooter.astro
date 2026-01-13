@@ -13,7 +13,9 @@ const options = [
 ];
 ---
 
-<div class="flex flex-row border-t-2 border-gray-500 bg-gray-200 p-6 dark:bg-zinc-800">
+<bottom-footer
+  class="flex flex-row border-t-2 border-gray-500 bg-gray-200 p-6 dark:bg-zinc-800"
+>
   <span>©{new Date().getFullYear()} Steve Reed</span>
   <div class="flex-1"></div>
   <select
@@ -29,28 +31,34 @@ const options = [
       ))
     }
   </select>
-</div>
+</bottom-footer>
 
 <script>
   import { getRelativeLocaleUrl, pathHasLocale } from "astro:i18n";
   import { navigate } from "astro:transitions/client";
-  document.addEventListener("astro:page-load", () => {
-    const languageSelect = document.getElementById(
-      "language-select",
-    )! as HTMLSelectElement;
-    languageSelect.addEventListener("change", () => {
-      navigate(
-        getRelativeLocaleUrl(
-          languageSelect.value,
-          localePrefixRemoved(languageSelect.dataset.navitem!),
-        ),
-      );
-    });
-  });
+
   function localePrefixRemoved(url: string): string {
     if (!pathHasLocale(url)) {
       return url;
     }
     return url.replace(/^\/[a-z]{2}(\/.*)/, "$1");
   }
+
+  class BottomFooter extends HTMLElement {
+    connectedCallback() {
+      const languageSelect = this.querySelector(
+        "#language-select",
+      )! as HTMLSelectElement;
+      languageSelect.addEventListener("change", () => {
+        navigate(
+          getRelativeLocaleUrl(
+            languageSelect.value,
+            localePrefixRemoved(languageSelect.dataset.navitem!),
+          ),
+        );
+      });
+    }
+  }
+
+  customElements.define("bottom-footer", BottomFooter);
 </script>

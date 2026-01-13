@@ -16,16 +16,20 @@ interface Props {
 }
 ---
 
-<div class="relative">
-  <button
-    class="flex flex-row p-4 sm:hidden"
-    id="topbar-persistent-item"
-    transition:animate="none"
-  >
-    <ArrowUnderliningTextButton selected>
-      {items.find(([ref]) => ref == currentItem)![1]}
-    </ArrowUnderliningTextButton>
-  </button>
+<site-topbar class="relative">
+  {
+    typeof currentItem === "string" && (
+      <button
+        class="flex flex-row p-4 sm:hidden"
+        id="topbar-persistent-item"
+        transition:animate="none"
+      >
+        <ArrowUnderliningTextButton selected>
+          {items.find(([ref]) => ref == currentItem)![1]}
+        </ArrowUnderliningTextButton>
+      </button>
+    )
+  }
   <div
     class="top-0 z-10 flex flex-col items-start gap-4 p-4 max-sm:absolute max-sm:hidden max-sm:h-screen max-sm:w-screen max-sm:bg-white sm:flex-row dark:max-sm:bg-neutral-950"
     id="topbar-expanded-items"
@@ -46,43 +50,62 @@ interface Props {
       ))
     }
   </div>
-</div>
+</site-topbar>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
-    const expandedItemsContainer = document.getElementById(
-      "topbar-expanded-items",
-    )!;
-    const persistentItemContainer = document.getElementById(
-      "topbar-persistent-item",
-    )!;
-    function setExpandedItemsContainerVisibility(visble: boolean) {
-      expandedItemsContainer.style.display = visble ? "flex" : "none";
-    }
-    let aboveSm = recompute();
-    function recompute() {
+  class Topbar extends HTMLElement {
+    expandedItemsContainer!: HTMLDivElement;
+    persistentItemContainer!: HTMLDivElement;
+    aboveSm = false;
+
+    private recompute() {
       const aboveSm =
-        persistentItemContainer.computedStyleMap().get("display") == "none";
-      setExpandedItemsContainerVisibility(aboveSm);
+        this.persistentItemContainer.computedStyleMap().get("display") ==
+        "none";
+      this.setExpandedItemsContainerVisibility(aboveSm);
       return aboveSm;
     }
-    window.addEventListener("resize", () => (aboveSm = recompute()));
-    persistentItemContainer.addEventListener("click", (event) => {
-      if (aboveSm) {
-        event.preventDefault();
-        return;
-      }
-      setExpandedItemsContainerVisibility(true);
-    });
-    document.querySelectorAll(".topbar-list-item").forEach((item) =>
-      item.addEventListener("click", (event) => {
-        if (item.ariaBusy == "true") {
+
+    setExpandedItemsContainerVisibility(visble: boolean) {
+      this.expandedItemsContainer.style.display = visble ? "flex" : "none";
+    }
+
+    private onWindowResize = () => {
+      this.aboveSm = this.recompute();
+    }
+
+    connectedCallback() {
+      this.expandedItemsContainer = this.querySelector(
+        "#topbar-expanded-items",
+      )!;
+      this.persistentItemContainer = this.querySelector(
+        "#topbar-persistent-item",
+      )!;
+      this.aboveSm = this.recompute();
+      window.addEventListener("resize", this.onWindowResize);
+      this.persistentItemContainer.addEventListener("click", (event) => {
+        if (this.aboveSm) {
           event.preventDefault();
+          return;
         }
-        if (!aboveSm) {
-          setExpandedItemsContainerVisibility(false);
-        }
-      }),
-    );
-  });
+        this.setExpandedItemsContainerVisibility(true);
+      });
+      this.querySelectorAll(".topbar-list-item").forEach((item) =>
+        item.addEventListener("click", (event) => {
+          if (item.ariaBusy == "true") {
+            event.preventDefault();
+          }
+          if (!this.aboveSm) {
+            this.setExpandedItemsContainerVisibility(false);
+          }
+        }),
+      );
+    }
+
+    disconnectedCallback() {
+      window.removeEventListener("resize", this.onWindowResize);
+    }
+  }
+
+  customElements.define("site-topbar", Topbar);
 </script>
