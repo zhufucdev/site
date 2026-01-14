@@ -1,4 +1,6 @@
 // @ts-check
+import { articleIdByLegacyId } from "./src/legacy";
+
 import { defineConfig } from "astro/config";
 
 import { loadEnv } from "vite";
@@ -19,6 +21,7 @@ const { PUBLIC_SITE } = loadEnv(
   "",
 );
 
+const defaultLocale = "en";
 // https://astro.build/config
 export default defineConfig({
   site: PUBLIC_SITE,
@@ -28,12 +31,20 @@ export default defineConfig({
 
   i18n: {
     locales: ["en", "zh", "zh-tw"],
-    defaultLocale: "en",
+    defaultLocale,
   },
 
   adapter: cloudflare({
     imageService: "compile",
   }),
   integrations: [solidJs(), mdx(), sitemap()],
+  redirects: {
+    ...Object.fromEntries(
+      Object.entries(articleIdByLegacyId).map(([legacyId, [locale, id]]) => [
+        `/article/${legacyId}`,
+        locale === defaultLocale ? `/article/${id}` : `/${locale}/article/${id}`,
+      ]),
+    ),
+  }
 });
 
