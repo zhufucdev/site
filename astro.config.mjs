@@ -3,7 +3,7 @@ import { articleIdByLegacyId } from "./src/legacy";
 
 import { defineConfig } from "astro/config";
 
-import { loadEnv } from "vite";
+import loadEnv from "./src/utils/load-env";
 
 import tailwindcss from "@tailwindcss/vite";
 
@@ -15,11 +15,7 @@ import mdx from "@astrojs/mdx";
 
 import sitemap from "@astrojs/sitemap";
 
-const { PUBLIC_SITE } = loadEnv(
-  process.env.NODE_ENV ?? "release",
-  process.cwd(),
-  "",
-);
+const { PUBLIC_SITE } = loadEnv();
 
 const defaultLocale = "en";
 // https://astro.build/config
@@ -47,4 +43,3 @@ export default defineConfig({
     ),
   }
 });
-

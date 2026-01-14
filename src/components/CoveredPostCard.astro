@@ -1,9 +1,10 @@
 ---
 import { Image } from "astro:assets";
 import TitleSummary from "./TitleSummary.astro";
+import { CldImage } from "astro-cloudinary";
 import type { ImageMetadata } from "astro";
 interface Props {
-  cover?: [ImageMetadata, string];
+  cover?: { image: string | ImageMetadata; alt: string };
   mask: string;
   class?: string;
   customColors?: boolean;
@@ -42,9 +43,23 @@ const { cover, mask, class: className, customColors = false } = Astro.props;
         .join(";")}
     >
       {
-        cover && (
-          <Image src={cover[0]} alt={cover[1]} class="size-full object-cover" />
-        )
+        cover &&
+          (typeof cover.image === "string" ? (
+            cover.image.startsWith("https://res.cloudinary.com") ? (
+              <CldImage src={cover.image} width={384} height={384} />
+            ) : (
+              <img src={cover.image} alt={cover.alt} class="object-cover" />
+            )
+          ) : (
+            <Image
+              src={cover.image}
+              alt={cover.alt}
+              width={384}
+              height={384}
+              fit="cover"
+              class="object-cover"
+            />
+          ))
       }
     </div>
   </div>

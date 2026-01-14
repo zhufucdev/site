@@ -1,8 +1,7 @@
 import type { ImageMetadata } from "astro";
-import type { SupportedLocale } from "./strings/types";
 
 interface Cover {
-  image: ImageMetadata;
+  image: ImageMetadata | string;
   alt: string;
 }
 export default interface Post {

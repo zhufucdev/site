@@ -1,6 +1,6 @@
 import { format as formatFn, type Format } from "@formkit/tempo";
 
-export default function formateDate(
+export default function formatDate(
   timestamp: number | Date,
   locale: string,
   form: "long" | "short",

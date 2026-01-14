@@ -3,20 +3,4 @@ import IndexDefault from "../index.astro";
 import i18n from "../../strings/zh-tw.ts";
 ---
 
-<IndexDefault
-  i18n={i18n}
-  posts={[
-    {
-      header: "狀態更新",
-      title: "買了StromCrew的衣服",
-      summary:
-        "不知道什麼時候變成一種風潮，我老闆跟同事上次聚餐也都穿這件。先講好，我們不是Tim的員工喔",
-    },
-    {
-      header: "新聞",
-      title: "Binder CVE",
-      summary:
-        "Linux kernel 裡有一段 Rust 寫的程式碼，可能會造成 race condition",
-    },
-  ]}
-/>
+<IndexDefault i18n={i18n} />

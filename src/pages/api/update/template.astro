@@ -1,0 +1,15 @@
+---
+import "../../../styles/global.css";
+import CoveredPostCard from "../../../components/CoveredPostCard.astro";
+export const prerender = false;
+---
+
+<CoveredPostCard
+  cover={{ image: "${cover.src}", alt: "${cover.alt}" }}
+  mask="${mask}"
+>
+  <Fragment slot="header-leading" set:text="${header.leading}" />
+  <Fragment slot="header-tailing" set:text="${header.tailing}" />
+  <Fragment slot="title" set:text="${title}" />
+  <Fragment slot="summary" set:text="${summary}" />
+</CoveredPostCard>

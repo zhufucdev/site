@@ -3,7 +3,6 @@ import type { I18nResource } from "../strings/types";
 import type Post from "../post";
 import Master from "../layouts/Master.astro";
 import Topbar from "../components/Topbar.astro";
-import CoveredPostCard from "../components/CoveredPostCard.astro";
 import ArrowHighlightingButton from "../components/ArrowHighlightingButton.astro";
 import TitleSummary from "../components/TitleSummary.astro";
 import BlueprintSheet from "../components/BlueprintSheet.astro";
@@ -11,9 +10,9 @@ import RssSection from "../components/RssSection.tsx";
 import SourceSection from "../components/SourceSection.astro";
 import TracePhotoCamera from "../icons/TracePhotoCamera.svg";
 import BottomFooter from "../components/BottomFooter.astro";
+import PostsSection from "../components/PostsSection.astro";
 import enRes from "../strings/en";
 import { createHighlighter } from "shiki";
-import formatDate from "../utils/dateformat";
 import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
 import { getRelativeArticleUrl } from "../utils/article-url";
@@ -21,84 +20,33 @@ import { getRssResponse } from "../utils/rss-template";
 import xmlFormat from "xml-formatter";
 
 import waveSegment from "../images/WaveSegment.svg";
-import stormcrew from "../images/storm-crew-clothing-wrapper.jpeg";
-import ferriesWithKnief from "../images/ferris-with-knief.png";
-import elevenSidedStar from "../images/ElevenSidedStar.svg";
-import tiltedRectangle from "../images/TiltedRectangle.svg";
+
+interface Props {
+  i18n?: I18nResource;
+  articles?: { id: string; data: any }[];
+  posts?: Post[];
+}
+
+const {
+  i18n = enRes,
+  posts,
+  articles = (await getCollection(`articles-${i18n.localeName}`))
+    .sort((a, b) => b.data.created - a.data.created)
+    .slice(0, 2),
+} = Astro.props;
 
 const highlighter = await createHighlighter({
   themes: ["one-light", "vitesse-black"],
   langs: ["xml"],
 });
-interface Props {
-  i18n?: I18nResource;
-  posts: Partial<Post>[];
-  articles?: { id: string; data: any }[];
-}
-const defaultPosts = [
-  {
-    created: 1768001767000,
-    header: "Status update",
-    mask: elevenSidedStar,
-    cover: { image: stormcrew, alt: "StormCrew clothing wrapper" },
-    title: "Bought some StormCrew clothes",
-    summary:
-      "It's become a trend or something. My boss and coworkers wore this last dinner party. We don't work for Tim, mind you.",
-  },
-  {
-    created: 1766532967000,
-    header: "News",
-    mask: tiltedRectangle,
-    cover: { image: ferriesWithKnief, alt: "Ferris with knief" },
-    title: "Binder CVE",
-    summary:
-      "There was a piece of Rust code in the Linux kernel that led to a potential race condition.",
-  },
-];
-const {
-  i18n = enRes,
-  posts: postsProps,
-  articles = (await getCollection(`articles-${i18n.localeName}`))
-    .sort((a, b) => b.data.created - a.data.created)
-    .slice(0, 2),
-} = Astro.props;
-const posts =
-  postsProps?.map((postOverride, index) => ({
-    ...defaultPosts[index],
-    ...postOverride,
-  })) ?? defaultPosts;
 ---
 
 <Master title={i18n.highlights_para} lang="en">
   <Topbar slot="nav" i18n={i18n} currentItem="" />
   <BottomFooter slot="footer" i18n={i18n} currentNavItem="/" />
-  <div class="flex flex-row flex-wrap gap-4 px-2 sm:px-6">
-    {
-      (
-        await Promise.all(
-          posts.map(async ({ mask, ...others }) => ({
-            ...others,
-            mask: `url(${(await getImage({ src: mask })).src})`,
-          })),
-        )
-      ).map(({ created, cover, mask, header, title, summary }) => (
-        <CoveredPostCard
-          cover={cover && [cover.image, cover.alt]}
-          mask={mask}
-          class="flex-1"
-        >
-          <Fragment slot="header-leading" set:text={header} />
-          <Fragment
-            slot="header-tailing"
-            set:text={formatDate(created, i18n.localeName, "short")}
-          />
-          <Fragment slot="title" set:text={title} />
-          <Fragment slot="summary" set:text={summary} />
-        </CoveredPostCard>
-      ))
-    }
-  </div>
-
+  <PostsSection i18n={i18n} server:defer>
+    <PostsSection slot="fallback" i18n={i18n} posts={posts} />
+  </PostsSection>
   <div
     class="mt-2 h-20 w-full bg-gray-100 bg-repeat-x dark:bg-zinc-800"
     style={`mask-image: url(${(await getImage({ src: waveSegment })).src})`}
