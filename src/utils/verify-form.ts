@@ -4,12 +4,12 @@ export default function verifyForm(
   data: any,
   {
     expectedTypes,
-    ignoreUnknownKeys,
+    ignoreUnknownKeys = false,
   }: {
     expectedTypes: {
       [key: string]: Primitive | Primitive[];
     };
-    ignoreUnknownKeys: boolean;
+    ignoreUnknownKeys?: boolean;
   },
 ) {
   const uncheckedTypes = { ...expectedTypes };

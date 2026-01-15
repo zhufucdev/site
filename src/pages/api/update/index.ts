@@ -4,6 +4,7 @@ import db from "../../../db/connection";
 import { supportedLocales } from "../../../strings/types";
 import { stringsTable } from "../../../db/schema/strings";
 import { and, eq } from "drizzle-orm";
+import verifyForm from "../../../utils/verify-form";
 
 export const prerender = false;
 
@@ -29,6 +30,22 @@ export const PUT: APIRoute = async ({ request }) => {
       "locale must be one of " + supportedLocales.join(", "),
       { status: 400 },
     );
+  }
+  try {
+    verifyForm(_body, {
+      expectedTypes: {
+        locale: "string",
+        header: "string",
+        title: "string",
+        summary: "string",
+        cover: "number",
+        mask: "string",
+        trashed: "boolean",
+      },
+      ignoreUnknownKeys: true
+    });
+  } catch (e) {
+    return new Response((e as Error).message, { status: 400 });
   }
   try {
     let matchingHeaders = await db
