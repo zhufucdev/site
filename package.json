@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "npx drizzle-kit push && astro build",
+    "build": "drizzle-kit push && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "format:check": "prettier --check .",

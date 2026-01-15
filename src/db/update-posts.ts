@@ -19,7 +19,7 @@ export async function list({
   ignoreTrash?: boolean;
   limit?: number;
 }) {
-  let conditions: SQLWrapper[] = [];
+  const conditions: SQLWrapper[] = [];
   if (ignoreTrash) {
     conditions.push(not(updatesTable.trashed));
   }
@@ -49,7 +49,7 @@ export async function list({
     .from(updatesTable)
     .where(and(...conditions))
     .orderBy(desc(updatesTable.created))
-    .leftJoin(stringsTable, eq(updatesTable.header, stringsTable.id))
+    .innerJoin(stringsTable, eq(updatesTable.header, stringsTable.id))
     .leftJoin(imagesTable, eq(updatesTable.cover, imagesTable.id));
   if (typeof limit === "number") {
     return query.limit(limit);

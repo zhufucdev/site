@@ -11,6 +11,7 @@ import SourceSection from "../components/SourceSection.astro";
 import TracePhotoCamera from "../icons/TracePhotoCamera.svg";
 import BottomFooter from "../components/BottomFooter.astro";
 import PostsSection from "../components/PostsSection.astro";
+import GallerySection from "../components/GallerySection.astro";
 import enRes from "../strings/en";
 import { createHighlighter } from "shiki";
 import { getCollection } from "astro:content";
@@ -106,18 +107,9 @@ const highlighter = await createHighlighter({
     <TracePhotoCamera
       class="absolute -top-10 right-0 max-w-60 text-gray-200 dark:text-zinc-800"
     />
-    <div
-      class="flex flex-row flex-wrap items-start gap-2 overflow-clip rounded-2xl"
-    >
-      {
-        Array.from({ length: 10 }).map((_, i) => (
-          <img
-            src={`https://placecats.com/${["neo", "millie", "millie_neo", "neo_2", "neo_banana"][i % 5]}/300/200`}
-            class="min-h-40 min-w-40 flex-1 bg-orange-100 object-cover sm:min-w-[30%] md:max-w-[33%] md:min-w-[20%]"
-          />
-        ))
-      }
-    </div>
+    <GallerySection targetLocale={i18n.localeName} server:defer>
+      <GallerySection slot="fallback" targetLocale={i18n.localeName} />
+    </GallerySection>
   </div>
   <div class="h-12"></div>
 </Master>

@@ -12,5 +12,9 @@ export const GET: APIRoute = async () => {
       alt: imagesTable.alt,
     })
     .from(imagesTable);
-  return new Response(JSON.stringify(images));
+  try {
+    return new Response(JSON.stringify(images));
+  } catch (e) {
+    return new Response("[]", { status: 500 });
+  }
 };

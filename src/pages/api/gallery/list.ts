@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { list } from "../../../db/update-posts";
+import { list } from "../../../db/gallery-items";
 import databaseListHandler from "../../../utils/list-database";
 
 export const prerender = false;

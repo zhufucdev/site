@@ -1,13 +1,22 @@
-type Primitive = "string" | "number" | "boolean" | "undefined";
+type Primitive = "string" | "number" | "boolean" | "undefined" | "null";
 
-export default function verifyForm(
-  data: any,
+function isInstanceOf(data: any, type: Primitive) {
+  switch (type) {
+    case "null":
+      return data === null;
+    default:
+      return typeof data == type;
+  }
+}
+
+export default function verifyForm<T extends { [key: string]: any }>(
+  data: T,
   {
     expectedTypes,
     ignoreUnknownKeys = false,
   }: {
     expectedTypes: {
-      [key: string]: Primitive | Primitive[];
+      [key in keyof T]: Primitive | Primitive[];
     };
     ignoreUnknownKeys?: boolean;
   },
@@ -23,8 +32,10 @@ export default function verifyForm(
       }
     }
     if (
-      (typeof expectedType === "string" && typeof value !== expectedType) ||
-      !expectedType.includes(typeof value as Primitive)
+      (typeof expectedType === "string" &&
+        !isInstanceOf(value, expectedType)) ||
+      (Array.isArray(expectedType) &&
+        !expectedType.find((t) => isInstanceOf(value, t)))
     ) {
       throw new Error(`Invalid ${key}`, {
         cause: new Error(

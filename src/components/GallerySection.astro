@@ -1,0 +1,39 @@
+---
+import { list } from "../db/gallery-items";
+import type { SupportedLocale } from "../strings/types";
+import { CldImage } from "astro-cloudinary";
+
+interface Props {
+  targetLocale?: SupportedLocale;
+}
+
+const { targetLocale } = Astro.props;
+const items = await list({
+  targetLocale,
+  ignoreTrashed: true,
+});
+---
+
+<div
+  class="flex flex-row flex-wrap items-start gap-2 overflow-clip rounded-2xl"
+>
+  {
+    items.map(({ image, alt }) => (
+      <div class="h-60 min-w-40 flex-1 bg-orange-100 object-cover sm:min-w-[30%] md:max-w-[33%] md:min-w-[20%]">
+        {image.startsWith("https://res.cloudinary.com") ? (
+          <CldImage
+            src={image}
+            width={400}
+            height={240}
+            sizes="(max-width: 640px) 100vw, 33vw"
+            class="size-full object-cover"
+            unstyled
+            alt={alt}
+          />
+        ) : (
+          <img src={image} class="size-full object-cover" alt={alt} />
+        )}
+      </div>
+    ))
+  }
+</div>
