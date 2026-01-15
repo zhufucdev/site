@@ -9,7 +9,7 @@ import { imagesTable } from "./images";
 
 export const galleryTable = pgTable("gallery", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  locale: localesEnum().notNull(),
+  locale: localesEnum(),
   tweet: text(),
   imageId: integer()
     .notNull()
