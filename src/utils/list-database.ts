@@ -1,6 +1,5 @@
 import type { APIRoute } from "astro";
 import { type SupportedLocale } from "../strings/types";
-import { list } from "../db/update-posts";
 
 export default function databaseListHandler<T>(
   list: (opts: {

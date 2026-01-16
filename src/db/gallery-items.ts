@@ -30,6 +30,7 @@ export async function list({
       image: imagesTable.url,
       alt: imagesTable.alt,
       created: galleryTable.created,
+      trashed: galleryTable.trashed,
     })
     .from(galleryTable)
     .innerJoin(imagesTable, eq(galleryTable.imageId, imagesTable.id))
