@@ -24,7 +24,7 @@ export default function databaseListHandler<T>(
         JSON.stringify(await list({ acceptedLocales, limit })),
         {
           headers: {
-            contentType: "application/json",
+            "Content-Type": "application/json",
           },
         },
       );
