@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: API
+  title: api
   description: API to post and manage stuff
   version: 1.0.0
 tags: []
@@ -679,19 +679,28 @@ components:
             - string
             - 'null'
           description: Comment on this item
-        imageId:
-          type: integer
+        image:
+          type: string
           description: Image identifier
+          format: uri
         created:
           type: string
           format: date-time
           description: Item creation time in ISO format
+        alt:
+          type: string
+          description: Alternative text describing image
+        trashed:
+          type: boolean
+          description: Whether to not display this item in the gallery
       required:
         - id
         - locale
         - tweet
-        - imageId
+        - image
         - created
+        - alt
+        - trashed
   responses: {}
   securitySchemes:
     PostAuthKey:
