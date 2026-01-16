@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 tags: []
 paths:
-  /api/update/template:
+  /update/template:
     get:
       summary: Update Post Card Template
       deprecated: false
@@ -31,7 +31,7 @@ paths:
           headers: {}
       security:
         - PostAuthKey: []
-  /api/update/list:
+  /update/list:
     get:
       summary: List Update Posts
       deprecated: false
@@ -75,7 +75,7 @@ paths:
           headers: {}
       security:
         - PostAuthKey: []
-  /api/update:
+  /update:
     put:
       summary: Create Update Post
       deprecated: false
@@ -90,7 +90,7 @@ paths:
               properties:
                 locale:
                   description: Target locale of this post
-                  $ref: '#/components/schemas/Locale'
+                  $ref: '#/components/schemas/SupportedLocale'
                 header:
                   type: string
                   description: Top header of the card, in bold color and monospaced font
@@ -130,7 +130,7 @@ paths:
           headers: {}
       security:
         - PostAuthKey: []
-  /api/update/{id}:
+  /update/{id}:
     patch:
       summary: Patch Update Post
       deprecated: false
@@ -150,7 +150,7 @@ paths:
               type: object
               properties:
                 locale:
-                  $ref: '#/components/schemas/Locale'
+                  $ref: '#/components/schemas/SupportedLocale'
                   description: Target locale of this post
                 header:
                   type: string
@@ -241,7 +241,7 @@ paths:
           headers: {}
       security:
         - PostAuthKey: []
-  /api/image/list:
+  /image/list:
     get:
       summary: List Images
       deprecated: false
@@ -260,7 +260,7 @@ paths:
           headers: {}
       security:
         - PostAuthKey: []
-  /api/image/{id}:
+  /image/{id}:
     get:
       summary: Query Image Metadata
       deprecated: false
@@ -291,7 +291,7 @@ paths:
           headers: {}
       security:
         - PostAuthKey: []
-  /api/image:
+  /image:
     post:
       summary: Upload Image
       deprecated: false
@@ -392,13 +392,27 @@ paths:
           headers: {}
       security:
         - PostAuthKey: []
-  /api/gallery/list:
+  /gallery/list:
     get:
       summary: List Gallery
       deprecated: false
       description: ''
       tags: []
-      parameters: []
+      parameters:
+        - name: locale
+          in: query
+          description: Accepted locales
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: limit
+          in: query
+          description: At most how many results to return
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: ''
@@ -411,7 +425,7 @@ paths:
           headers: {}
       security:
         - PostAuthKey: []
-  /api/gallery:
+  /gallery:
     put:
       summary: Create Gallery Item
       deprecated: false
@@ -456,10 +470,13 @@ paths:
           description: ''
           content:
             application/octet-stream:
-              schema: {}
+              schema:
+                type: object
+                properties: {}
+          headers: {}
       security:
         - PostAuthKey: []
-  /api/gallery/{id}:
+  /gallery/{id}:
     get:
       summary: Query Gallery Item
       deprecated: false
@@ -527,7 +544,7 @@ paths:
               properties:
                 locale:
                   anyOf:
-                    - $ref: '#/components/schemas/Locale'
+                    - $ref: '#/components/schemas/SupportedLocale'
                     - type: 'null'
                 tweet:
                   type: string
@@ -596,7 +613,7 @@ components:
           $ref: '#/components/schemas/Shape'
           description: Shape of the mask
         locale:
-          $ref: '#/components/schemas/Locale'
+          $ref: '#/components/schemas/SupportedLocale'
           description: Target locale of the post
         trashed:
           type: boolean
@@ -621,7 +638,7 @@ components:
         - tiltedPentagon
         - tiltedRectangle
         - waveSegment
-    Locale:
+    SupportedLocale:
       type: string
       enum:
         - en
@@ -652,7 +669,7 @@ components:
           description: Gallery item Identifier
         locale:
           anyOf:
-            - $ref: '#/components/schemas/Locale'
+            - $ref: '#/components/schemas/SupportedLocale'
             - type: 'null'
           description: >-
             Target locale, null if it's for global audience so no specific
