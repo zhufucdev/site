@@ -604,11 +604,6 @@ components:
         summary:
           type: string
           description: Tweet content in system Sans font
-        cover:
-          type:
-            - integer
-            - 'null'
-          description: Image url masked by the mask
         mask:
           $ref: '#/components/schemas/Shape'
           description: Shape of the mask
@@ -618,16 +613,20 @@ components:
         trashed:
           type: boolean
           description: Whether to not display this post
+        cover:
+          anyOf:
+            - $ref: '#/components/schemas/UpdatePostCover'
+            - type: 'null'
       required:
         - id
         - created
         - title
         - summary
-        - cover
         - mask
         - locale
         - header
         - trashed
+        - cover
     Shape:
       type: string
       enum:
@@ -701,6 +700,19 @@ components:
         - created
         - alt
         - trashed
+    UpdatePostCover:
+      type: object
+      properties:
+        image:
+          type: string
+          format: uri
+          description: Image URL
+        alt:
+          type: string
+          description: Alternative text
+      required:
+        - image
+        - alt
   responses: {}
   securitySchemes:
     PostAuthKey:
