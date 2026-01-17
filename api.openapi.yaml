@@ -26,8 +26,7 @@ paths:
           content:
             text/html:
               schema:
-                type: object
-                properties: {}
+                type: string
           headers: {}
       security:
         - PostAuthKey: []
