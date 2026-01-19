@@ -124,7 +124,7 @@ paths:
           content:
             application/json:
               schema:
-                type: number
+                type: integer
                 description: Post identifier
           headers: {}
       security:
@@ -304,7 +304,7 @@ paths:
           example: ''
           schema:
             type: string
-        - name: X-FIle-Name
+        - name: X-File-Name
           in: header
           description: Name of the original image file
           required: true
@@ -593,9 +593,7 @@ components:
           description: ISO format time representation
           format: date-time
         header:
-          type:
-            - string
-            - 'null'
+          type: string
           description: Leading header text, in bold color and monospace font
         title:
           type: string
@@ -708,9 +706,13 @@ components:
         alt:
           type: string
           description: Alternative text
+        id:
+          type: integer
+          description: Image identifier
       required:
         - image
         - alt
+        - id
   responses: {}
   securitySchemes:
     PostAuthKey:

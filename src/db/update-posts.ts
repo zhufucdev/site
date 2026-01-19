@@ -40,6 +40,7 @@ export async function list({
       title: updatesTable.title,
       summary: updatesTable.summary,
       cover: {
+        id: imagesTable.id,
         image: imagesTable.url,
         alt: imagesTable.alt,
       },
@@ -55,4 +56,30 @@ export async function list({
     return query.limit(limit);
   }
   return query;
+}
+
+export async function query(id: number) {
+  const posts = await db
+    .select({
+      id: updatesTable.id,
+      created: updatesTable.created,
+      locale: updatesTable.locale,
+      header: stringsTable.value,
+      title: updatesTable.title,
+      summary: updatesTable.summary,
+      cover: {
+        id: imagesTable.id,
+        image: imagesTable.url,
+        alt: imagesTable.alt,
+      },
+      mask: updatesTable.mask,
+      trashed: updatesTable.trashed,
+    })
+    .from(updatesTable)
+    .where(eq(updatesTable.id, id))
+    .leftJoin(stringsTable, eq(stringsTable.id, updatesTable.header))
+    .leftJoin(imagesTable, eq(imagesTable.id, updatesTable.cover));
+  if (posts.length >= 1) {
+    return posts[0];
+  }
 }

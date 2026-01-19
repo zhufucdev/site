@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { stringsTable } from "../../../db/schema/strings";
 import verifyForm from "../../../utils/verify-form";
 import { supportedLocales } from "../../../strings/types";
+import { query } from "../../../db/update-posts";
 
 export const prerender = false;
 
@@ -47,25 +48,11 @@ export const GET: APIRoute = async ({ params }) => {
   if (!Number.isInteger(id)) {
     return new Response("id must be an integer", { status: 400 });
   }
-  const posts = await db
-    .select({
-      id: updatesTable.id,
-      created: updatesTable.created,
-      locale: updatesTable.locale,
-      header: stringsTable.value,
-      title: updatesTable.title,
-      summary: updatesTable.summary,
-      cover: updatesTable.cover,
-      mask: updatesTable.mask,
-      trashed: updatesTable.trashed,
-    })
-    .from(updatesTable)
-    .where(eq(updatesTable.id, id))
-    .leftJoin(stringsTable, eq(stringsTable.id, updatesTable.header));
-  if (posts.length <= 0) {
+  const post = await query(id);
+  if (!post) {
     return new Response("Post not found", { status: 404 });
   }
-  return new Response(JSON.stringify(posts[0]));
+  return new Response(JSON.stringify(post));
 };
 
 export const PATCH: APIRoute = async ({ params, request }) => {
@@ -83,7 +70,15 @@ export const PATCH: APIRoute = async ({ params, request }) => {
   } catch (e) {
     return new Response("Invalid body", { status: 400 });
   }
-  const { locale, header, title, summary, cover, mask, trashed } = _body;
+  const {
+    locale,
+    header: headerText,
+    title,
+    summary,
+    cover,
+    mask,
+    trashed,
+  } = _body;
   try {
     verifyForm(_body, {
       ignoreUnknownKeys: true,
@@ -106,28 +101,38 @@ export const PATCH: APIRoute = async ({ params, request }) => {
       { status: 400 },
     );
   }
-  const modifiedPosts = await db
+  const _posts = await db
+    .select({ locale: updatesTable.locale, header: updatesTable.header })
+    .from(updatesTable)
+    .where(eq(updatesTable.id, id));
+  if (_posts.length < 0) {
+    return new Response("Post not found", { status: 404 });
+  }
+  const oldPost = _posts[0];
+  let header = oldPost.header;
+
+  if (typeof headerText === "string") {
+    const modifiedHeaders = await db
+      .insert(stringsTable)
+      .values({ locale: oldPost.locale, value: headerText })
+      .onConflictDoUpdate({
+        target: [stringsTable.value, stringsTable.locale],
+        set: { value: headerText }, // To still get something from returning clause
+      })
+      .returning({ id: stringsTable.id });
+    header ??= modifiedHeaders[0]?.id;
+  }
+  await db
     .update(updatesTable)
     .set({
-      locale,
       header,
+      locale,
       title,
       summary,
-      cover,
+      cover: typeof cover === 'number' && cover === -1 ? null : cover,
       mask,
       trashed,
     })
-    .where(eq(updatesTable.id, id))
-    .returning();
-  if (modifiedPosts.length < 0) {
-    return new Response("Post not found", { status: 404 });
-  }
-  const { header: headerId, ...modifiedPost } = modifiedPosts[0];
-  const currentHeaders = await db
-    .select({ value: stringsTable.value })
-    .from(stringsTable)
-    .where(eq(stringsTable.id, headerId));
-  return new Response(
-    JSON.stringify({ header: currentHeaders[0].value, ...modifiedPost }),
-  );
+    .where(eq(updatesTable.id, id));
+  return new Response(JSON.stringify(await query(id)));
 };

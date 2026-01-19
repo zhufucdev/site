@@ -18,6 +18,7 @@ export const PUT: APIRoute = async ({ request }) => {
   const {
     created,
     header,
+    cover,
     ...newPost
   }: Omit<typeof updatesTable.$inferInsert, "header"> & { header?: string } =
     _body;
@@ -42,7 +43,7 @@ export const PUT: APIRoute = async ({ request }) => {
         mask: "string",
         trashed: "boolean",
       },
-      ignoreUnknownKeys: true
+      ignoreUnknownKeys: true,
     });
   } catch (e) {
     return new Response((e as Error).message, { status: 400 });
@@ -66,7 +67,11 @@ export const PUT: APIRoute = async ({ request }) => {
     }
     const newPosts = await db
       .insert(updatesTable)
-      .values({ header: matchingHeaders[0].id, ...newPost })
+      .values({
+        header: matchingHeaders[0].id,
+        cover: cover === -1 ? null : cover,
+        ...newPost,
+      })
       .returning({ id: updatesTable.id });
     return new Response(String(newPosts[0].id), {
       status: 201,
