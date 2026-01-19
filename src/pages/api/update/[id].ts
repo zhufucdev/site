@@ -120,7 +120,7 @@ export const PATCH: APIRoute = async ({ params, request }) => {
         set: { value: headerText }, // To still get something from returning clause
       })
       .returning({ id: stringsTable.id });
-    header ??= modifiedHeaders[0]?.id;
+    header = modifiedHeaders[0]?.id ?? header;
   }
   await db
     .update(updatesTable)
