@@ -48,7 +48,7 @@ const { cover, mask, class: className, customColors = false } = Astro.props;
             cover.image.startsWith("https://res.cloudinary.com") ? (
               <CldImage src={cover.image} width={384} height={384} />
             ) : (
-              <img src={cover.image} alt={cover.alt} class="object-cover" />
+              <img src={cover.image} alt={cover.alt} class="size-full object-cover" />
             )
           ) : (
             <Image
