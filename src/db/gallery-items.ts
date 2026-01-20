@@ -2,7 +2,7 @@ import type { SupportedLocale } from "../strings/types";
 import db from "./connection";
 import { galleryTable } from "./schema/gallery";
 import { imagesTable } from "./schema/images";
-import { and, eq, isNull, not, or, type SQLWrapper } from "drizzle-orm";
+import { and, desc, eq, isNull, not, or, type SQLWrapper } from "drizzle-orm";
 
 export async function list({
   targetLocale,
@@ -33,6 +33,7 @@ export async function list({
       trashed: galleryTable.trashed,
     })
     .from(galleryTable)
+    .orderBy(desc(galleryTable.created))
     .innerJoin(imagesTable, eq(galleryTable.imageId, imagesTable.id))
     .where(and(...conditions));
   if (typeof limit === "number") {
