@@ -438,10 +438,10 @@ paths:
               type: object
               properties:
                 locale:
-                  type:
-                    - string
-                    - 'null'
                   description: Target locale, null if global
+                  anyOf:
+                    - $ref: '#/components/schemas/SupportedLocale'
+                    - type: 'null'
                 tweet:
                   type:
                     - string
