@@ -50,7 +50,7 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   let altText = request.headers.get("X-Alt-Text");
-  console.log('alt text', altText)
+  console.log("alt text", altText);
   if (!altText) {
     return new Response("X-Alt-Text is required", { status: 400 });
   }
@@ -119,18 +119,19 @@ async function chunkedUpload(
   fileName: string,
   cloudName: string,
   presetName: string,
+  chunkSize: number = (5 * 1) << 20,
 ) {
-  let sentBytes = 0;
-  const uniqueUploadId = crypto.randomUUID();
-  let response!: Response;
-  for await (const chunk of imageBytes) {
+  async function uploadChunks(
+    chunks: Uint8Array<ArrayBuffer>[],
+    offset: number,
+  ) {
     const formData = new FormData();
-    formData.append("file", new File([chunk], fileName));
+    formData.append("file", new File(chunks, fileName));
     formData.append("cloud_name", cloudName);
     formData.append("upload_preset", presetName);
-    const contentRange = `bytes ${sentBytes}-${sentBytes + chunk.length - 1}/${contentLength}`;
+    const contentRange = `bytes ${offset}-${offset + chunks.map((chunk) => chunk.length).reduce((a, b) => a + b) - 1}/${contentLength}`;
     response = await fetch(
-      `https://api.cloudinary.com/v1_1/${PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+      `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
       {
         method: "POST",
         body: formData,
@@ -143,7 +144,21 @@ async function chunkedUpload(
     if (!response.ok) {
       throw new Error(`Error from upstream service: ${await response.text()}`);
     }
-    sentBytes += chunk.length;
+  }
+
+  let sentBytes = 0;
+  const uniqueUploadId = crypto.randomUUID();
+  let response!: Response;
+  let accumulatingBuffer: Uint8Array<ArrayBuffer>[] = [];
+  let accumulatingBufferSize = 0;
+  for await (const chunk of imageBytes) {
+    if (chunk.length + accumulatingBufferSize >= chunkSize) {
+      await uploadChunks(accumulatingBuffer, sentBytes);
+      sentBytes += accumulatingBufferSize;
+    } else {
+      accumulatingBuffer.push(chunk);
+      accumulatingBufferSize += chunk.length;
+    }
   }
 
   const { secure_url } = await response.json();
