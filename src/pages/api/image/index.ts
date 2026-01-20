@@ -49,14 +49,18 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response("Service unavailble", { status: 503 });
   }
 
-  const altText = request.headers.get("X-Alt-Text");
+  let altText = request.headers.get("X-Alt-Text");
+  console.log('alt text', altText)
   if (!altText) {
     return new Response("X-Alt-Text is required", { status: 400 });
   }
-  const fileName = request.headers.get("X-File-Name");
+  altText = decodeURIComponent(altText);
+
+  let fileName = request.headers.get("X-File-Name");
   if (!fileName) {
     return new Response("X-File-Name is required", { status: 400 });
   }
+  fileName = decodeURIComponent(fileName);
 
   const _contentLength = request.headers.get("Content-Length");
   if (_contentLength === null) {
