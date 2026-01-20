@@ -12,5 +12,10 @@
 	},
 	"observability": {
 		"enabled": true
+	},
+	"vars": {
+		"PUBLIC_CLOUDINARY_CLOUD_NAME": "steves-blog",
+		"PUBLIC_SITE": "https://zhufucdev.com",
+		"CLOUDINARY_UPLOAD_PRESET": "generic"
 	}
 }
