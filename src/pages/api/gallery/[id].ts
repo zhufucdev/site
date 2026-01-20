@@ -116,10 +116,10 @@ export const PATCH: APIRoute = async ({ params, request }) => {
   }
   const { imageId: currentImageId, ...modifiedItem } = modifiedItems[0];
   const images = await db
-    .select({ url: imagesTable.url })
+    .select({ url: imagesTable.url, alt: imagesTable.alt })
     .from(imagesTable)
     .where(eq(imagesTable.id, currentImageId));
   return new Response(
-    JSON.stringify({ image: images[0].url, ...modifiedItem }),
+    JSON.stringify({ image: images[0].url, alt: images[0].alt, ...modifiedItem }),
   );
 };
