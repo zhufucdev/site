@@ -5,13 +5,14 @@
   "packageManager": "pnpm@10.26.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "drizzle-kit push && astro build",
+    "build": "drizzle-kit push --force && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "format:check": "prettier --check .",
     "format:write": "prettier --write ."
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.6",
     "@astrojs/cloudflare": "^12.6.12",
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/rss": "^4.0.14",
@@ -24,7 +25,8 @@
     "astro-cloudinary": "^1.3.5",
     "drizzle-orm": "^0.45.1",
     "solid-js": "^1.9.10",
-    "tailwindcss": "^4.1.18"
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "dotenv": "^17.2.3",
@@ -34,7 +36,6 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "sharp": "^0.34.5",
     "shiki": "^3.20.0",
-    "tsx": "^4.21.0",
     "vite": "^7.3.1",
     "wrangler": "^4.54.0",
     "xml-formatter": "^3.6.7"
