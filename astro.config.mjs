@@ -1,4 +1,6 @@
 // @ts-check
+import { builtinModules } from "module";
+
 import { articleIdByLegacyId } from "./src/legacy";
 
 import { defineConfig } from "astro/config";
@@ -18,11 +20,21 @@ import sitemap from "@astrojs/sitemap";
 const { PUBLIC_SITE } = loadEnv();
 
 const defaultLocale = "en";
+
 // https://astro.build/config
 export default defineConfig({
   site: PUBLIC_SITE,
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        external: [
+          "fsevents",
+          ...builtinModules,
+          ...builtinModules.map((m) => `node:${m}`),
+        ],
+      },
+    },
   },
 
   i18n: {
@@ -38,8 +50,10 @@ export default defineConfig({
     ...Object.fromEntries(
       Object.entries(articleIdByLegacyId).map(([legacyId, [locale, id]]) => [
         `/article/${legacyId}`,
-        locale === defaultLocale ? `/article/${id}` : `/${locale}/article/${id}`,
+        locale === defaultLocale
+          ? `/article/${id}`
+          : `/${locale}/article/${id}`,
       ]),
     ),
-  }
+  },
 });

@@ -60,6 +60,9 @@ importers:
       drizzle-kit:
         specifier: ^0.31.8
         version: 0.31.8
+      fsevents:
+        specifier: ^2.3.3
+        version: 2.3.3
       prettier:
         specifier: ^3.7.4
         version: 3.7.4
@@ -5627,8 +5630,7 @@ snapshots:
       unicode-properties: 1.4.1
       unicode-trie: 2.0.0
 
-  fsevents@2.3.3:
-    optional: true
+  fsevents@2.3.3: {}
 
   gensync@1.0.0-beta.2: {}
 

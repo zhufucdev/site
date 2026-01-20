@@ -31,6 +31,7 @@
   "devDependencies": {
     "dotenv": "^17.2.3",
     "drizzle-kit": "^0.31.8",
+    "fsevents": "^2.3.3",
     "prettier": "^3.7.4",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",

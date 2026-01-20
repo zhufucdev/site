@@ -1,5 +1,12 @@
-import { loadEnv as loadEnvVite } from "vite";
+import { parse } from "dotenv";
+import * as fs from "node:fs";
 
 export default function loadEnv(): EnviromentVariables {
-  return loadEnvVite(process.env.NODE_ENV ?? "release", process.cwd(), "");
+  if (fs.existsSync(".env")) {
+    return {
+      ...parse(fs.readFileSync(".env")),
+      ...(process.env as unknown as any),
+    };
+  }
+  return process.env as unknown as EnviromentVariables;
 }
