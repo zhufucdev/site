@@ -79,7 +79,7 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const preset = CLOUDINARY_UPLOAD_PRESET ?? "default";
     let url: string;
-    if (contentLength > (5 * 1) << 20) {
+    if (contentLength > 5 << 20) {
       const { secureUrl } = await chunkedUpload(
         imageBytes,
         contentLength,
@@ -119,12 +119,16 @@ async function chunkedUpload(
   fileName: string,
   cloudName: string,
   presetName: string,
-  chunkSize: number = (5 * 1) << 20,
+  chunkSize: number = 5 << 20,
 ) {
   async function uploadChunks(
     chunks: Uint8Array<ArrayBuffer>[],
     offset: number,
   ) {
+    if (chunks.length <= 0) {
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", new File(chunks, fileName));
     formData.append("cloud_name", cloudName);
@@ -152,14 +156,16 @@ async function chunkedUpload(
   let accumulatingBuffer: Uint8Array<ArrayBuffer>[] = [];
   let accumulatingBufferSize = 0;
   for await (const chunk of imageBytes) {
-    if (chunk.length + accumulatingBufferSize >= chunkSize) {
+    accumulatingBuffer.push(chunk);
+    accumulatingBufferSize += chunk.length;
+    if (accumulatingBufferSize > chunkSize) {
       await uploadChunks(accumulatingBuffer, sentBytes);
       sentBytes += accumulatingBufferSize;
-    } else {
-      accumulatingBuffer.push(chunk);
-      accumulatingBufferSize += chunk.length;
+      accumulatingBufferSize = 0;
+      accumulatingBuffer = [];
     }
   }
+  await uploadChunks(accumulatingBuffer, sentBytes);
 
   const { secure_url } = await response.json();
   return { secureUrl: secure_url as string };
