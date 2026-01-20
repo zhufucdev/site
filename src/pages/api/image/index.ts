@@ -72,14 +72,58 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response("Empty request body", { status: 400 });
   }
 
+  try {
+    const preset = CLOUDINARY_UPLOAD_PRESET ?? "default";
+    let url: string;
+    if (contentLength > (5 * 1) << 20) {
+      const { secureUrl } = await chunkedUpload(
+        imageBytes,
+        contentLength,
+        fileName,
+        PUBLIC_CLOUDINARY_CLOUD_NAME,
+        preset,
+      );
+      url = secureUrl;
+    } else {
+      const { secureUrl } = await upload(
+        imageBytes,
+        fileName,
+        PUBLIC_CLOUDINARY_CLOUD_NAME,
+        preset,
+      );
+      url = secureUrl;
+    }
+    const newImages = await db
+      .insert(imagesTable)
+      .values({ url, alt: altText })
+      .returning({ id: imagesTable.id });
+    return new Response(
+      JSON.stringify({
+        id: newImages[0].id,
+        url,
+      }),
+      { status: 201 },
+    );
+  } catch (error) {
+    return new Response((error as Error).message, { status: 500 });
+  }
+};
+
+async function chunkedUpload(
+  imageBytes: ReadableStream<Uint8Array<ArrayBuffer>>,
+  contentLength: number,
+  fileName: string,
+  cloudName: string,
+  presetName: string,
+) {
   let sentBytes = 0;
   const uniqueUploadId = crypto.randomUUID();
   let response!: Response;
   for await (const chunk of imageBytes) {
     const formData = new FormData();
     formData.append("file", new File([chunk], fileName));
-    formData.append("cloud_name", PUBLIC_CLOUDINARY_CLOUD_NAME);
-    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET ?? "default");
+    formData.append("cloud_name", cloudName);
+    formData.append("upload_preset", presetName);
     const contentRange = `bytes ${sentBytes}-${sentBytes + chunk.length - 1}/${contentLength}`;
     response = await fetch(
       `https://api.cloudinary.com/v1_1/${PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`,
@@ -93,24 +137,35 @@ export const POST: APIRoute = async ({ request }) => {
       },
     );
     if (!response.ok) {
-      return new Response(
-        `Error from upstream service: ${await response.text()}`,
-        { status: 500 },
-      );
+      throw new Error(`Error from upstream service: ${await response.text()}`);
     }
     sentBytes += chunk.length;
   }
 
   const { secure_url } = await response.json();
-  const newImages = await db
-    .insert(imagesTable)
-    .values({ url: secure_url, alt: altText })
-    .returning({ id: imagesTable.id });
-  return new Response(
-    JSON.stringify({
-      id: newImages[0].id,
-      url: secure_url,
-    }),
-    { status: 201 },
+  return { secureUrl: secure_url as string };
+}
+
+async function upload(
+  imageBytes: ReadableStream<Uint8Array<ArrayBuffer>>,
+  fileName: string,
+  cloudName: string,
+  presetName: string,
+) {
+  const imageBuffer: BlobPart[] = [];
+  for await (const chunk of imageBytes) {
+    imageBuffer.push(chunk);
+  }
+  const formData = new FormData();
+  formData.append("file", new File(imageBuffer, fileName));
+  formData.append("upload_preset", presetName);
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+    {
+      method: "POST",
+      body: formData,
+    },
   );
-};
+  const { secure_url } = await response.json();
+  return { secureUrl: secure_url as string };
+}
