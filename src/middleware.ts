@@ -1,7 +1,6 @@
 import { sequence, defineMiddleware } from "astro:middleware";
-import loadEnv from "./utils/load-env";
 
-const { POST_AUTH_KEY } = loadEnv();
+const { POST_AUTH_KEY } = import.meta.env;
 const interceptApiIfUnauthenticated = defineMiddleware(
   async (context, next) => {
     if (!context.url.pathname.startsWith("/api")) {

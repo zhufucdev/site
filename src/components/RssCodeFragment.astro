@@ -1,0 +1,30 @@
+---
+import { getAbsoluteLocaleUrl } from "astro:i18n";
+import { createHighlighter } from "shiki";
+import xmlFormat from "xml-formatter";
+import { defaultLocale } from "../locale";
+
+const highlighter = await createHighlighter({
+  themes: ["one-light", "vitesse-black"],
+  langs: ["xml"],
+});
+
+interface Props {
+  targetLocale?: string;
+}
+const { targetLocale = defaultLocale } = Astro.props;
+---
+
+<Fragment
+  set:html={highlighter.codeToHtml(
+    xmlFormat(
+      await (
+        await fetch(getAbsoluteLocaleUrl(targetLocale, "/rss.xml"))
+      ).text(),
+    ),
+    {
+      lang: "xml",
+      themes: { light: "one-light", dark: "vitesse-black" },
+    },
+  )}
+/>

@@ -1,6 +1,8 @@
 ---
-import IndexDefault from "../index.astro";
+import DefaultHighlights from "../../components/DefaultHighlights.astro";
 import i18n from "../../strings/zh-tw.ts";
+
+export const prerender = false;
 ---
 
-<IndexDefault i18n={i18n} />
+<DefaultHighlights i18n={i18n} />

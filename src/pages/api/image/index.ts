@@ -2,7 +2,6 @@ import type { APIRoute } from "astro";
 import db from "../../../db/connection";
 import { imagesTable } from "../../../db/schema/images";
 import { eq } from "drizzle-orm";
-import loadEnv from "../../../utils/load-env";
 
 export const prerender = false;
 
@@ -43,7 +42,8 @@ export const PUT: APIRoute = async ({ request }) => {
   }
 };
 
-const { PUBLIC_CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } = loadEnv();
+const { PUBLIC_CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } = import.meta
+  .env;
 export const POST: APIRoute = async ({ request }) => {
   if (!PUBLIC_CLOUDINARY_CLOUD_NAME) {
     return new Response("Service unavailble", { status: 503 });

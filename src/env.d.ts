@@ -1,4 +1,4 @@
-declare interface EnviromentVariables {
+declare interface ImportMetaEnv {
   PUBLIC_SITE?: string;
   PUBLIC_CLOUDINARY_CLOUD_NAME?: string;
 
@@ -7,4 +7,8 @@ declare interface EnviromentVariables {
   CLOUDINARY_API_KEY?: string;
   CLOUDINARY_API_SECRET?: string;
   CLOUDINARY_UPLOAD_PRESET?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
 }
