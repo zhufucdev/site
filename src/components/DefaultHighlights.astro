@@ -15,11 +15,7 @@ import GallerySection from "../components/GallerySection.astro";
 import RssCodeFragment from "./RssCodeFragment.tsx";
 import enRes from "../strings/en";
 import { getCollection } from "astro:content";
-import { getImage } from "astro:assets";
 import { getRelativeArticleUrl } from "../utils/article-url";
-import { getRssResponse } from "../utils/rss-template";
-
-import waveSegment from "../images/WaveSegment.svg";
 
 interface Props {
   i18n?: I18nResource;
@@ -42,7 +38,7 @@ const {
   <PostsSection i18n={i18n} />
   <div
     class="mt-2 h-20 w-full bg-gray-100 bg-repeat-x dark:bg-zinc-800"
-    style={`mask-image: url(${(await getImage({ src: waveSegment })).src})`}
+    style={`mask-image: url(/public/WaveSegment.svg)`}
   >
   </div>
   <div
