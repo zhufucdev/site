@@ -1,5 +1,5 @@
 ---
-import GalleryItem from "../../../components/GalleryItem.astro";
+import DefaultGalleryItem from "../../../components/DefaultGalleryItem.astro";
 import zhTwRes from "../../../strings/zh-tw";
 import * as gallery from "../../../db/gallery-items";
 import { getRelativeLocaleUrl } from "astro:i18n";
@@ -24,7 +24,7 @@ if (photoLocale && photoLocale !== zhTwRes.localeName) {
 }
 ---
 
-<GalleryItem
+<DefaultGalleryItem
   i18n={zhTwRes}
   src={photo.image}
   alt={photo.alt}

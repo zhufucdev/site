@@ -1,5 +1,5 @@
 ---
-import GalleryItem from "../../components/GalleryItem.astro";
+import DefaultGalleryItem from "../../components/DefaultGalleryItem.astro";
 import enRes from "../../strings/en";
 import * as gallery from "../../db/gallery-items";
 import { getRelativeLocaleUrl } from "astro:i18n";
@@ -23,7 +23,7 @@ if (photoLocale && photoLocale !== enRes.localeName) {
 }
 ---
 
-<GalleryItem
+<DefaultGalleryItem
   i18n={enRes}
   src={photo.image}
   alt={photo.alt}
