@@ -1,7 +1,9 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import { list } from "../db/gallery-items";
 import type { SupportedLocale } from "../strings/types";
 import { CldImage } from "astro-cloudinary";
+import { defaultLocale } from "../locale";
 
 interface Props {
   targetLocale?: SupportedLocale;
@@ -18,8 +20,15 @@ const items = await list({
   class="flex flex-row flex-wrap items-start gap-2 overflow-clip rounded-2xl"
 >
   {
-    items.map(({ image, alt }) => (
-      <div class="h-60 min-w-40 flex-1 bg-orange-100 object-cover sm:min-w-[30%] md:max-w-[33%] md:min-w-[20%]">
+    items.map(({ image, alt, id }) => (
+      <a
+        href={getRelativeLocaleUrl(
+          targetLocale ?? defaultLocale,
+          `/gallery/${id}`,
+        )}
+        class="h-60 min-w-40 flex-1 bg-orange-100 sm:min-w-[30%] md:max-w-[33%] md:min-w-[20%]"
+        transition:name={`gallery-${id}`}
+      >
         {image.startsWith("https://res.cloudinary.com") ? (
           <CldImage
             src={image}
@@ -33,7 +42,7 @@ const items = await list({
         ) : (
           <img src={image} class="size-full object-cover" alt={alt} />
         )}
-      </div>
+      </a>
     ))
   }
 </div>

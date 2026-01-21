@@ -21,6 +21,7 @@ const zhTwRes: I18nResource = {
   copy_failed_you_may_go_manual_para: "複製失敗，你可以手動複製以下內容",
   page_not_found_para: "找不到指定頁面",
   go_home_para: "回到首頁",
+  photo_para: "相片",
 };
 
 export default zhTwRes;

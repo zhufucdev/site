@@ -1,7 +1,6 @@
 ---
-import { Image } from "astro:assets";
+import Unimage from "./Unimage.astro";
 import TitleSummary from "./TitleSummary.astro";
-import { CldImage } from "astro-cloudinary";
 import type { ImageMetadata } from "astro";
 interface Props {
   cover?: { image: string | ImageMetadata; alt: string };
@@ -24,8 +23,12 @@ const { cover, mask, class: className, customColors = false } = Astro.props;
   {
     Astro.slots.has("header-leading") && Astro.slots.has("header-tailing") && (
       <p class="space-x-2 font-mono leading-8">
-        <span class="bg-orange-600 p-2 text-white"><slot name="header-leading" /></span>
-        <span><slot name="header-tailing" /></span>
+        <span class="bg-orange-600 p-2 text-white">
+          <slot name="header-leading" />
+        </span>
+        <span>
+          <slot name="header-tailing" />
+        </span>
       </p>
     )
   }
@@ -43,23 +46,15 @@ const { cover, mask, class: className, customColors = false } = Astro.props;
         .join(";")}
     >
       {
-        cover &&
-          (typeof cover.image === "string" ? (
-            cover.image.startsWith("https://res.cloudinary.com") ? (
-              <CldImage src={cover.image} width={384} height={384} />
-            ) : (
-              <img src={cover.image} alt={cover.alt} class="size-full object-cover" />
-            )
-          ) : (
-            <Image
-              src={cover.image}
-              alt={cover.alt}
-              width={384}
-              height={384}
-              fit="cover"
-              class="object-cover"
-            />
-          ))
+        cover && (
+          <Unimage
+            image={cover.image}
+            alt={cover.alt}
+            width={384}
+            height={384}
+            class="object-cover aspect-square"
+          />
+        )
       }
     </div>
   </div>

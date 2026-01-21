@@ -16,10 +16,9 @@ import solidJs from "@astrojs/solid-js";
 import mdx from "@astrojs/mdx";
 
 import sitemap from "@astrojs/sitemap";
+import { defaultLocale } from "./src/locale";
 
 const { PUBLIC_SITE } = loadEnv();
-
-const defaultLocale = "en";
 
 // https://astro.build/config
 export default defineConfig({

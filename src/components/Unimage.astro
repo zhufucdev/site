@@ -1,0 +1,48 @@
+---
+import { Image } from "astro:assets";
+import { CldImage } from "astro-cloudinary";
+import type { ImageMetadata } from "astro";
+interface Props {
+  image: string | ImageMetadata;
+  alt: string;
+  width: number;
+  height: number;
+  class?: string;
+}
+const { image, alt, width, height, class: className, ...others } = Astro.props;
+---
+
+{
+  typeof image === "string" ? (
+    image.startsWith("https://res.cloudinary.com") ? (
+      <CldImage
+        src={image}
+        alt={alt}
+        unstyled
+        width={width}
+        height={height}
+        class={className}
+        {...others}
+      />
+    ) : (
+      <img
+        src={image}
+        alt={alt}
+        width={width}
+        height={height}
+        class={className}
+        {...others}
+      />
+    )
+  ) : (
+    <Image
+      src={image}
+      alt={alt}
+      width={width}
+      height={height}
+      layout="constrained"
+      class={className}
+      {...others}
+    />
+  )
+}

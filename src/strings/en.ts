@@ -21,7 +21,8 @@ const enRes: I18nResource = {
   copy_failed_you_may_go_manual_para:
     "Copy failed. You may manually copy the content below.",
   page_not_found_para: "The page you are looking for was not found",
-  go_home_para: "Go home"
+  go_home_para: "Go home",
+  photo_para: "Photo",
 };
 
 export default enRes;

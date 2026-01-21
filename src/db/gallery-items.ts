@@ -41,3 +41,22 @@ export async function list({
   }
   return query;
 }
+
+export async function query(id: number) {
+  const items = await db
+    .select({
+      id: galleryTable.id,
+      locale: galleryTable.locale,
+      tweet: galleryTable.tweet,
+      image: imagesTable.url,
+      alt: imagesTable.alt,
+      created: galleryTable.created,
+      trashed: galleryTable.trashed,
+    })
+    .from(galleryTable)
+    .where(eq(galleryTable.id, id))
+    .innerJoin(imagesTable, eq(galleryTable.imageId, imagesTable.id));
+  if (items.length >= 1) {
+    return items[0];
+  }
+}

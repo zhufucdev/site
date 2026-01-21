@@ -5,6 +5,7 @@ import { imagesTable } from "../../../db/schema/images";
 import { eq } from "drizzle-orm";
 import verifyForm from "../../../utils/verify-form";
 import { supportedLocales } from "../../../strings/types";
+import { query } from "../../../db/update-posts";
 
 export const prerender = false;
 
@@ -17,22 +18,11 @@ export const GET: APIRoute = async ({ params }) => {
   if (!Number.isInteger(id)) {
     return new Response("id must be an integer", { status: 400 });
   }
-  const items = await db
-    .select({
-      id: galleryTable.id,
-      locale: galleryTable.locale,
-      tweet: galleryTable.tweet,
-      image: imagesTable.url,
-      created: galleryTable.created,
-      trashed: galleryTable.trashed,
-    })
-    .from(galleryTable)
-    .where(eq(galleryTable.id, id))
-    .innerJoin(imagesTable, eq(galleryTable.imageId, imagesTable.id));
-  if (items.length <= 0) {
+  const item = await query(id);
+  if (!item) {
     return new Response("Item not found", { status: 404 });
   }
-  return new Response(JSON.stringify(items[0]));
+  return new Response(JSON.stringify(item));
 };
 
 export const DELETE: APIRoute = async ({ params }) => {
@@ -120,6 +110,10 @@ export const PATCH: APIRoute = async ({ params, request }) => {
     .from(imagesTable)
     .where(eq(imagesTable.id, currentImageId));
   return new Response(
-    JSON.stringify({ image: images[0].url, alt: images[0].alt, ...modifiedItem }),
+    JSON.stringify({
+      image: images[0].url,
+      alt: images[0].alt,
+      ...modifiedItem,
+    }),
   );
 };

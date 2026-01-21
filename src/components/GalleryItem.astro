@@ -1,0 +1,53 @@
+---
+import Unimage from "./Unimage.astro";
+import Master from "../layouts/Master.astro";
+import XMark from "../icons/XMark.svg";
+import ArrowPath from "../icons/ArrowPath.svg";
+
+import type { I18nResource } from "../strings/types";
+import formatDate from "../utils/dateformat";
+import enRes from "../strings/en";
+
+interface Props {
+  i18n?: I18nResource;
+  src: string;
+  alt: string;
+  id: number;
+  created: Date;
+  tweet: string | null;
+}
+const { i18n = enRes, src, alt, id, tweet, created } = Astro.props;
+---
+
+<Master lang={i18n.localeName} title={i18n.photo_para}>
+  <a
+    class="fixed top-0 left-0 z-10 p-2"
+    slot="nav"
+    href="javascript:history.back()"
+  >
+    <XMark class="size-8 rounded-full bg-white stroke-2 p-1 text-black" />
+  </a>
+  <div class="fixed top-0 left-0 -z-10" transition:name=`gallery-${id}`>
+    <ArrowPath
+      class="absolute top-1/2 left-1/2 -z-20 size-8 -translate-x-1/2 -translate-y-1/2 animate-spin"
+    />
+    <Unimage
+      image={src}
+      alt={alt}
+      width={600}
+      height={600}
+      class="h-screen w-screen object-contain"
+    />
+  </div>
+  <div
+    class="no-scrollbar max-h-screen snap-y snap-mandatory overflow-y-scroll"
+  >
+    <div class="h-screen snap-end"></div>
+    <div class="snap-end bg-white p-6 dark:bg-neutral-950 space-y-2">
+      {tweet && <p>{tweet}</p>}
+      <p class="text-neutral-500">
+        {formatDate(created, i18n.localeName, "long")}
+      </p>
+    </div>
+  </div>
+</Master>
