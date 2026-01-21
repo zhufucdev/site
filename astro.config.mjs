@@ -56,4 +56,13 @@ export default defineConfig({
       ]),
     ),
   },
+
+  security: {
+    allowedDomains: [
+      {
+        hostname: "**.zhufucdev.com",
+        protocol: "https",
+      },
+    ],
+  },
 });
