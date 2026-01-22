@@ -13,12 +13,19 @@ interface Props {
   targetLocale?: string;
 }
 
+function removeSuffix(str: string, suffix: string) {
+  if (str.endsWith(suffix)) {
+    return str.slice(0, str.length - suffix.length);
+  }
+  return str;
+}
+
 export default function RssCodeFragment(props: Props) {
   const targetLocale = () => props.targetLocale ?? defaultLocale;
   const [rssText] = createResource(targetLocale(), (targetLocale) =>
-    fetch(getAbsoluteLocaleUrl(targetLocale, "/rss.xml")).then((res) =>
-      res.text(),
-    ),
+    fetch(
+      removeSuffix(getAbsoluteLocaleUrl(targetLocale, "/rss.xml"), "/"), // somewhat bugged
+    ).then((res) => res.text()),
   );
   return (
     <Switch>
