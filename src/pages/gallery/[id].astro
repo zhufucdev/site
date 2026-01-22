@@ -15,7 +15,7 @@ const photo = await gallery.query(id!);
 if (typeof photo === "undefined" || photo.trashed) {
   return Astro.redirect("/404");
 }
-const photoLocale = photo.locale ?? defaultLocale;
+const photoLocale = photo.locale;
 if (photoLocale && photoLocale !== enRes.localeName) {
   return Astro.redirect(
     getRelativeLocaleUrl(photoLocale ?? defaultLocale, `/gallery/${id}`),
