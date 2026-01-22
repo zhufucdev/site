@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=WDXL+Lubrifont+SC&display=swap");
 @import "tailwindcss";
 
@@ -13,6 +13,38 @@
   --font-default:
     "Futura", "Josefin Sans", "Noto Sans SC", "Noto Sans JP", "Noto Sans KR",
     system-ui, -apple-system, sans-serif;
+  --animate-spin-lgbt: spin-lgbt 1s linear infinite;
+  @keyframes spin-lgbt {
+    0% {
+      color: #ff68b5;
+      transform: rotate(0deg);
+    }
+    12.5% {
+      color: #f00;
+    }
+    25% {
+      color: #ff8e00;
+    }
+    37.5% {
+      color: #ff0;
+    }
+    50% {
+      color: #008e00;
+    }
+    62.5% {
+      color: #00c0bf;
+    }
+    75% {
+      color: #400098;
+    }
+    87.5% {
+      color: #8e008d;
+    }
+    100% {
+      color: #ff68b5;
+      transform: rotate(360deg);
+    }
+  }
 }
 
 @layer utilities {
