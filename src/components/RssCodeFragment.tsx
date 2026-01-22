@@ -1,4 +1,4 @@
-import { getAbsoluteLocaleUrl } from "astro:i18n";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import { createHighlighter } from "shiki";
 import xmlFormat from "xml-formatter";
 import { defaultLocale } from "../locale";
@@ -24,7 +24,7 @@ export default function RssCodeFragment(props: Props) {
   const targetLocale = () => props.targetLocale ?? defaultLocale;
   const [rssText] = createResource(targetLocale(), (targetLocale) =>
     fetch(
-      removeSuffix(getAbsoluteLocaleUrl(targetLocale, "/rss.xml"), "/"), // somewhat bugged
+      removeSuffix(getRelativeLocaleUrl(targetLocale, "/rss.xml"), "/"), // somewhat bugged
     ).then((res) => res.text()),
   );
   return (
