@@ -39,7 +39,10 @@ export const PUT: APIRoute = async ({ request }) => {
       .insert(galleryTable)
       .values({ locale, tweet, imageId })
       .returning({ id: galleryTable.id });
-    return new Response(String(newItems[0].id), { status: 201 });
+    return new Response(String(newItems[0].id), {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (e) {
     console.error("Failed to create gallery item");
     console.error(e);

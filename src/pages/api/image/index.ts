@@ -50,7 +50,6 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   let altText = request.headers.get("X-Alt-Text");
-  console.log("alt text", altText);
   if (!altText) {
     return new Response("X-Alt-Text is required", { status: 400 });
   }
@@ -106,7 +105,7 @@ export const POST: APIRoute = async ({ request }) => {
         id: newImages[0].id,
         url,
       }),
-      { status: 201 },
+      { status: 201, headers: { "Content-Type": "application/json" } },
     );
   } catch (error) {
     return new Response((error as Error).message, { status: 500 });

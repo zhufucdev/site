@@ -311,6 +311,13 @@ paths:
           example: ''
           schema:
             type: string
+        - name: Content-Length
+          in: header
+          description: ''
+          required: true
+          example: 0
+          schema:
+            type: integer
       requestBody:
         content:
           application/octet-stream:
