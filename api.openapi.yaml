@@ -586,6 +586,64 @@ paths:
           headers: {}
       security:
         - PostAuthKey: []
+  /strings/by-locale:
+    get:
+      summary: List Strings by Locale Copy
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  en:
+                    type: array
+                    items:
+                      type: string
+                  zh:
+                    type: array
+                    items:
+                      type: string
+                  zh-tw:
+                    type: array
+                    items:
+                      type: string
+                required:
+                  - en
+                  - zh
+                  - zh-tw
+      security:
+        - PostAuthKey: []
+  /strings/by-locale/{locale}:
+    get:
+      summary: List Strings by Specific Locale
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: locale
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+          headers: {}
+      security:
+        - PostAuthKey: []
 webhooks: {}
 components:
   schemas:
