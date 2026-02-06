@@ -75,6 +75,9 @@ export const PUT: APIRoute = async ({ request }) => {
       .returning({ id: updatesTable.id });
     return new Response(String(newPosts[0].id), {
       status: 201,
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
   } catch (e) {
     console.error("Error creating update post:");
