@@ -36,6 +36,9 @@ export const DELETE: APIRoute = async ({ params }) => {
     .where(eq(stringsTable.id, header));
   return new Response(
     JSON.stringify({ header: headers[0].value, ...deletePost }),
+    {
+      headers: { "Content-Type": "application/json" },
+    },
   );
 };
 
@@ -52,7 +55,9 @@ export const GET: APIRoute = async ({ params }) => {
   if (!post) {
     return new Response("Post not found", { status: 404 });
   }
-  return new Response(JSON.stringify(post));
+  return new Response(JSON.stringify(post), {
+    headers: { "Content-Type": "application/json" },
+  });
 };
 
 export const PATCH: APIRoute = async ({ params, request }) => {
@@ -129,10 +134,12 @@ export const PATCH: APIRoute = async ({ params, request }) => {
       locale,
       title,
       summary,
-      cover: typeof cover === 'number' && cover === -1 ? null : cover,
+      cover: typeof cover === "number" && cover === -1 ? null : cover,
       mask,
       trashed,
     })
     .where(eq(updatesTable.id, id));
-  return new Response(JSON.stringify(await query(id)));
+  return new Response(JSON.stringify(await query(id)), {
+    headers: { "Content-Type": "application/json" },
+  });
 };
