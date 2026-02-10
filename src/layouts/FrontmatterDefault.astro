@@ -81,4 +81,18 @@ const { frontmatter, i18n, url } = Astro.props;
   article :global(li p) {
     @apply inline;
   }
+  article :global(.shiki) {
+    overflow-x: scroll;
+  }
+
+  article :global(.mermaid-default) {
+    @media (prefers-color-scheme: dark) {
+      display: none !important;
+    }
+  }
+  article :global(.mermaid-dark) {
+    @media (prefers-color-scheme: dark) {
+      display: block !important;
+    }
+  }
 </style>

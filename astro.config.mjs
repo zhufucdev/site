@@ -15,6 +15,10 @@ import solidJs from "@astrojs/solid-js";
 
 import mdx from "@astrojs/mdx";
 
+import { rehypeMermaidCLI } from "rehype-mermaid-cli";
+
+import rehypeShiki from "@shikijs/rehype";
+
 import sitemap from "@astrojs/sitemap";
 import { defaultLocale } from "./src/locale";
 
@@ -39,6 +43,13 @@ export default defineConfig({
   i18n: {
     locales: ["en", "zh", "zh-tw"],
     defaultLocale,
+  },
+  markdown: {
+    rehypePlugins: [
+      [rehypeMermaidCLI, { renderThemes: ["default", "dark"] }],
+      [rehypeShiki, { theme: "github-dark" }],
+    ],
+    syntaxHighlight: false,
   },
 
   adapter: cloudflare({
