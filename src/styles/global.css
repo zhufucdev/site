@@ -14,7 +14,7 @@
     "Futura", "Josefin Sans", "Noto Sans SC", "Noto Sans JP", "Noto Sans KR",
     system-ui, -apple-system, sans-serif;
   --animate-spin-lgbt: spin-lgbt 1s linear infinite;
-  --animate-expand-vertical-screen: expand-vertical-screen 0.2s forwards ease-in;
+  --animate-expand-vertical-screen: expand-vertical-screen 0.2s cubic-bezier(0, 0, 0.13, 1);
   @keyframes spin-lgbt {
     0% {
       color: #ff68b5;
