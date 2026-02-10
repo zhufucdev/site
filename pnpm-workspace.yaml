@@ -3,3 +3,5 @@ onlyBuiltDependencies:
   - '@openapitools/openapi-generator-cli'
   - esbuild
   - puppeteer
+  - sharp
+  - workerd

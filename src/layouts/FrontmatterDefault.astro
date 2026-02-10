@@ -98,4 +98,39 @@ const { frontmatter, i18n, url } = Astro.props;
       display: block !important;
     }
   }
+  article :global(.mermaid:not([data-processed])) {
+    display: none;
+  }
+  article :global(.mermaid.dark) {
+    @media (prefers-color-scheme: light) {
+      display: none;
+    }
+  }
+  article :global(.mermaid.light) {
+    @media (prefers-color-scheme: dark) {
+      display: none;
+    }
+  }
 </style>
+
+<script>
+  import mermaid from "mermaid";
+  const query = window.matchMedia("(prefers-color-scheme: dark)");
+  runMermaid(query.matches);
+
+  function runMermaid(darkMode: boolean) {
+    mermaid.initialize({
+      theme: darkMode ? "dark" : "neutral",
+      startOnLoad: false,
+    });
+    mermaid.run({
+      querySelector: `.mermaid.${darkMode ? "dark" : "light"}`,
+    });
+  }
+  query.addEventListener("change", (event) => {
+    runMermaid(event.matches);
+  });
+  document.addEventListener("astro:page-load", () => {
+    runMermaid(query.matches);
+  });
+</script>

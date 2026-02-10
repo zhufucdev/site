@@ -15,7 +15,7 @@ import solidJs from "@astrojs/solid-js";
 
 import mdx from "@astrojs/mdx";
 
-import { rehypeMermaidCLI } from "rehype-mermaid-cli";
+import mermaid from "./astro-mermaid-integration";
 
 import rehypeShiki from "@shikijs/rehype";
 
@@ -45,17 +45,27 @@ export default defineConfig({
     defaultLocale,
   },
   markdown: {
-    rehypePlugins: [
-      [rehypeMermaidCLI, { renderThemes: ["default", "dark"] }],
-      [rehypeShiki, { theme: "github-dark" }],
-    ],
+    rehypePlugins: [[rehypeShiki, { theme: "github-dark" }]],
     syntaxHighlight: false,
   },
 
   adapter: cloudflare({
     imageService: "compile",
   }),
-  integrations: [solidJs(), mdx(), sitemap()],
+  integrations: [
+    mermaid({
+      theme: "neutral",
+      autoTheme: false,
+      mermaidConfig: {
+        startOnLoad: false,
+        logLevel: "error",
+        securityLevel: "strict",
+      },
+    }),
+    solidJs(),
+    mdx(),
+    sitemap(),
+  ],
   redirects: {
     ...Object.fromEntries(
       Object.entries(articleIdByLegacyId).map(([legacyId, [locale, id]]) => [
