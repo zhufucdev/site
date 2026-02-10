@@ -81,6 +81,9 @@ const { frontmatter, i18n, url } = Astro.props;
   article :global(li p) {
     @apply inline;
   }
+  article :global(li li) {
+    @apply ml-4;
+  }
   article :global(.shiki) {
     overflow-x: scroll;
   }
