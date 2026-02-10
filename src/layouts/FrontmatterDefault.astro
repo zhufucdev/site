@@ -116,7 +116,6 @@ const { frontmatter, i18n, url } = Astro.props;
 <script>
   import mermaid from "mermaid";
   const query = window.matchMedia("(prefers-color-scheme: dark)");
-  runMermaid(query.matches);
 
   function runMermaid(darkMode: boolean) {
     mermaid.initialize({
