@@ -9,18 +9,7 @@ interface Props {
 const { i18n = enRes } = Astro.props;
 ---
 
-<div class="comment-section relative min-h-64">
-  <script
-    is:inline
-    is:raw
-    src="https://utteranc.es/client.js"
-    repo="zhufucdev/site"
-    label={process.env.NODE_ENV === "production" ? "comment" : "comment in dev"}
-    issue-term="pathname"
-    theme="preferred-color-scheme"
-    crossorigin="anonymous"
-    async></script>
-
+<comment-section class="relative min-h-64">
   <div
     class="utterances-loading absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1"
   >
@@ -33,10 +22,31 @@ const { i18n = enRes } = Astro.props;
 
     <p>{i18n.loading_comments}</p>
   </div>
-</div>
+</comment-section>
 
 <style is:global>
-  .comment-section .utterances ~ .utterances-loading {
+  comment-section .utterances ~ .utterances-loading {
     display: none;
   }
 </style>
+
+<script>
+  class CommentSection extends HTMLElement {
+    connectedCallback() {
+      const script = document.createElement("script");
+      Object.entries({
+        src: "https://utteranc.es/client.js",
+        repo: "zhufucdev/site",
+        label:
+          process.env.NODE_ENV === "production" ? "comment" : "comment in dev",
+        "issue-term": "pathname",
+        theme: "preferred-color-scheme",
+        crossorigin: "anonymous",
+      }).forEach(([key, value]) => {
+        script.setAttribute(key, value);
+      });
+      this.prepend(script);
+    }
+  }
+  customElements.define("comment-section", CommentSection);
+</script>
