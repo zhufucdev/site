@@ -17,7 +17,8 @@ export type i18nStringKeys =
   | "copy_failed_you_may_go_manual_para"
   | "page_not_found_para"
   | "go_home_para"
-  | "photo_para";
+  | "photo_para"
+  | "loading_comments";
 export type i18nFunctionKeys = "via_span";
 export type i18nKeys = i18nStringKeys | i18nFunctionKeys;
 export const supportedLocales = ["en", "zh", "zh-tw"] as const;

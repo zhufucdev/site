@@ -1,0 +1,42 @@
+---
+import ProgressCircle from "../images/ProgressCircle.svg";
+import enRes from "../strings/en";
+import type { I18nResource } from "../strings/types";
+interface Props {
+  i18n?: I18nResource;
+}
+
+const { i18n = enRes } = Astro.props;
+---
+
+<div class="comment-section relative min-h-64">
+  <script
+    is:inline
+    is:raw
+    src="https://utteranc.es/client.js"
+    repo="zhufucdev/site"
+    label={process.env.NODE_ENV === "production" ? "comment" : "comment in dev"}
+    issue-term="pathname"
+    theme="preferred-color-scheme"
+    crossorigin="anonymous"
+    async></script>
+
+  <div
+    class="utterances-loading absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1"
+  >
+    <ProgressCircle
+      class:list={[
+        "size-12 animate-spin",
+        Math.random() < 0.05 ? "animate-spin-lgbt" : "animate-spin",
+      ]}
+    />
+
+    <p>{i18n.loading_comments}</p>
+  </div>
+</div>
+
+<style is:global>
+  .comment-section .utterances ~ .utterances-loading {
+    display: none;
+  }
+</style>

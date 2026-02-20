@@ -2,6 +2,7 @@
 import Master from "./Master.astro";
 import Topbar from "../components/Topbar.astro";
 import BottomFooter from "../components/BottomFooter.astro";
+import Comments from "../components/Comments.astro";
 import type { I18nResource } from "../strings/types";
 import formatDate from "../utils/dateformat";
 interface Props {
@@ -33,7 +34,7 @@ const { frontmatter, i18n, url } = Astro.props;
     </p>
     <slot />
   </article>
-  <div class="h-6"></div>
+  <Comments i18n={i18n} />
   <BottomFooter slot="footer" i18n={i18n} currentNavItem={url} />
 </Master>
 
@@ -111,6 +112,7 @@ const { frontmatter, i18n, url } = Astro.props;
       display: none;
     }
   }
+
 </style>
 
 <script>

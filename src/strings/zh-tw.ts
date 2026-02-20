@@ -22,6 +22,7 @@ const zhTwRes: I18nResource = {
   page_not_found_para: "找不到指定頁面",
   go_home_para: "回到首頁",
   photo_para: "相片",
+  loading_comments: "載入評論中…",
 };
 
 export default zhTwRes;

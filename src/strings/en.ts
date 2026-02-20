@@ -23,6 +23,7 @@ const enRes: I18nResource = {
   page_not_found_para: "The page you are looking for was not found",
   go_home_para: "Go home",
   photo_para: "Photo",
+  loading_comments: "Loading comments…",
 };
 
 export default enRes;
