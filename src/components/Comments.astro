@@ -4,14 +4,15 @@ import enRes from "../strings/en";
 import type { I18nResource } from "../strings/types";
 interface Props {
   i18n?: I18nResource;
+  class?: string;
 }
 
-const { i18n = enRes } = Astro.props;
+const { i18n = enRes, class: clazz } = Astro.props;
 ---
 
-<comment-section class="relative min-h-64">
+<comment-section class:list={["relative", clazz]}>
   <div
-    class="utterances-loading absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1"
+    class="giscus-loading absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1"
   >
     <ProgressCircle
       class:list={[
@@ -25,7 +26,7 @@ const { i18n = enRes } = Astro.props;
 </comment-section>
 
 <style is:global>
-  comment-section .utterances ~ .utterances-loading {
+  comment-section .giscus ~ .giscus-loading {
     display: none;
   }
 </style>
@@ -35,15 +36,27 @@ const { i18n = enRes } = Astro.props;
     connectedCallback() {
       const script = document.createElement("script");
       Object.entries({
-        src: "https://utteranc.es/client.js",
-        repo: "zhufucdev/site",
-        label:
-          process.env.NODE_ENV === "production" ? "comment" : "comment in dev",
-        "issue-term": "pathname",
-        theme: "preferred-color-scheme",
+        src: "https://giscus.app/client.js",
+        "data-repo": "zhufucdev/site",
+        "data-repo-id": "R_kgDOQvd6Dg",
+        "data-category": "Announcements",
+        "data-category-id": "DIC_kwDOQvd6Ds4C244a",
+        "data-mapping": "pathname",
+        "data-strict": "1",
+        "data-reactions-enabled": "1",
+        "data-emit-metadata": "0",
+        "data-input-position": "top",
+        "data-theme": "preferred_color_scheme",
+        "data-lang": "en",
+        "data-loading": "lazy",
         crossorigin: "anonymous",
+        async: true,
       }).forEach(([key, value]) => {
-        script.setAttribute(key, value);
+        if (typeof value === "string") {
+          script.setAttribute(key, value);
+        } else if (value) {
+          script.setAttribute(key, "");
+        }
       });
       this.prepend(script);
     }

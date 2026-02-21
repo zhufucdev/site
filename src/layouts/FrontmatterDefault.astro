@@ -17,7 +17,7 @@ const { frontmatter, i18n, url } = Astro.props;
   lang={i18n.localeName}
   title={frontmatter.title}
   description={frontmatter.summary}
-  class="px-6 font-sans"
+  class="items-center px-6 font-sans"
 >
   <Topbar
     slot="nav"
@@ -25,7 +25,7 @@ const { frontmatter, i18n, url } = Astro.props;
     currentItem="articles"
     allowNavigateToCurrent
   />
-  <article class="max-w-2xl space-y-2 self-center">
+  <article class="max-w-2xl space-y-2">
     <header class="font-default text-4xl">
       {frontmatter.title}
     </header>
@@ -34,7 +34,7 @@ const { frontmatter, i18n, url } = Astro.props;
     </p>
     <slot />
   </article>
-  <Comments i18n={i18n} />
+  <Comments i18n={i18n} class="my-6 min-h-96 w-full max-w-2xl" />
   <BottomFooter slot="footer" i18n={i18n} currentNavItem={url} />
 </Master>
 
@@ -112,7 +112,6 @@ const { frontmatter, i18n, url } = Astro.props;
       display: none;
     }
   }
-
 </style>
 
 <script>
