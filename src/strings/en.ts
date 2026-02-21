@@ -24,6 +24,8 @@ const enRes: I18nResource = {
   go_home_para: "Go home",
   photo_para: "Photo",
   loading_comments: "Loading comments…",
+  steves_site_with_updates_and_articles_para:
+    "Steve's personal site where they posts updates and long form blogs",
 };
 
 export default enRes;

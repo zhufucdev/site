@@ -18,7 +18,9 @@ export type i18nStringKeys =
   | "page_not_found_para"
   | "go_home_para"
   | "photo_para"
-  | "loading_comments";
+  | "loading_comments"
+  | "steves_site_with_updates_and_articles_para";
+
 export type i18nFunctionKeys = "via_span";
 export type i18nKeys = i18nStringKeys | i18nFunctionKeys;
 export const supportedLocales = ["en", "zh", "zh-tw"] as const;

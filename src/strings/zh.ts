@@ -22,7 +22,9 @@ const zhRes: I18nResource = {
   page_not_found_para: "找不到指定页面",
   go_home_para: "回到首页",
   photo_para: "照片",
-  loading_comments: "加载评论中…"
+  loading_comments: "加载评论中…",
+  steves_site_with_updates_and_articles_para:
+    "Steve的个人站，有动态和长篇幅博文",
 };
 
 export default zhRes;

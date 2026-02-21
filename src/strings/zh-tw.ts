@@ -23,6 +23,8 @@ const zhTwRes: I18nResource = {
   go_home_para: "回到首頁",
   photo_para: "相片",
   loading_comments: "載入評論中…",
+  steves_site_with_updates_and_articles_para:
+    "Steve的個人站，有動態和長篇幅博文",
 };
 
 export default zhTwRes;
