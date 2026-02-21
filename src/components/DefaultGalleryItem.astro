@@ -7,6 +7,7 @@ import ProgressCircle from "../images/ProgressCircle.svg";
 import type { I18nResource } from "../strings/types";
 import formatDate from "../utils/dateformat";
 import enRes from "../strings/en";
+import getIsoLangCodeByLocale from "../utils/iso-lang-code-by-locale";
 
 interface Props {
   i18n?: I18nResource;
@@ -19,7 +20,7 @@ interface Props {
 const { i18n = enRes, src, alt, id, tweet, created } = Astro.props;
 ---
 
-<Master lang={i18n.localeName} title={i18n.photo_para}>
+<Master lang={getIsoLangCodeByLocale(i18n.localeName)} title={i18n.photo_para}>
   <a
     class="fixed top-0 left-0 z-10 p-2"
     slot="nav"

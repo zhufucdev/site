@@ -4,13 +4,14 @@ import Topbar from "../components/Topbar.astro";
 import UnderliningTextButton from "../components/UnderliningTextButton.astro";
 import type { I18nResource } from "../strings/types";
 import enRes from "../strings/en";
+import getIsoLangCodeByLocale from "../utils/iso-lang-code-by-locale";
 interface Props {
   i18n?: I18nResource;
 }
 const { i18n = enRes } = Astro.props;
 ---
 
-<Master title="404" lang={i18n.localeName} class="justify-center space-y-4 p-6">
+<Master title="404" lang={getIsoLangCodeByLocale(i18n.localeName)} class="justify-center space-y-4 p-6">
   <p class="text-center text-4xl font-bold">404</p>
   <p class="text-center font-sans">{i18n.page_not_found_para}</p>
   <div class="flex flex-row justify-center">

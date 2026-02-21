@@ -20,6 +20,7 @@ import vividStasis from "/src/images/vivid-stasis.png";
 import osu from "/src/images/osu.png";
 import celeste from "/src/images/celeste.png";
 import matrix from "/src/images/matrix.svg";
+import getIsoLangCodeByLocale from "../utils/iso-lang-code-by-locale";
 
 interface Props {
   i18n?: I18nResource;
@@ -68,7 +69,10 @@ const qnaPosts =
   })) ?? defaultQnaPosts;
 ---
 
-<Master title={i18n.about_me_para} lang="en">
+<Master
+  title={i18n.about_me_para}
+  lang={getIsoLangCodeByLocale(i18n.localeName)}
+>
   <Topbar slot="nav" i18n={i18n} currentItem="about" />
   <BottomFooter slot="footer" i18n={i18n} currentNavItem="/about" />
   <div

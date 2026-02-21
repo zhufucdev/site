@@ -5,6 +5,7 @@ import BottomFooter from "../components/BottomFooter.astro";
 import Comments from "../components/Comments.astro";
 import type { I18nResource } from "../strings/types";
 import formatDate from "../utils/dateformat";
+import getIsoLangCodeByLocale from "../utils/iso-lang-code-by-locale";
 interface Props {
   i18n: I18nResource;
   frontmatter: any;
@@ -14,7 +15,7 @@ const { frontmatter, i18n, url } = Astro.props;
 ---
 
 <Master
-  lang={i18n.localeName}
+  lang={getIsoLangCodeByLocale(i18n.localeName)}
   title={frontmatter.title}
   description={frontmatter.summary}
   class="items-center px-6 font-sans"

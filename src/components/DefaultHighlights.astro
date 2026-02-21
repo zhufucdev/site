@@ -16,6 +16,7 @@ import RssCodeFragment from "./RssCodeFragment.tsx";
 import enRes from "../strings/en";
 import { getCollection } from "astro:content";
 import { getRelativeArticleUrl } from "../utils/article-url";
+import getIsoLangCodeByLocale from "../utils/iso-lang-code-by-locale";
 
 interface Props {
   i18n?: I18nResource;
@@ -32,7 +33,10 @@ const {
 } = Astro.props;
 ---
 
-<Master title={i18n.highlights_para} lang="en">
+<Master
+  title={i18n.highlights_para}
+  lang={getIsoLangCodeByLocale(i18n.localeName)}
+>
   <Topbar slot="nav" i18n={i18n} currentItem="" />
   <BottomFooter slot="footer" i18n={i18n} currentNavItem="/" />
   <PostsSection i18n={i18n} posts={posts} />

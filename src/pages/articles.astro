@@ -9,6 +9,7 @@ import { getRelativeArticleUrl } from "../utils/article-url";
 import type { ArticlesData } from "../article";
 import getArticlesDataFromCollection from "../utils/article-data-from-collection";
 import { getCollection } from "astro:content";
+import getIsoLangCodeByLocale from "../utils/iso-lang-code-by-locale";
 interface Props {
   i18n?: I18nResource;
   data?: ArticlesData;
@@ -19,7 +20,10 @@ const {
 } = Astro.props;
 ---
 
-<Master title={i18n.all_articles_para} lang={i18n.localeName}>
+<Master
+  title={i18n.all_articles_para}
+  lang={getIsoLangCodeByLocale(i18n.localeName)}
+>
   <Topbar slot="nav" i18n={i18n} currentItem="articles" />
   <BottomFooter slot="footer" i18n={i18n} currentNavItem="articles" />
   <div class="flex flex-col gap-6 px-6">
