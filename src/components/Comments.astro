@@ -10,7 +10,10 @@ interface Props {
 const { i18n = enRes, class: clazz } = Astro.props;
 ---
 
-<comment-section class:list={["relative", clazz]}>
+<comment-section
+  class:list={["relative", clazz]}
+  data-theme={new URL("giscus-onsite.css", Astro.site).toString()}
+>
   <div
     class="giscus-loading absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1"
   >
@@ -46,7 +49,7 @@ const { i18n = enRes, class: clazz } = Astro.props;
         "data-reactions-enabled": "1",
         "data-emit-metadata": "0",
         "data-input-position": "top",
-        "data-theme": "preferred_color_scheme",
+        "data-theme": this.dataset.theme ?? "preferred_color_scheme",
         "data-lang": "en",
         "data-loading": "lazy",
         crossorigin: "anonymous",

@@ -19,6 +19,8 @@ import mermaid from "./astro-mermaid-integration";
 
 import rehypeShiki from "@shikijs/rehype";
 
+import basicSsl from "@vitejs/plugin-basic-ssl";
+
 import sitemap from "@astrojs/sitemap";
 import { defaultLocale } from "./src/locale";
 
@@ -28,7 +30,8 @@ const { PUBLIC_SITE } = loadEnv();
 export default defineConfig({
   site: PUBLIC_SITE,
   vite: {
-    plugins: [tailwindcss()],
+    // @ts-ignore
+    plugins: [tailwindcss(), basicSsl()],
     build: {
       rollupOptions: {
         external: [
@@ -52,6 +55,11 @@ export default defineConfig({
   adapter: cloudflare({
     imageService: "compile",
   }),
+  server: {
+    headers: {
+      "Access-Control-Allow-Origin": "https://giscus.app",
+    },
+  },
   integrations: [
     mermaid({
       theme: "neutral",
@@ -81,6 +89,10 @@ export default defineConfig({
     allowedDomains: [
       {
         hostname: "**.zhufucdev.com",
+        protocol: "https",
+      },
+      {
+        hostname: "giscus.app",
         protocol: "https",
       },
     ],
