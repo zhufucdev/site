@@ -181,7 +181,6 @@ main {
     --color-btn-primary-text: #fff;
     --color-btn-primary-shadow: 0 0 transparent;
     --color-btn-primary-inset-shadow: 0 0 transparent;
-    --color-btn-primary-selected-bg: #09b43a;
     --color-btn-primary-selected-shadow: 0 0 transparent;
     --color-btn-primary-disabled-text: rgb(10 12 16 / 50%);
     --color-btn-primary-disabled-bg: oklch(47% 0.157 37.304);
