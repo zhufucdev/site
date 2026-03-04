@@ -16,7 +16,7 @@ const zhRes: I18nResource = {
   socials_para: "社交媒体",
   asterisk_bad_at_gaming_span: "*不懂玩游戏",
   via_span: (provider: string) => `通过${provider}`,
-  steve_reeds_blog_para: "Steve Reed的博客",
+  steve_reeds_blog_para: "Caturday Reed的博客",
   oops_para: "哎呀，出错了",
   copy_failed_you_may_go_manual_para: "复制失败，你可以手动复制以下内容",
   page_not_found_para: "找不到指定页面",
@@ -24,7 +24,7 @@ const zhRes: I18nResource = {
   photo_para: "照片",
   loading_comments: "加载评论中…",
   steves_site_with_updates_and_articles_para:
-    "Steve的个人站，有动态和长篇幅博文",
+    "Caturday的个人站，有动态和长篇幅博文",
 };
 
 export default zhRes;

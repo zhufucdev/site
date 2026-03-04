@@ -1,7 +1,7 @@
 {
-  "name": "Steve's Blog",
-  "short_name": "Blog",
-  "description": "Steve Reed posts life updates and long form articles here",
+  "name": "Your Application Name",
+  "short_name": "App",
+  "description": "Application description",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
