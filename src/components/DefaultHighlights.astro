@@ -50,12 +50,12 @@ const {
     class="border-b-3 border-b-gray-100 bg-linear-to-b from-gray-100 via-gray-200 to-gray-300 not-dark:via-70% dark:border-b-zinc-800 dark:from-zinc-800 dark:via-zinc-900 dark:via-30% dark:to-zinc-950"
   >
     <div
-      class="bg-blueprint-grid flex flex-row flex-wrap gap-4 px-8 pb-8 sm:px-6"
+      class="bg-blueprint-grid flex flex-row flex-wrap gap-8 px-6 pb-8 sm:gap-4"
     >
       {
         articles.map(({ id, data }) => (
           <div
-            class="flex min-w-80 flex-1 flex-col space-y-6"
+            class="flex min-w-80 flex-1 flex-col space-y-4"
             style={`flex-basis: ${data.summary.length + data.title.length * 3.3}px`}
           >
             <TitleSummary>
