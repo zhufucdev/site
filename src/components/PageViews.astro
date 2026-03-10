@@ -1,5 +1,5 @@
 ---
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import db from "../db/connection";
 import { visitsTable, pageViewsTable } from "../db/schema/visits";
 import ViewCounter from "./ViewCounter.astro";
@@ -30,7 +30,12 @@ async function notVisited() {
   const exists = await db
     .select({})
     .from(visitsTable)
-    .where(eq(visitsTable.pageId, pageId))
+    .where(
+      and(
+        eq(visitsTable.pageId, pageId),
+        eq(visitsTable.visitorId, visitorId as string),
+      ),
+    )
     .limit(1);
   return exists.length <= 0;
 }
