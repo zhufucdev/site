@@ -45,7 +45,10 @@ async function getViews() {
 
 if ((await visitExpired()) || (await notVisited())) {
   const [_, [page]] = await Promise.all([
-    db.insert(visitsTable).values({ visitorId: visitorId!, pageId }),
+    db
+      .insert(visitsTable)
+      .values({ visitorId: visitorId!, pageId })
+      .onConflictDoNothing(),
     db
       .insert(pageViewsTable)
       .values({ pageId, views: 1 })
