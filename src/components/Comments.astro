@@ -2,6 +2,7 @@
 import ProgressCircle from "../images/ProgressCircle.svg";
 import enRes from "../strings/en";
 import type { I18nResource } from "../strings/types";
+import getIsoLangCodeByLocale from "../utils/iso-lang-code-by-locale";
 interface Props {
   i18n?: I18nResource;
   class?: string;
@@ -13,6 +14,7 @@ const { i18n = enRes, class: clazz } = Astro.props;
 <comment-section
   class:list={["relative", clazz]}
   data-theme={new URL("giscus-onsite.css", Astro.site).toString()}
+  data-lang={getIsoLangCodeByLocale(i18n.localeName)}
 >
   <div
     class="giscus-loading absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1"
@@ -50,7 +52,7 @@ const { i18n = enRes, class: clazz } = Astro.props;
         "data-emit-metadata": "0",
         "data-input-position": "top",
         "data-theme": this.dataset.theme ?? "preferred_color_scheme",
-        "data-lang": "en",
+        "data-lang": this.dataset.lang ?? "en",
         "data-loading": "lazy",
         crossorigin: "anonymous",
         async: true,
