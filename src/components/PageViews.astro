@@ -1,0 +1,64 @@
+---
+import { eq, sql } from "drizzle-orm";
+import db from "../db/connection";
+import { visitsTable, pageViewsTable } from "../db/schema/visits";
+import ViewCounter from "./ViewCounter.astro";
+import type { SupportedLocale } from "../strings/types";
+export interface Props {
+  pageId: string;
+  class?: string;
+  locale?: SupportedLocale;
+}
+const { pageId, class: clazz, locale } = Astro.props;
+let views = 0;
+let visitorId: string | undefined = Astro.cookies.get("fingerprint")?.value;
+if (typeof visitorId == "undefined") {
+  views = await getViews();
+  return;
+}
+async function visitExpired() {
+  const removed = (
+    await db
+      .delete(visitsTable)
+      .where(sql`now() - ${visitsTable.time} >= INTERVAL '1 day'`)
+      .returning({ v: visitsTable.visitorId })
+  ).map(({ v }) => v);
+  return removed.includes(visitorId!);
+}
+
+async function notVisited() {
+  const exists = await db
+    .select({})
+    .from(visitsTable)
+    .where(eq(visitsTable.pageId, pageId))
+    .limit(1);
+  return exists.length <= 0;
+}
+
+async function getViews() {
+  const [page] = await db
+    .select({ views: pageViewsTable.views })
+    .from(pageViewsTable)
+    .where(eq(pageViewsTable.pageId, pageId));
+  return page?.views ?? 0;
+}
+
+if ((await visitExpired()) || (await notVisited())) {
+  const [_, [page]] = await Promise.all([
+    db.insert(visitsTable).values({ visitorId: visitorId!, pageId }),
+    db
+      .insert(pageViewsTable)
+      .values({ pageId, views: 1 })
+      .onConflictDoUpdate({
+        target: pageViewsTable.pageId,
+        set: { views: sql`${pageViewsTable.views} + 1` },
+      })
+      .returning({ views: pageViewsTable.views }),
+  ]);
+  views = page.views;
+} else {
+  views = await getViews();
+}
+---
+
+<ViewCounter count={views} class={clazz} locale={locale} />

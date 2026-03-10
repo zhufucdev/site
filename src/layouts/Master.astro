@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import NavigationIndicator from "../components/NavigationIndicator.astro";
+import ClientAnalytics from "../components/ClientAnalytics.astro";
 
 interface Props {
   title: string;
@@ -66,5 +67,6 @@ const {
 </html>
 
 <ClientRouter />
+<ClientAnalytics />
 
 <script></script>

@@ -1,0 +1,7 @@
+<script>
+  import FingerprintJS from "@fingerprintjs/fingerprintjs";
+  FingerprintJS.load().then(async (fp) => {
+    const result = await fp.get();
+    window.cookieStore.set("fingerprint", result.visitorId);
+  });
+</script>

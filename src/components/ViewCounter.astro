@@ -1,0 +1,31 @@
+---
+import type { SupportedLocale } from "../strings/types";
+
+export interface Props {
+  count: number;
+  class?: string;
+  locale?: SupportedLocale;
+}
+const { count: _count, class: clazz, locale = "en" } = Astro.props;
+const count = _count < 0 ? '~' : _count.toString();
+let content: string;
+switch (locale) {
+  case "en":
+    if (_count == 1) {
+      content = "1 view";
+    } else {
+      content = `${count} views`;
+    }
+    break;
+  case "zh":
+    content = `${count} 次浏览`;
+    break;
+  case "zh-tw":
+    content = `${count} 次瀏覽`;
+    break;
+}
+---
+
+<h4 class:list={["text-center font-semibold max-[320px]:text-[4vw]", clazz]}>
+  {content}
+</h4>

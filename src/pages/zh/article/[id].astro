@@ -21,6 +21,7 @@ const embeddedComponents = getEmbeddedComponents();
   i18n={i18n}
   url={`/zh/article/${post.id}`}
   frontmatter={post.data}
+  pageId={post.id}
 >
   <Content components={embeddedComponents} />
 </FrontmatterDefault>

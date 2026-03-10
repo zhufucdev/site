@@ -3,6 +3,8 @@ import Master from "./Master.astro";
 import Topbar from "../components/Topbar.astro";
 import BottomFooter from "../components/BottomFooter.astro";
 import Comments from "../components/Comments.astro";
+import PageViews from "../components/PageViews.astro";
+import ViewCounter from "../components/ViewCounter.astro";
 import type { I18nResource } from "../strings/types";
 import formatDate from "../utils/dateformat";
 import getIsoLangCodeByLocale from "../utils/iso-lang-code-by-locale";
@@ -10,8 +12,9 @@ interface Props {
   i18n: I18nResource;
   frontmatter: any;
   url: string;
+  pageId?: string;
 }
-const { frontmatter, i18n, url } = Astro.props;
+const { frontmatter, i18n, url, pageId = url } = Astro.props;
 ---
 
 <Master
@@ -35,7 +38,10 @@ const { frontmatter, i18n, url } = Astro.props;
     </p>
     <slot />
   </article>
-  <Comments i18n={i18n} class="my-6 min-h-96 w-full max-w-2xl" />
+  <PageViews pageId={pageId} class="mt-6" locale={i18n.localeName} server:defer>
+    <ViewCounter count={-1} class="mt-6" locale={i18n.localeName} slot="fallback" />
+  </PageViews>
+  <Comments i18n={i18n} class="mb-6 min-h-96 w-full max-w-2xl" />
   <BottomFooter slot="footer" i18n={i18n} currentNavItem={url} />
 </Master>
 

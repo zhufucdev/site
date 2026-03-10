@@ -18,6 +18,7 @@
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
     "@astrojs/solid-js": "^5.1.3",
+    "@fingerprintjs/fingerprintjs": "^5.1.0",
     "@formkit/tempo": "^1.0.0",
     "@giscus/solid": "^3.1.0",
     "@neondatabase/serverless": "^1.0.2",
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@shikijs/rehype": "^3.22.0",
+    "@vitejs/plugin-basic-ssl": "^2.1.4",
     "dotenv": "^17.2.3",
     "drizzle-kit": "^0.31.8",
     "fsevents": "^2.3.3",
@@ -42,7 +44,6 @@
     "shiki": "^3.20.0",
     "vite": "^7.3.1",
     "wrangler": "^4.54.0",
-    "xml-formatter": "^3.6.7",
-    "@vitejs/plugin-basic-ssl": "^2.1.4"
+    "xml-formatter": "^3.6.7"
   }
 }
