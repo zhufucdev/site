@@ -31,7 +31,7 @@ export default defineConfig({
   site: PUBLIC_SITE,
   vite: {
     // @ts-ignore
-    plugins: [tailwindcss(), basicSsl()],
+    plugins: [tailwindcss()],
     build: {
       rollupOptions: {
         external: [

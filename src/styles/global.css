@@ -14,7 +14,8 @@
     "Futura", "Josefin Sans", "Noto Sans SC", "Noto Sans JP", "Noto Sans KR",
     system-ui, -apple-system, sans-serif;
   --animate-spin-lgbt: spin-lgbt 1s linear infinite;
-  --animate-expand-vertical-screen: expand-vertical-screen 0.2s cubic-bezier(0, 0, 0.13, 1);
+  --animate-expand-vertical-screen: expand-vertical-screen 0.2s
+    cubic-bezier(0, 0, 0.13, 1);
   @keyframes spin-lgbt {
     0% {
       color: #ff68b5;
@@ -63,11 +64,12 @@
 
 @layer utilities {
   .bg-blueprint-grid {
+    --color-grid: rgb(255 255 255 / 0.9);
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.2) 2px, transparent 2px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.2) 2px, transparent 1px),
-      linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      linear-gradient(var(--color-grid) 2px, transparent 2px),
+      linear-gradient(90deg, var(--color-grid) 2px, transparent 1px),
+      linear-gradient(var(--color-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
     background-size:
       100px 100px,
       100px 100px,
@@ -81,18 +83,20 @@
   }
 
   .stroke-custom {
-    filter: drop-shadow(2px 0 0 var(--color-gray-700))
-      drop-shadow(0 2px 0 var(--color-gray-700))
-      drop-shadow(-2px 0 0 var(--color-gray-700))
-      drop-shadow(0 -2px 0 var(--color-gray-700));
+    --color-custom-stroke: var(--color-gray-700);
+
+    filter: drop-shadow(2px 0 0 var(--color-custom-stroke))
+      drop-shadow(0 2px 0 var(--color-custom-stroke))
+      drop-shadow(-2px 0 0 var(--color-custom-stroke))
+      drop-shadow(0 -2px 0 var(--color-custom-stroke));
   }
 
   @media (prefers-color-scheme: dark) {
+    .bg-blueprint-grid {
+      --color-grid: rgb(255 255 255 / 0.1);
+    }
     .stroke-custom {
-      filter: drop-shadow(2px 0 0 var(--color-neutral-500))
-        drop-shadow(0 2px 0 var(--color-neutral-500))
-        drop-shadow(-2px 0 0 var(--color-neutral-500))
-        drop-shadow(0 -2px 0 var(--color-neutral-500));
+      --color-custom-stroke: var(--color-neutral-500);
     }
   }
 
@@ -108,4 +112,3 @@
 ::backdrop {
   background-color: rgba(0, 0, 0, 0.5);
 }
-

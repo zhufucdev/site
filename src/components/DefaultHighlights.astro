@@ -42,31 +42,38 @@ const {
   <BottomFooter slot="footer" i18n={i18n} currentNavItem="/" />
   <PostsSection i18n={i18n} posts={posts} />
   <div
-    class="mt-2 h-20 w-full bg-gray-100 bg-repeat-x dark:bg-zinc-800"
+    class="bg-blueprint-grid mt-2 h-20 w-full bg-gray-100 dark:bg-zinc-800"
     style={`mask-image: url(/WaveSegment.svg)`}
   >
   </div>
   <div
-    class="flex flex-row flex-wrap gap-4 border-b-3 border-b-gray-100 bg-linear-to-b from-gray-100 via-gray-200 to-gray-300 px-2 pb-8 not-dark:via-70% sm:px-6 dark:border-b-zinc-800 dark:from-zinc-800 dark:via-zinc-900 dark:via-30% dark:to-zinc-950"
+    class="border-b-3 border-b-gray-100 bg-linear-to-b from-gray-100 via-gray-200 to-gray-300 not-dark:via-70% dark:border-b-zinc-800 dark:from-zinc-800 dark:via-zinc-900 dark:via-30% dark:to-zinc-950"
   >
-    {
-      articles.map(({ id, data }) => (
-        <BlueprintSheet
-          style={`flex: ${data.summary.length + data.title.length * 3.3}`}
-        >
-          <TitleSummary>
-            <Fragment slot="title" set:text={data.title} />
-            <Fragment slot="summary" set:text={data.summary} />
-          </TitleSummary>
-          <ArrowHighlightingButton
-            slot="bottom"
-            href={getRelativeArticleUrl(id, i18n.localeName)}
+    <div
+      class="bg-blueprint-grid flex flex-row flex-wrap gap-4 px-8 pb-8 sm:px-6"
+    >
+      {
+        articles.map(({ id, data }) => (
+          <div
+            class="flex min-w-80 flex-1 flex-col space-y-6"
+            style={`flex-basis: ${data.summary.length + data.title.length * 3.3}px`}
           >
-            {i18n.read_full_para}
-          </ArrowHighlightingButton>
-        </BlueprintSheet>
-      ))
-    }
+            <TitleSummary>
+              <Fragment slot="title" set:text={data.title} />
+              <Fragment slot="summary" set:text={data.summary} />
+            </TitleSummary>
+            <div class="flex-1" />
+            <div>
+              <ArrowHighlightingButton
+                href={getRelativeArticleUrl(id, i18n.localeName)}
+              >
+                {i18n.read_full_para}
+              </ArrowHighlightingButton>
+            </div>
+          </div>
+        ))
+      }
+    </div>
   </div>
   <div class="relative flex overflow-clip max-sm:flex-col sm:flex-row">
     <RssSection class="flex-1 p-6" i18n={i18n} client:idle />
