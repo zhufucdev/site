@@ -16,6 +16,12 @@ if (typeof visitorId == "undefined") {
   views = await getViews();
   return;
 }
+
+const lock = new Uint8Array(
+  await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pageId)),
+).reduce((a, b) => a + b, 0);
+await db.execute(sql`SELECT pg_advisory_lock(${lock});`);
+
 async function visitExpired() {
   const removed = (
     await db
@@ -67,6 +73,8 @@ if ((await visitExpired()) || (await notVisited())) {
 } else {
   views = await getViews();
 }
+
+await db.execute(sql`SELECT pg_advisory_unlock(${lock});`);
 ---
 
 <ViewCounter count={views} class={clazz} locale={locale} />
