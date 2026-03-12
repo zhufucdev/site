@@ -13,6 +13,12 @@
 	"observability": {
 		"enabled": true
 	},
+	"kv_namespaces": [
+		{
+			"binding": "SESSION",
+			"id": "09563e8891134b00845f26af01d4080b"
+		}
+	],
 	"vars": {
 		"PUBLIC_CLOUDINARY_CLOUD_NAME": "steves-blog",
 		"PUBLIC_SITE": "https://zhufucdev.com",

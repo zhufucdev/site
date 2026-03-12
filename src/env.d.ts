@@ -12,3 +12,9 @@ declare interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+declare namespace App {
+  interface SessionData {
+    pageViews: { pageId: string; timestamp: Date; ip: string }[];
+  }
+}

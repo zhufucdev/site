@@ -1,7 +1,7 @@
 ---
 import { and, eq, sql } from "drizzle-orm";
 import db from "../db/connection";
-import { visitsTable, pageViewsTable } from "../db/schema/visits";
+import { pageViewsTable } from "../db/schema/page-views";
 import ViewCounter from "./ViewCounter.astro";
 import type { SupportedLocale } from "../strings/types";
 export interface Props {
@@ -10,6 +10,7 @@ export interface Props {
   locale?: SupportedLocale;
 }
 const { pageId, class: clazz, locale } = Astro.props;
+
 let views = 0;
 let visitorId: string | undefined = Astro.cookies.get("fingerprint")?.value;
 if (typeof visitorId == "undefined") {
@@ -17,38 +18,29 @@ if (typeof visitorId == "undefined") {
   return;
 }
 
-const lock = new Uint8Array(
-  await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pageId)),
-).reduce((a, b) => a + b, 0);
-await db.execute(sql`SELECT pg_advisory_lock(${lock});`);
-
 async function visitExpired() {
-  const removed = (
-    await db
-      .delete(visitsTable)
-      .where(
-        and(
-          eq(visitsTable.pageId, pageId),
-          sql`now() - ${visitsTable.time} >= INTERVAL '1 day'`,
-        ),
-      )
-      .returning({ v: visitsTable.visitorId })
-  ).map(({ v }) => v);
-  return removed.includes(visitorId!);
+  const pageViews = await Astro.session?.get("pageViews");
+  const expired =
+    pageViews?.filter(
+      ({ timestamp }) =>
+        Date.now() - timestamp.getTime() >= 1000 * 60 * 60 * 24, // one day
+    ) ?? [];
+  if (expired.length <= 0) {
+    return false;
+  }
+  Astro.session?.set(
+    "pageViews",
+    pageViews!.filter((item) => !expired.includes(item)),
+  );
+  return true;
 }
 
 async function notVisited() {
-  const exists = await db
-    .select({})
-    .from(visitsTable)
-    .where(
-      and(
-        eq(visitsTable.pageId, pageId),
-        eq(visitsTable.visitorId, visitorId as string),
-      ),
-    )
-    .limit(1);
-  return exists.length <= 0;
+  return (
+    (await Astro.session?.get("pageViews"))?.find(
+      (item) => pageId === item.pageId,
+    ) === undefined
+  );
 }
 
 async function getViews() {
@@ -60,26 +52,27 @@ async function getViews() {
 }
 
 if ((await visitExpired()) || (await notVisited())) {
-  const [_, [page]] = await Promise.all([
-    db
-      .insert(visitsTable)
-      .values({ visitorId: visitorId!, pageId })
-      .onConflictDoNothing(),
-    db
-      .insert(pageViewsTable)
-      .values({ pageId, views: 1 })
-      .onConflictDoUpdate({
-        target: pageViewsTable.pageId,
-        set: { views: sql`${pageViewsTable.views} + 1` },
-      })
-      .returning({ views: pageViewsTable.views }),
-  ]);
+  const [page] = await db
+    .insert(pageViewsTable)
+    .values({ pageId, views: 1 })
+    .onConflictDoUpdate({
+      target: pageViewsTable.pageId,
+      set: { views: sql`${pageViewsTable.views} + 1` },
+    })
+    .returning({ views: pageViewsTable.views });
   views = page.views;
+  const pageViews = (await Astro.session?.get("pageViews")) ?? [];
+  if (!pageViews.find((item) => item.pageId === pageId)) {
+    pageViews.push({
+      pageId,
+      timestamp: new Date(),
+      ip: Astro.clientAddress,
+    });
+    Astro.session?.set("pageViews", pageViews);
+  }
 } else {
   views = await getViews();
 }
-
-await db.execute(sql`SELECT pg_advisory_unlock(${lock});`);
 ---
 
 <ViewCounter count={views} class={clazz} locale={locale} />
