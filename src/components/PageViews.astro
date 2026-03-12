@@ -26,7 +26,12 @@ async function visitExpired() {
   const removed = (
     await db
       .delete(visitsTable)
-      .where(sql`now() - ${visitsTable.time} >= INTERVAL '1 day'`)
+      .where(
+        and(
+          eq(visitsTable.pageId, pageId),
+          sql`now() - ${visitsTable.time} >= INTERVAL '1 day'`,
+        ),
+      )
       .returning({ v: visitsTable.visitorId })
   ).map(({ v }) => v);
   return removed.includes(visitorId!);
