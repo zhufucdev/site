@@ -1,3 +1,5 @@
+type Runtime = import('@astrojs/cloudflare').Runtime<Env>;
+
 declare interface ImportMetaEnv {
   PUBLIC_SITE?: string;
   PUBLIC_CLOUDINARY_CLOUD_NAME?: string;
@@ -16,5 +18,11 @@ interface ImportMeta {
 declare namespace App {
   interface SessionData {
     pageViews: { pageId: string; timestamp: Date; ip: string }[];
+  }
+
+  interface Locals extends Runtime {
+    otherLocals: {
+      SESSION: KVNamespace;
+    };
   }
 }
