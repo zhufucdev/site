@@ -14,55 +14,6 @@ export interface Props {
 const { pageId, class: clazz, locale } = Astro.props;
 const { env } = Astro.locals.runtime;
 
-let views = 0;
-let visitorId: string | undefined = await Astro.session?.get("fingerprint");
-if (typeof visitorId == "undefined") {
-  views = await getViews();
-  return;
-}
-
-async function visitExpired() {
-  const pageViews = await Astro.session?.get("pageViews");
-  const expired =
-    pageViews?.filter(
-      ({ timestamp }) =>
-        Date.now() - timestamp.getTime() >= 1000 * 60 * 60 * 24, // one day
-    ) ?? [];
-  if (expired.length <= 0) {
-    return false;
-  }
-  Astro.session?.set(
-    "pageViews",
-    pageViews!.filter((item) => !expired.includes(item)),
-  );
-  return true;
-}
-
-async function notVisited() {
-  return (
-    (await Astro.session?.get("pageViews"))?.find(
-      (item) => pageId === item.pageId,
-    ) === undefined
-  );
-}
-
-async function ipPoolSize() {
-  const ip = Astro.clientAddress;
-  const keys = (await env.SESSION.list()).keys;
-  let poolSize = 0;
-  for (const { name } of keys) {
-    const value: App.SessionData = devalue.parse(
-      (await env.SESSION.get(name))!,
-    );
-    for (const item of value.pageViews ?? []) {
-      if (item.pageId === pageId && item.ip == ip) {
-        poolSize++;
-      }
-    }
-  }
-  return poolSize;
-}
-
 async function getViews() {
   const [page] = await db
     .select({ views: pageViewsTable.views })
@@ -71,30 +22,78 @@ async function getViews() {
   return page?.views ?? 0;
 }
 
-if (
-  (await ipPoolSize()) <= 10 &&
-  ((await visitExpired()) || (await notVisited()))
-) {
-  const [page] = await db
-    .insert(pageViewsTable)
-    .values({ pageId, views: 1 })
-    .onConflictDoUpdate({
-      target: pageViewsTable.pageId,
-      set: { views: sql`${pageViewsTable.views} + 1` },
-    })
-    .returning({ views: pageViewsTable.views });
-  views = page.views;
-  const pageViews = (await Astro.session?.get("pageViews")) ?? [];
-  if (!pageViews.find((item) => item.pageId === pageId)) {
-    pageViews.push({
-      pageId,
-      timestamp: new Date(),
-      ip: Astro.clientAddress,
-    });
-    Astro.session?.set("pageViews", pageViews);
-  }
-} else {
+let views = 0;
+let visitorId: string | undefined = await Astro.session?.get("fingerprint");
+if (typeof visitorId == "undefined") {
   views = await getViews();
+} else {
+  async function visitExpired() {
+    const pageViews = await Astro.session?.get("pageViews");
+    const expired =
+      pageViews?.filter(
+        ({ timestamp }) =>
+          Date.now() - timestamp.getTime() >= 1000 * 60 * 60 * 24, // one day
+      ) ?? [];
+    if (expired.length <= 0) {
+      return false;
+    }
+    Astro.session?.set(
+      "pageViews",
+      pageViews!.filter((item) => !expired.includes(item)),
+    );
+    return true;
+  }
+
+  async function notVisited() {
+    return (
+      (await Astro.session?.get("pageViews"))?.find(
+        (item) => pageId === item.pageId,
+      ) === undefined
+    );
+  }
+
+  async function ipPoolSize() {
+    const ip = Astro.clientAddress;
+    const keys = (await env.SESSION.list()).keys;
+    let poolSize = 0;
+    for (const { name } of keys) {
+      const value: App.SessionData = devalue.parse(
+        (await env.SESSION.get(name))!,
+      );
+      for (const item of value.pageViews ?? []) {
+        if (item.pageId === pageId && item.ip == ip) {
+          poolSize++;
+        }
+      }
+    }
+    return poolSize;
+  }
+
+  if (
+    (await ipPoolSize()) <= 10 &&
+    ((await visitExpired()) || (await notVisited()))
+  ) {
+    const [page] = await db
+      .insert(pageViewsTable)
+      .values({ pageId, views: 1 })
+      .onConflictDoUpdate({
+        target: pageViewsTable.pageId,
+        set: { views: sql`${pageViewsTable.views} + 1` },
+      })
+      .returning({ views: pageViewsTable.views });
+    views = page.views;
+    const pageViews = (await Astro.session?.get("pageViews")) ?? [];
+    if (!pageViews.find((item) => item.pageId === pageId)) {
+      pageViews.push({
+        pageId,
+        timestamp: new Date(),
+        ip: Astro.clientAddress,
+      });
+      Astro.session?.set("pageViews", pageViews);
+    }
+  } else {
+    views = await getViews();
+  }
 }
 ---
 
