@@ -47,14 +47,15 @@ async function notVisited() {
 }
 
 async function ipPoolSize() {
-  const currentIp = Astro.clientAddress;
+  const ip = Astro.clientAddress;
   const keys = (await env.SESSION.list()).keys;
   let poolSize = 0;
   for (const { name } of keys) {
-    const value: App.SessionData =
-      devalue.parse((await env.SESSION.get(name))!);
-    for (const { ip } of value.pageViews ?? []) {
-      if (ip === currentIp) {
+    const value: App.SessionData = devalue.parse(
+      (await env.SESSION.get(name))!,
+    );
+    for (const item of value.pageViews ?? []) {
+      if (item.pageId === pageId && item.ip == ip) {
         poolSize++;
       }
     }
