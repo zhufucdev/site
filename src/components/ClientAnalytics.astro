@@ -1,7 +1,29 @@
 <script>
   import FingerprintJS from "@fingerprintjs/fingerprintjs";
+  import ChallengeResolver from "../workers/challenge-resolver?worker";
+  import { actions } from "astro:actions";
   FingerprintJS.load().then(async (fp) => {
     const result = await fp.get();
     window.cookieStore.set("fingerprint", result.visitorId);
   });
+  (async () => {
+    if ((await actions.getRequireChallenge()).data === false) {
+      console.debug("Skipping challenge attempt");
+      return;
+    }
+    const challenge = await actions.getChallenge();
+    if (!challenge.data) {
+      console.warn("Server action returned empty challenge");
+      return;
+    }
+    const resolver = new ChallengeResolver();
+    resolver.postMessage(challenge.data);
+    resolver.addEventListener("message", async (event) => {
+      const { solutions } = event.data;
+      const res = await actions.verifyChallenge(solutions);
+      if (!res.data?.success) {
+        console.warn("Challenge verification failed");
+      }
+    });
+  })();
 </script>

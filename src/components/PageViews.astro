@@ -1,5 +1,5 @@
 ---
-import { and, eq, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import db from "../db/connection";
 import { pageViewsTable } from "../db/schema/page-views";
 import ViewCounter from "./ViewCounter.astro";
@@ -15,7 +15,7 @@ const { pageId, class: clazz, locale } = Astro.props;
 const { env } = Astro.locals.runtime;
 
 let views = 0;
-let visitorId: string | undefined = Astro.cookies.get("fingerprint")?.value;
+let visitorId: string | undefined = await Astro.session?.get("fingerprint");
 if (typeof visitorId == "undefined") {
   views = await getViews();
   return;

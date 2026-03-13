@@ -1,0 +1,49 @@
+import { ActionError, defineAction } from "astro:actions";
+import { z } from "astro/zod";
+import * as pow from "../utils/proof-of-work";
+
+export const server = {
+  getRequireChallenge: defineAction({
+    handler: async (_, context) => {
+      return (await context.session?.has("fingerprint")) === false;
+    },
+  }),
+  getChallenge: defineAction({
+    handler: async (_, context) => {
+      if (!context.session) {
+        throw new ActionError({
+          message: "Challenge serivce is not available",
+          code: "SERVICE_UNAVAILABLE",
+        });
+      }
+      const info = pow.newPoW(3);
+      context.session?.set("pow", info);
+      return await pow.getChallenge(info);
+    },
+  }),
+  verifyChallenge: defineAction({
+    input: z.array(z.string()),
+    handler: async (input, context) => {
+      const info = await context.session?.get("pow");
+      if (!info) {
+        throw new ActionError({
+          message: "Call getChallenge first",
+          code: "TOO_EARLY",
+        });
+      }
+      if (pow.verifyChallenge(info, input)) {
+        const fingerprint = context.cookies.get("fingerprint")?.value;
+        if (!fingerprint || !/^[\da-f]{32}$/g.test(fingerprint)) {
+          throw new ActionError({
+            message: "Missing or using invalid fingerprint cookie",
+            code: "BAD_REQUEST",
+          });
+        }
+        context.session?.set("fingerprint", fingerprint);
+        return { success: true };
+      } else {
+        return { success: false };
+      }
+    },
+  }),
+};

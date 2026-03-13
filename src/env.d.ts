@@ -1,4 +1,6 @@
-type Runtime = import('@astrojs/cloudflare').Runtime<Env>;
+import type { PoW } from "./utils/proof-of-work";
+
+type Runtime = import("@astrojs/cloudflare").Runtime<Env>;
 
 declare interface ImportMetaEnv {
   PUBLIC_SITE?: string;
@@ -18,6 +20,8 @@ interface ImportMeta {
 declare namespace App {
   interface SessionData {
     pageViews: { pageId: string; timestamp: Date; ip: string }[];
+    pow: PoW;
+    fingerprint: string;
   }
 
   interface Locals extends Runtime {
