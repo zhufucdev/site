@@ -1,6 +1,5 @@
-import type { PoW } from "./utils/proof-of-work";
-
 type Runtime = import("@astrojs/cloudflare").Runtime<Env>;
+type PoW = import("./utils/proof-of-work").PoW;
 
 declare interface ImportMetaEnv {
   PUBLIC_SITE?: string;
