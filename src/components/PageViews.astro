@@ -19,4 +19,22 @@ const views = await getViews(
 );
 ---
 
-<ViewCounter count={views} class={clazz} locale={locale} />
+<page-views data-page-id={pageId}>
+  <ViewCounter count={views} class={clazz} locale={locale} />
+</page-views>
+
+<script>
+  import { actions } from "astro:actions";
+
+  class PageViews extends HTMLElement {
+    connectedCallback() {
+      window.addEventListener("challenge-resolved", async () => {
+        const pageId = this.dataset.pageId;
+        if (!pageId) return;
+        await actions.incrementPageView({ pageId });
+      });
+    }
+  }
+
+  customElements.define("page-views", PageViews);
+</script>

@@ -54,39 +54,56 @@ async function ipPoolSize(
   return poolSize;
 }
 
+export async function incrementViews(
+  pageId: string,
+  session: AstroSession,
+  clientAddress: string,
+) {
+  const [page] = await db
+    .insert(pageViewsTable)
+    .values({ pageId, views: 1 })
+    .onConflictDoUpdate({
+      target: pageViewsTable.pageId,
+      set: { views: sql`${pageViewsTable.views} + 1` },
+    })
+    .returning({ views: pageViewsTable.views });
+  const pageViews = (await session.get("pageViews")) ?? [];
+  if (!pageViews.find((item) => item.pageId === pageId)) {
+    pageViews.push({
+      pageId,
+      timestamp: new Date(),
+      ip: clientAddress,
+    });
+    session.set("pageViews", pageViews);
+  }
+  return page.views;
+}
+
+export async function shouldIncrementViews(
+  pageId: string,
+  session: AstroSession,
+  kv: KVNamespace,
+  clientAddress: string,
+) {
+  return (
+    (await ipPoolSize(kv, pageId, clientAddress)) <= 10 &&
+    ((await visitExpired(session)) || (await notVisited(session, pageId)))
+  );
+}
+
 export async function getViews(
   pageId: string,
   session: AstroSession | undefined,
   kv: KVNamespace,
   clientAddress: string,
 ) {
-  let visitorId: string | undefined = await session?.get("fingerprint");
+  const visitorId: string | undefined = await session?.get("fingerprint");
   if (!session || typeof visitorId == "undefined") {
     return await getViewsFromDb(pageId);
   }
 
-  if (
-    (await ipPoolSize(kv, pageId, clientAddress)) <= 10 &&
-    ((await visitExpired(session)) || (await notVisited(session, pageId)))
-  ) {
-    const [page] = await db
-      .insert(pageViewsTable)
-      .values({ pageId, views: 1 })
-      .onConflictDoUpdate({
-        target: pageViewsTable.pageId,
-        set: { views: sql`${pageViewsTable.views} + 1` },
-      })
-      .returning({ views: pageViewsTable.views });
-    const pageViews = (await session.get("pageViews")) ?? [];
-    if (!pageViews.find((item) => item.pageId === pageId)) {
-      pageViews.push({
-        pageId,
-        timestamp: new Date(),
-        ip: clientAddress,
-      });
-      session.set("pageViews", pageViews);
-    }
-    return page.views;
+  if (await shouldIncrementViews(pageId, session, kv, clientAddress)) {
+    return await incrementViews(pageId, session, clientAddress);
   } else {
     return await getViewsFromDb(pageId);
   }

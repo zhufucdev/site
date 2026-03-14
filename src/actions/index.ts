@@ -1,6 +1,7 @@
 import { ActionError, defineAction } from "astro:actions";
 import { z } from "astro/zod";
 import * as pow from "../utils/proof-of-work";
+import { incrementViews, shouldIncrementViews } from "../utils/page-views";
 
 export const server = {
   getRequireChallenge: defineAction({
@@ -43,6 +44,29 @@ export const server = {
         return { success: true };
       } else {
         return { success: false };
+      }
+    },
+  }),
+  incrementPageView: defineAction({
+    input: z.object({ pageId: z.string() }),
+    handler: async ({ pageId }, context) => {
+      const session = context.session;
+      if (!session) {
+        throw new ActionError({
+          message: "Session not available",
+          code: "SERVICE_UNAVAILABLE",
+        });
+      }
+      const { env } = context.locals.runtime;
+      if (
+        await shouldIncrementViews(
+          pageId,
+          session,
+          env.SESSION,
+          context.clientAddress,
+        )
+      ) {
+        return await incrementViews(pageId, session, context.clientAddress);
       }
     },
   }),

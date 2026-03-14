@@ -23,6 +23,8 @@
       const res = await actions.verifyChallenge(solutions);
       if (!res.data?.success) {
         console.warn("Challenge verification failed");
+      } else {
+        window.dispatchEvent(new CustomEvent("challenge-resolved"));
       }
     });
   })();
