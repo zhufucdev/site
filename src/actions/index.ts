@@ -54,8 +54,18 @@ export const server = {
             code: "BAD_REQUEST",
           });
         }
-        context.session?.set("fingerprint", fingerprint);
         const { env } = context.locals.runtime;
+        if (context.session) {
+          context.session.set("fingerprint", fingerprint);
+          const sessionId = context.session.sessionID;
+          if (sessionId) {
+            await env.SESSION_ID_BY_FINGERPRINT.put(fingerprint, sessionId);
+          } else {
+            console.warn(
+              "Session not available after challenge was resolved. This might be a bug.",
+            );
+          }
+        }
         await env.FINGERPRINT_BY_IP.put(context.clientAddress, fingerprint, {
           expirationTtl: ipTtlSeconds,
         });
