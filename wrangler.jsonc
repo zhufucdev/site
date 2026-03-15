@@ -17,6 +17,14 @@
 		{
 			"binding": "SESSION",
 			"id": "09563e8891134b00845f26af01d4080b"
+		},
+		{
+			"binding": "SESSION_ID_BY_FINGERPRINT",
+			"id": "c58642745499490ca3c2f322d7d62d7c"
+		},
+		{
+			"binding": "FINGERPRINT_BY_IP",
+			"id": "e7a35e9d37dd42aa8e886465d0990fc5"
 		}
 	],
 	"vars": {

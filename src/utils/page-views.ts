@@ -1,8 +1,8 @@
 import db from "../db/connection";
 import { eq, sql } from "drizzle-orm";
 import { pageViewsTable } from "../db/schema/page-views";
-import * as devalue from "devalue";
 import type { AstroSession } from "astro";
+import { visitTtlSeconds } from "../sessions";
 
 async function getViewsFromDb(pageId: string) {
   const [page] = await db
@@ -17,7 +17,7 @@ async function visitExpired(session: AstroSession) {
   const expired =
     pageViews?.filter(
       ({ timestamp }) =>
-        Date.now() - timestamp.getTime() >= 1000 * 60 * 60 * 24, // one day
+        Date.now() - timestamp.getTime() >= visitTtlSeconds * 1000,
     ) ?? [];
   if (expired.length <= 0) {
     return false;
@@ -37,28 +37,16 @@ async function notVisited(session: AstroSession, pageId: string) {
 }
 
 async function ipPoolSize(
-  kv: KVNamespace,
-  pageId: string,
+  fingerprintByIpKv: KVNamespace,
   clientAddress: string,
 ) {
-  const keys = (await kv.list()).keys;
-  let poolSize = 0;
-  for (const { name } of keys) {
-    const value: App.SessionData = devalue.parse((await kv.get(name))!);
-    for (const item of value.pageViews ?? []) {
-      if (item.pageId === pageId && item.ip == clientAddress) {
-        poolSize++;
-      }
-    }
-  }
-  return poolSize;
+  return (await fingerprintByIpKv.list()).keys.reduce(
+    (acc, curr) => (curr.name === clientAddress ? acc + 1 : acc),
+    0,
+  );
 }
 
-export async function incrementViews(
-  pageId: string,
-  session: AstroSession,
-  clientAddress: string,
-) {
+export async function incrementViews(pageId: string, session: AstroSession) {
   const [page] = await db
     .insert(pageViewsTable)
     .values({ pageId, views: 1 })
@@ -72,7 +60,6 @@ export async function incrementViews(
     pageViews.push({
       pageId,
       timestamp: new Date(),
-      ip: clientAddress,
     });
     session.set("pageViews", pageViews);
   }
@@ -82,11 +69,11 @@ export async function incrementViews(
 export async function shouldIncrementViews(
   pageId: string,
   session: AstroSession,
-  kv: KVNamespace,
+  fingerprintByIpKv: KVNamespace,
   clientAddress: string,
 ) {
   return (
-    (await ipPoolSize(kv, pageId, clientAddress)) <= 10 &&
+    (await ipPoolSize(fingerprintByIpKv, clientAddress)) <= 10 &&
     ((await visitExpired(session)) || (await notVisited(session, pageId)))
   );
 }
@@ -94,7 +81,7 @@ export async function shouldIncrementViews(
 export async function getViews(
   pageId: string,
   session: AstroSession | undefined,
-  kv: KVNamespace,
+  runtime: Env,
   clientAddress: string,
 ) {
   const visitorId: string | undefined = await session?.get("fingerprint");
@@ -102,8 +89,15 @@ export async function getViews(
     return await getViewsFromDb(pageId);
   }
 
-  if (await shouldIncrementViews(pageId, session, kv, clientAddress)) {
-    return await incrementViews(pageId, session, clientAddress);
+  if (
+    await shouldIncrementViews(
+      pageId,
+      session,
+      runtime.FINGERPRINT_BY_IP,
+      clientAddress,
+    )
+  ) {
+    return await incrementViews(pageId, session);
   } else {
     return await getViewsFromDb(pageId);
   }

@@ -11,12 +11,7 @@ export interface Props {
 const { pageId, class: clazz, locale } = Astro.props;
 const { env } = Astro.locals.runtime;
 
-const views = await getViews(
-  pageId,
-  Astro.session,
-  env.SESSION,
-  Astro.clientAddress,
-);
+const views = await getViews(pageId, Astro.session, env, Astro.clientAddress);
 ---
 
 <page-views data-page-id={pageId}>

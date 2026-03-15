@@ -18,7 +18,7 @@ interface ImportMeta {
 
 declare namespace App {
   interface SessionData {
-    pageViews: { pageId: string; timestamp: Date; ip: string }[];
+    pageViews: { pageId: string; timestamp: Date }[];
     pow: PoW;
     fingerprint: string;
   }

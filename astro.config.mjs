@@ -22,8 +22,9 @@ import rehypeShiki from "@shikijs/rehype";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 
 import sitemap from "@astrojs/sitemap";
-import { defaultLocale } from "./src/locale";
 
+import { defaultLocale } from "./src/locale";
+import { cookiesName as cookieName, sessionTtlSeconds } from "./src/sessions";
 const { PUBLIC_SITE } = loadEnv();
 
 // https://astro.build/config
@@ -58,6 +59,11 @@ export default defineConfig({
   server: {
     headers: {
       "Access-Control-Allow-Origin": "https://giscus.app",
+    },
+  },
+  session: {
+    cookie: {
+      name: cookieName,
     },
   },
   integrations: [

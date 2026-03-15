@@ -2,11 +2,25 @@ import { ActionError, defineAction } from "astro:actions";
 import { z } from "astro/zod";
 import * as pow from "../utils/proof-of-work";
 import { incrementViews, shouldIncrementViews } from "../utils/page-views";
+import { ipTtlSeconds } from "../sessions";
 
 export const server = {
   getRequireChallenge: defineAction({
     handler: async (_, context) => {
-      return (await context.session?.has("fingerprint")) === false;
+      if (!context.session) {
+        return false;
+      }
+      const selfClaimedFingerprint = context.cookies.get("fingerprint")?.value;
+      if (selfClaimedFingerprint) {
+        const { env } = context.locals.runtime;
+        const existingSessionId = await env.SESSION_ID_BY_FINGERPRINT.get(
+          selfClaimedFingerprint,
+        );
+        if (existingSessionId) {
+          await context.session.load(existingSessionId);
+        }
+      }
+      return (await context.session.has("fingerprint")) === false;
     },
   }),
   getChallenge: defineAction({
@@ -41,6 +55,10 @@ export const server = {
           });
         }
         context.session?.set("fingerprint", fingerprint);
+        const { env } = context.locals.runtime;
+        await env.FINGERPRINT_BY_IP.put(context.clientAddress, fingerprint, {
+          expirationTtl: ipTtlSeconds,
+        });
         return { success: true };
       } else {
         return { success: false };
@@ -62,11 +80,11 @@ export const server = {
         await shouldIncrementViews(
           pageId,
           session,
-          env.SESSION,
+          env.FINGERPRINT_BY_IP,
           context.clientAddress,
         )
       ) {
-        return await incrementViews(pageId, session, context.clientAddress);
+        return await incrementViews(pageId, session);
       }
     },
   }),
