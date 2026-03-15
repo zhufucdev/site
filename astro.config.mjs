@@ -24,7 +24,7 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 import sitemap from "@astrojs/sitemap";
 
 import { defaultLocale } from "./src/locale";
-import { cookiesName as cookieName, sessionTtlSeconds } from "./src/sessions";
+import { cookieName, visitTtlSeconds } from "./src/sessions";
 const { PUBLIC_SITE } = loadEnv();
 
 // https://astro.build/config
@@ -65,6 +65,7 @@ export default defineConfig({
     cookie: {
       name: cookieName,
     },
+    ttl: visitTtlSeconds,
   },
   integrations: [
     mermaid({
