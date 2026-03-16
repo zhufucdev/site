@@ -43,7 +43,7 @@ export default function PageViewStatsDialog(props: PageViewStatsDialogProps) {
       class="relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 space-y-2 rounded-2xl border-2 border-gray-700 p-6 max-sm:w-[calc(100vw-24px)] dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
     >
       <div class="flex flex-row justify-between gap-4 mb-4">
-        <h1 class="text-2xl font-bold">Page views</h1>
+        <h1 class="text-2xl font-bold">Article views</h1>
         <CloseButton onClick={() => setOpen(false)} strokeWidth="3.5" />
       </div>
       <Switch fallback={<p>Loading...</p>}>
