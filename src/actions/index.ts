@@ -3,6 +3,9 @@ import { z } from "astro/zod";
 import * as pow from "../utils/proof-of-work";
 import { incrementViews, shouldIncrementViews } from "../utils/page-views";
 import { ipTtlSeconds } from "../sessions";
+import db from "../db/connection";
+import { pageViewsTable } from "../db/schema/page-views";
+import { desc } from "drizzle-orm";
 
 export const server = {
   getRequireChallenge: defineAction({
@@ -96,6 +99,15 @@ export const server = {
       ) {
         return await incrementViews(pageId, session);
       }
+    },
+  }),
+  getPageViews: defineAction({
+    handler: async (input, context) => {
+      const pageViews = await db
+        .select()
+        .from(pageViewsTable)
+        .orderBy(desc(pageViewsTable.views));
+      return pageViews.map(({ pageId, views }) => [pageId, views]);
     },
   }),
 };

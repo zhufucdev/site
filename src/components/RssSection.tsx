@@ -3,6 +3,7 @@ import type { I18nResource } from "../strings/types";
 import ChunkyIconButton from "./ChunkyIconButton";
 import Modal from "./Modal";
 import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from "astro:i18n";
+import CloseButton from "./CloseButton";
 
 interface RssSectionProps {
   i18n: I18nResource;
@@ -43,23 +44,7 @@ export default function RssSection(props: RssSectionProps) {
       >
         <div class="flex flex-row items-start justify-between">
           <span class="text-2xl font-semibold">{i18n.oops_para}</span>
-
-          <button onClick={() => setShowModel(false)} class="cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+          <CloseButton onClick={() => setShowModel(false)} />
         </div>
         <p class="font-sans">{i18n.copy_failed_you_may_go_manual_para}</p>
         <input

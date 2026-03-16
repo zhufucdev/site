@@ -1,0 +1,96 @@
+---
+import Master from "../layouts/Master.astro";
+import PageViewStatsDialog from "../components/PageViewStatsDialog";
+import Home from "../icons/Home.svg";
+import ChevronDoubleDown from "../icons/ChevronDoubleDown.svg";
+import db from "../db/connection";
+import { pageViewsTable } from "../db/schema/page-views";
+import { desc } from "drizzle-orm";
+export const prerender = false;
+
+const { env } = Astro.locals.runtime;
+async function getEntryCountByKv(kv: KVNamespace, limit: number = 100) {
+  const count = (await kv.list({ limit: limit + 1 })).keys.length;
+  if (count > limit) {
+    return `${limit}+`;
+  } else {
+    return `${count}`;
+  }
+}
+const session = {
+  total: await getEntryCountByKv(env.SESSION),
+  genuine: await getEntryCountByKv(env.SESSION_ID_BY_FINGERPRINT),
+};
+
+const pageViews = await db
+  .select()
+  .from(pageViewsTable)
+  .orderBy(desc(pageViewsTable.views))
+  .limit(4);
+---
+
+<Master title="Stats" lang="en" class="p-2 sm:p-4" disableTopPadding>
+  <div
+    class="flex flex-row items-center justify-between px-6 pt-2 sm:px-8 sm:pt-3"
+    slot="nav"
+  >
+    <h1 class="text-2xl font-bold">Stats</h1>
+    <a href="/" class="transition-all hover:text-orange-500"
+      ><Home stroke-width="2.5" /></a
+    >
+  </div>
+
+  <div class="flex flex-row flex-wrap gap-2">
+    <card>
+      <h1>Sessions</h1>
+      <p><span>Total</span><span>{session.total}</span></p>
+      <p><span>Genuine</span><span>{session.genuine}</span></p>
+    </card>
+    <card class="relative overflow-clip">
+      <h1>Article views</h1>
+      {
+        pageViews.slice(0, 3).map(({ pageId, views }) => (
+          <p>
+            <>
+              <span>{pageId}</span>
+              <span>{views}</span>
+            </>
+          </p>
+        ))
+      }
+      {
+        pageViews.length > 3 && (
+          <div class="absolute bottom-0 left-0 flex h-24 w-full items-end justify-center bg-linear-to-b from-transparent via-white/90 via-80% to-white p-4 dark:via-neutral-950 dark:to-neutral-950">
+            <a href="#page-views" class="cursor-pointer">
+              <ChevronDoubleDown class="bottom-0 size-6" stroke-width="2.5" />
+            </a>
+          </div>
+        )
+      }
+    </card>
+  </div>
+  <PageViewStatsDialog hash="#page-views" client:only />
+</Master>
+
+<style>
+  @import "tailwindcss";
+  card {
+    @apply min-w-xs flex-1 rounded-2xl border-2 border-zinc-200 p-4 dark:border-zinc-800;
+  }
+
+  card h1 {
+    @apply mb-2 text-2xl font-bold;
+  }
+
+  card p {
+    @apply flex flex-row justify-between gap-2;
+  }
+
+  card p span {
+    @apply line-clamp-1;
+  }
+
+  card p span:nth-child(2) {
+    @apply min-w-8 text-right;
+  }
+</style>
