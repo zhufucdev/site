@@ -1,0 +1,43 @@
+---
+import type { SupportedLocale } from "../strings/types";
+import formatDate from "../utils/dateformat";
+
+export interface Props {
+  locale: SupportedLocale;
+  form?: "long" | "short";
+  date: number | Date;
+}
+
+const { locale, form = "short", date } = Astro.props;
+---
+
+<local-date
+  data-locale={locale}
+  data-form={form}
+  data-date={typeof date === "number" ? date : date.getTime()}
+  >{formatDate(date, locale, form)}</local-date
+>
+
+<script>
+  import formatDate from "../utils/dateformat";
+
+  class LocalDate extends HTMLElement {
+    connectedCallback() {
+      const locale = this.dataset.locale!;
+      const form = this.dataset.form as "long" | "short";
+      const date = this.dataset.date
+        ? new Date(Number.parseInt(this.dataset.date))
+        : undefined;
+      if (!date) {
+        console.warn("LocalDate: no date provided");
+        return;
+      }
+      this.innerHTML = formatDate(date, locale, form);
+      ["form", "date", "locale"].forEach((attr) =>
+        this.attributes.removeNamedItem(`data-${attr}`),
+      );
+    }
+  }
+
+  customElements.define("local-date", LocalDate);
+</script>

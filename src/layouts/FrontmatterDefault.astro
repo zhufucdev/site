@@ -5,8 +5,8 @@ import BottomFooter from "../components/BottomFooter.astro";
 import Comments from "../components/Comments.astro";
 import PageViews from "../components/PageViews.astro";
 import ViewCounter from "../components/ViewCounter.astro";
+import LocalDate from "../components/LocalDate.astro";
 import type { I18nResource } from "../strings/types";
-import formatDate from "../utils/dateformat";
 import getIsoLangCodeByLocale from "../utils/iso-lang-code-by-locale";
 interface Props {
   i18n: I18nResource;
@@ -29,12 +29,16 @@ const { frontmatter, i18n, url, pageId = url } = Astro.props;
     currentItem="articles"
     allowNavigateToCurrent
   />
-  <article class="max-w-2xl space-y-2 mb-6">
+  <article class="mb-6 max-w-2xl space-y-2">
     <header class="font-default text-4xl">
       {frontmatter.title}
     </header>
     <p class="font-default">
-      {formatDate(frontmatter.created, i18n.localeName, "long")}
+      <LocalDate
+        date={frontmatter.created}
+        locale={i18n.localeName}
+        form="long"
+      />
     </p>
     <slot />
   </article>
