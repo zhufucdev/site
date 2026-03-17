@@ -1,0 +1,35 @@
+---
+import type { SupportedLocale } from "../strings/types";
+import type { FormatStyle } from "@formkit/tempo";
+
+export interface Props {
+  locale?: SupportedLocale;
+  form?: FormatStyle;
+}
+const { locale, form } = Astro.props;
+---
+
+<local-time data-locale={locale} data-form={form}><slot /></local-time>
+
+<script>
+  import { format, type FormatStyle } from "@formkit/tempo";
+
+  class LocalTime extends HTMLElement {
+    connectedCallback() {
+      const date = new Date(this.innerHTML.trim());
+      const form = (this.dataset.form ?? "short") as FormatStyle;
+      this.innerText = format(date, { date: form, time: form });
+      for (let i = 0; i < this.attributes.length; ++i) {
+        const item = this.attributes.item(i);
+        if (
+          item?.localName?.startsWith("data-") === true &&
+          !item.localName.startsWith("data-astro-")
+        ) {
+          this.attributes.removeNamedItem(item!.name);
+        }
+      }
+    }
+  }
+
+  customElements.define("local-time", LocalTime);
+</script>

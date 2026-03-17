@@ -6,6 +6,7 @@ import ChevronDoubleDown from "../icons/ChevronDoubleDown.svg";
 import db from "../db/connection";
 import { pageViewsTable } from "../db/schema/page-views";
 import { desc } from "drizzle-orm";
+import LocalTime from "../components/LocalTime.astro";
 export const prerender = false;
 
 const { env } = Astro.locals.runtime;
@@ -70,6 +71,9 @@ const pageViews = await db
     </card>
   </div>
   <PageViewStatsDialog hash="#page-views" client:only />
+  <p class="p-4 opacity-80" slot="footer">
+    Updated at <LocalTime form="medium">{new Date()}</LocalTime>
+  </p>
 </Master>
 
 <style>
