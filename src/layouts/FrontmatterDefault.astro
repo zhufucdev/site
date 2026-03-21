@@ -129,6 +129,16 @@ const { frontmatter, i18n, url, pageId = url } = Astro.props;
   import mermaid from "mermaid";
   const query = window.matchMedia("(prefers-color-scheme: dark)");
 
+  function createLightDarkCounterparts() {
+    const mermaidElements = document.querySelectorAll(".mermaid");
+    for (const element of mermaidElements) {
+      element.classList.add("light");
+      const darkElement = document.createElement('pre');
+      element.insertAdjacentElement("afterend", darkElement);
+      darkElement.classList.add("mermaid", "dark");
+      darkElement.innerHTML = element.innerHTML;
+    }
+  }
   function runMermaid(darkMode: boolean) {
     mermaid.initialize({
       theme: darkMode ? "dark" : "neutral",
@@ -142,6 +152,7 @@ const { frontmatter, i18n, url, pageId = url } = Astro.props;
     runMermaid(event.matches);
   });
   document.addEventListener("astro:page-load", () => {
+    createLightDarkCounterparts();
     runMermaid(query.matches);
   });
 </script>

@@ -40,17 +40,12 @@ function remarkMermaidPlugin(options = {}) {
         const escaped = escapeHtml(node.value);
         const htmlNode = {
           type: "html",
-          value: `<pre class="mermaid light">${escaped}</pre>`,
-        };
-        const htmlDarkNode = {
-          type: "html",
-          value: `<pre class="mermaid dark">${escaped}</pre>`,
+          value: `<pre class="mermaid">${escaped}</pre>`,
         };
 
         // Replace the code node with html node
         if (parent && typeof index === "number") {
           parent.children[index] = htmlNode;
-          parent.children.splice(index, 0, htmlDarkNode);
         }
 
         if (options.logger) {
