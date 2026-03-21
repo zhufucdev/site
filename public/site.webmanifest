@@ -1,7 +1,7 @@
 {
-  "name": "Your Application Name",
-  "short_name": "App",
-  "description": "Application description",
+  "name": "Caturday Reed",
+  "short_name": "Caturday",
+  "description": "Caturday Reed's site where they post long form writings",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -27,9 +27,8 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": [
-    "productivity"
-  ],
+  "categories": ["lifestyle", "developer", "fashion"],
   "lang": "en",
   "dir": "ltr"
 }
+
