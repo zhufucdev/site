@@ -4,6 +4,7 @@ import Topbar from "../components/Topbar.astro";
 import BottomFooter from "../components/BottomFooter.astro";
 import CoveredPostCard from "../components/CoveredPostCard.astro";
 import LineExtendedHeader from "../components/LineExtendedHeader.astro";
+import Read from "../components/Read.astro";
 import type { I18nResource } from "../strings/types";
 import { getImage, Image } from "astro:assets";
 import type QnaPost from "../qna";
@@ -16,6 +17,7 @@ import clover from "/src/images/Clover.svg";
 import elevenSidedStar from "/src/images/ElevenSidedStar.svg";
 import tiltedRectangle from "/src/images/TiltedRectangle.svg";
 import anAutumnInAmber from "/src/images/an-autumn-in-amber.jpg";
+import myImpossibleSoulmate from "/src/images/my-impossible-soulmate.webp";
 import vividStasis from "/src/images/vivid-stasis.png";
 import osu from "/src/images/osu.png";
 import celeste from "/src/images/celeste.png";
@@ -105,27 +107,18 @@ const qnaPosts =
   <LineExtendedHeader href="reading" class="mb-2"
     >{i18n.reading_para}</LineExtendedHeader
   >
-  <div
-    class="flex flex-row content-around items-center justify-center gap-4 self-center px-6 pb-12"
-  >
-    <div class="relative flex-nowrap">
-      <Image
-        src={anAutumnInAmber}
-        class="rounded-sm"
-        width="48"
-        densities={[1, 2]}
-        alt="book cover"
+  <div class="self-center flex flex-wrap mb-12 gap-6 max-md:max-w-sm">
+    <Read cover={myImpossibleSoulmate}>
+      <Fragment slot="title" set:text="My Impossible Soulmate" />
+      <Fragment slot="author" set:text="Jocelyn Samara" />
+    </Read>
+    <Read cover={anAutumnInAmber}>
+      <Fragment
+        slot="title"
+        set:text="An Autumn in Amber, a Zero-Second Journey"
       />
-      <div
-        class="absolute -right-1 -bottom-1 -z-10 size-full rounded-sm bg-amber-100 dark:bg-stone-800"
-      >
-      </div>
-    </div>
-    <div class="flex-1">
-      <p class="text-lg">An Autumn in Amber, a Zero-Second Journey</p>
-      <div class="flex-1"></div>
-      <p class="opacity-65">Mei Hachimoku</p>
-    </div>
+      <Fragment slot="author" set:text="Mei Hachimoku" />
+    </Read>
   </div>
   <LineExtendedHeader href="playing">{i18n.playing_para}</LineExtendedHeader>
   <div
