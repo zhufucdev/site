@@ -25,7 +25,7 @@ const enRes: I18nResource = {
   photo_para: "Photo",
   loading_comments: "Loading comments…",
   steves_site_with_updates_and_articles_para:
-    "Catruday's personal site where they post updates and long form blogs",
+    "Caturday's personal site where they post updates and long form blogs",
 };
 
 export default enRes;
