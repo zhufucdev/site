@@ -1,0 +1,100 @@
+---
+title: Reality is Arbitrary
+summary:
+  Though it's unclear whether we live in a simulation or not, the distinction
+  doesn't matter to me. People think too hard about the concept itself, while
+  the important aspect is ignored.
+created: 1780726313433
+---
+
+# TADC
+
+I knew nothing about Jax from The Amazing Digitial Circus other than a pop
+culture reference. Not until today did I spend time going through the animated
+series, and found it pretty good, featuring several interesting if not
+questionable characters. I am not going to bother you with the details, not to
+mention spoilers. If you have time though, I would recommend you giving it a
+shot.
+
+Throughout my engagement in the animated web series, I have been pondering the
+reason of my feelings, or let's say, the lack of such, towards the situation
+where Pomni realizes she's stuck in a simulated world and cannot escape. That
+moment, I did feel no rage, and to Jax's claim that it's all fake thus nothing
+matters I kinda wanted to nod, which presumably is contrary to popular
+discourse. Not that I agree to the "jerk" side of him, nor am I a negative
+nihilist. So dear reader, I hope you would find my opinions a little bit
+interesting.
+
+# Differentiating Reality From Simulation
+
+Aside from TADC, many pop cultures involve the idea of simulated worlds, some
+very biased examples include vivid/stasis (v/s), Doki Doki Literature Club
+(DDLC), The Truman Show (TTS), Inception, and the thought experiment of brain in
+a vet (BIAV). There are common aspects, like the involvement of highly
+sophisticated computing technology and artificial intelligence, but that's
+beyond the point. Let's focus on where these media differ, and I would put them
+into two buckets:
+
+1. ones where the protagonists are born in the simulation (DDLC, BIAV, TTS), and
+2. where they come into the simulation from "the real world" (TADC, v/s,
+   Inception).
+
+_\*the BIAV case is debatable but here I put it in 1_
+
+According to these media representations, characters from both buckets share the
+emotion of existential crisis when they realize the simulation situation. Monika
+from DDLC does not hesitate to manipulate data files of her friends because
+nothing is real except her ego. Jax from TADC doesn't care about anything but
+fun, even at the expense of making his friends' life miserable, which is a
+classic negative nihilistic worldview. Saturday from vivid/stasis literally had
+a mental breakdown in the underground facility, and it took her weeks if not
+months to recover from the shock.
+
+By instinct, characters originating from virtual reality are unable to go back,
+but that's merely a constraint by the plot. Take brain in a vet as example, it's
+totally plausible that the brain formerly has a human owner. But I would argue
+it's morally incorrect to bring these characters to life.
+
+# Their Reality
+
+Let me review for you: there's a being, perfectly conscious, rational, with
+agency, just as good as a human, except their entirity of experience, the people
+they talked to, their family they grew up in, the food they ate, are all made
+up. Our world to them is as foreign as their world to ours. Doesn't that make
+bringing them to reality as evil as sending them to a simulation? By bringing
+them to the "real" world they are forced to give up their entire life. What kind
+of real is that?
+
+And I want to push it further. If the only difference is the subjective
+experience, and the past experience is irrelevant, then there's no difference in
+realities regardless of it's simulated or not. To the present me, living in a
+simulation is as good as in the world that runs it, because that's all I could
+care about.
+
+I can see why this can be a hard pill to swallow. I understand why Truman chose
+to quit the show: he wants control over who to love, and his love is a real
+person. That does not invalidate my point, because that is a category error. In
+the contrary, in Truman I see the courage to put down the past and seek fully
+forward, the faith in that things are dynamic and there's no point being
+obsessed with one's own comfort zone, the spirit to experiment with who one can
+possibly be and live the current live to the fullest.
+
+# Our Reality
+
+It's really interesting that we are statistically almost impossible to live in a
+real universe rather than a simulated one, if some specific presumptions which I
+am not going to bother you about are true, of course. Some people doubt this
+proposition because the presumptions are questionable. I honestly do not know,
+meanwhile finding the questioning itself irrelevant. After all, it's not a hot
+take that this world contains our entire experience. Even if that's not the
+case, or some day we find the truth and there's more to live, I really wouldn't
+care. I mean, still I would get excited, but the motivation would be the secrets
+we could unravel, rather than the feeling of being inferior thus the ego to
+impress the outside world and prove my existence.
+
+So back to the start, I guess that explains why I felt no rage towards Pomni's
+situation. If I were Pomni, certainly there was bad guys putting me into the
+circus (do not take my words because I haven't watched the last act yet), but
+that is more confusion than anger. Guess I am a jester now, and let me find a
+way out. Worst-case scenario, I make friends with the other humans, finding out
+what it means to be an anime jester and life goes on.
