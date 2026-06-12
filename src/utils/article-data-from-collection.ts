@@ -5,6 +5,7 @@ export default function getArticlesDataFromCollection(
 ): ArticlesData {
   return Map.groupBy(
     posts
+      .filter(({ id }) => !id.startsWith(".")) // hide some articles
       .map(({ data, id }) => ({
         meta: {
           title: data.title,

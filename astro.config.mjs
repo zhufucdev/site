@@ -79,7 +79,14 @@ export default defineConfig({
     }),
     solidJs(),
     mdx(),
-    sitemap(),
+    sitemap({
+      filter: (page) => {
+        const segements = new URL(page).pathname.split("/");
+        return (
+          segements.findLast((seg) => seg.length > 0)?.startsWith(".") == false
+        );
+      },
+    }),
   ],
   redirects: {
     ...Object.fromEntries(
