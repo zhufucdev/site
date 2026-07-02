@@ -29,19 +29,21 @@ const { frontmatter, i18n, url, pageId = url } = Astro.props;
     currentItem="articles"
     allowNavigateToCurrent
   />
-  <article class="mb-6 max-w-2xl space-y-2">
-    <header class="font-default text-4xl">
-      {frontmatter.title}
+  <main class="mb-6 max-w-2xl space-y-2">
+    <header>
+      <h1 class="font-default text-4xl">{frontmatter.title}</h1>
+      <p class="font-default">
+        <LocalDate
+          date={frontmatter.created}
+          locale={i18n.localeName}
+          form="long"
+        />
+      </p>
     </header>
-    <p class="font-default">
-      <LocalDate
-        date={frontmatter.created}
-        locale={i18n.localeName}
-        form="long"
-      />
-    </p>
-    <slot />
-  </article>
+    <article class="space-y-2">
+      <slot />
+    </article>
+  </main>
   <PageViews pageId={pageId} locale={i18n.localeName} server:defer>
     <ViewCounter count={-1} locale={i18n.localeName} slot="fallback" />
   </PageViews>
@@ -133,7 +135,7 @@ const { frontmatter, i18n, url, pageId = url } = Astro.props;
     const mermaidElements = document.querySelectorAll(".mermaid");
     for (const element of mermaidElements) {
       element.classList.add("light");
-      const darkElement = document.createElement('pre');
+      const darkElement = document.createElement("pre");
       element.insertAdjacentElement("afterend", darkElement);
       darkElement.classList.add("mermaid", "dark");
       darkElement.innerHTML = element.innerHTML;
