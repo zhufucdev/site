@@ -16,11 +16,11 @@ import tiltedPentagon from "/src/images/TiltedPentagon.svg";
 import clover from "/src/images/Clover.svg";
 import elevenSidedStar from "/src/images/ElevenSidedStar.svg";
 import tiltedRectangle from "/src/images/TiltedRectangle.svg";
-import anAutumnInAmber from "/src/images/an-autumn-in-amber.jpg";
+import iHadThatSameDreamAgain from "/src/images/I-had-that-same-dream-again.jpg";
 import myImpossibleSoulmate from "/src/images/my-impossible-soulmate.webp";
 import vividStasis from "/src/images/vivid-stasis.png";
 import osu from "/src/images/osu.png";
-import celeste from "/src/images/celeste.png";
+import inStarsAndTime from "/src/images/in-stars-and-time.png";
 import matrix from "/src/images/matrix.svg";
 import getIsoLangCodeByLocale from "../utils/iso-lang-code-by-locale";
 
@@ -112,12 +112,12 @@ const qnaPosts =
       <Fragment slot="title" set:text="My Impossible Soulmate" />
       <Fragment slot="author" set:text="Jocelyn Samara" />
     </Read>
-    <Read cover={anAutumnInAmber}>
+    <Read cover={iHadThatSameDreamAgain}>
       <Fragment
         slot="title"
-        set:text="An Autumn in Amber, a Zero-Second Journey"
+        set:text="I Had That Same Dream Again"
       />
-      <Fragment slot="author" set:text="Mei Hachimoku" />
+      <Fragment slot="author" set:text="Yoru Sumino" />
     </Read>
   </div>
   <LineExtendedHeader href="playing">{i18n.playing_para}</LineExtendedHeader>
@@ -134,10 +134,10 @@ const qnaPosts =
       ><Image src={osu} width="48" alt="osu" densities={[1, 2]} /></a
     >
     <Image
-      src={celeste}
-      width="160"
-      class="p-2"
-      alt="celeste"
+      src={inStarsAndTime}
+      height="80"
+      class="p-2 dark:invert"
+      alt="In Stars and Time"
       densities={[1, 2]}
     />
   </div>
