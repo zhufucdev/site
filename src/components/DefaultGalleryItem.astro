@@ -1,5 +1,4 @@
 ---
-import Unimage from "./Unimage.astro";
 import Master from "../layouts/Master.astro";
 import XMark from "../icons/XMark.svg";
 import ProgressCircle from "../images/ProgressCircle.svg";
@@ -8,6 +7,7 @@ import type { I18nResource } from "../strings/types";
 import formatDate from "../utils/dateformat";
 import enRes from "../strings/en";
 import getIsoLangCodeByLocale from "../utils/iso-lang-code-by-locale";
+import { Image } from "astro:assets";
 
 interface Props {
   i18n?: I18nResource;
@@ -35,8 +35,8 @@ const { i18n = enRes, src, alt, id, tweet, created } = Astro.props;
         Math.random() < 0.05 ? "animate-spin-lgbt" : "animate-spin",
       ]}
     />
-    <Unimage
-      image={src}
+    <Image
+      src={src}
       alt={alt}
       width={600}
       height={600}

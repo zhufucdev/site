@@ -2,6 +2,7 @@
 import ViewCounter from "./ViewCounter.astro";
 import { getViews } from "../utils/page-views";
 import type { SupportedLocale } from "../strings/types";
+import { env } from "cloudflare:workers";
 
 export interface Props {
   pageId: string;
@@ -9,7 +10,6 @@ export interface Props {
   locale?: SupportedLocale;
 }
 const { pageId, class: clazz, locale } = Astro.props;
-const { env } = Astro.locals.runtime;
 
 const views = await getViews(pageId, Astro.session, env, Astro.clientAddress);
 ---

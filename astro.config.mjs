@@ -17,8 +17,6 @@ import mdx from "@astrojs/mdx";
 
 import mermaid from "./astro-mermaid-integration";
 
-import rehypeShiki from "@shikijs/rehype";
-
 import basicSsl from "@vitejs/plugin-basic-ssl";
 
 import sitemap from "@astrojs/sitemap";
@@ -34,7 +32,7 @@ export default defineConfig({
     // @ts-ignore
     plugins: [tailwindcss(), basicSsl()],
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         external: [
           "fsevents",
           ...builtinModules,
@@ -42,15 +40,14 @@ export default defineConfig({
         ],
       },
     },
+    optimizeDeps: {
+      exclude: ["mermaid"],
+    },
   },
 
   i18n: {
     locales: ["en", "zh", "zh-tw"],
     defaultLocale,
-  },
-  markdown: {
-    rehypePlugins: [[rehypeShiki, { theme: "github-dark" }]],
-    syntaxHighlight: false,
   },
 
   adapter: cloudflare({
@@ -68,15 +65,7 @@ export default defineConfig({
     ttl: visitTtlSeconds,
   },
   integrations: [
-    mermaid({
-      theme: "neutral",
-      autoTheme: false,
-      mermaidConfig: {
-        startOnLoad: false,
-        logLevel: "error",
-        securityLevel: "strict",
-      },
-    }),
+    mermaid(),
     solidJs(),
     mdx(),
     sitemap({

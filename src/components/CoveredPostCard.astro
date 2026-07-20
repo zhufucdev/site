@@ -1,5 +1,5 @@
 ---
-import Unimage from "./Unimage.astro";
+import { Image } from "astro:assets";
 import TitleSummary from "./TitleSummary.astro";
 import type { ImageMetadata } from "astro";
 interface Props {
@@ -23,8 +23,12 @@ const { cover, mask, class: className, customColors = false } = Astro.props;
   {
     Astro.slots.has("header-leading") && Astro.slots.has("header-tailing") && (
       <p class="space-x-2 font-mono leading-8">
-        <span class="bg-orange-600 p-2 text-white"><slot name="header-leading" /></span>
-        <span><slot name="header-tailing" /></span>
+        <span class="bg-orange-600 p-2 text-white">
+          <slot name="header-leading" />
+        </span>
+        <span>
+          <slot name="header-tailing" />
+        </span>
       </p>
     )
   }
@@ -43,12 +47,12 @@ const { cover, mask, class: className, customColors = false } = Astro.props;
     >
       {
         cover && (
-          <Unimage
-            image={cover.image}
+          <Image
+            src={cover.image}
             alt={cover.alt}
             width={384}
             height={384}
-            class="object-cover aspect-square size-full"
+            class="aspect-square size-full object-cover"
           />
         )
       }

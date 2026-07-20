@@ -7,9 +7,9 @@ import db from "../db/connection";
 import { pageViewsTable } from "../db/schema/page-views";
 import { desc } from "drizzle-orm";
 import LocalTime from "../components/LocalTime.astro";
-export const prerender = false;
+import { env } from "cloudflare:workers";
 
-const { env } = Astro.locals.runtime;
+export const prerender = false;
 async function getEntryCountByKv(kv: KVNamespace, limit: number = 100) {
   const count = (await kv.list({ limit: limit + 1 })).keys.length;
   if (count > limit) {

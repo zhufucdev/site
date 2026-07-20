@@ -1,48 +1,72 @@
 ---
-import { Image } from "astro:assets";
-import { CldImage } from "astro-cloudinary";
+import { getImage } from "astro:assets";
+import { Cloudinary } from "@cloudinary/url-gen";
 import type { ImageMetadata } from "astro";
-interface Props {
+import { thumbnail } from "@cloudinary/url-gen/actions/resize";
+import type { ImgAttributes } from "astro:assets";
+
+type Props = ImgAttributes & {
   image: string | ImageMetadata;
-  alt: string;
   width: number;
   height: number;
-  class?: string;
+};
+
+async function resolveImage({
+  image: im,
+  width,
+  height,
+  ...others
+}: Props): Promise<
+  ImgAttributes & { width?: number; height?: number; src?: string }
+> {
+  if (typeof im === "object") {
+    const rendered = await getImage({
+      src: im.src,
+      height: im.height,
+      width: im.width,
+      format: im.format,
+    });
+    return {
+      src: rendered.src,
+      srcset: rendered.srcSet.values.join(","),
+      ...others,
+    };
+  }
+  if (!im.startsWith("https://res.cloudinary.com")) {
+    return { src: im, ...others };
+  }
+  // https://res.cloudinary.com/<cloud name>/image/upload/v<number>/<public id>
+  const cloudinaryUrlMatcher =
+    /https:\/\/res\.cloudinary\.com\/([a-zA-Z\-_]+)\/image\/upload\/.+\/([^/]+)\/?/;
+  const match = im.match(cloudinaryUrlMatcher);
+  if (!match) {
+    return { src: im, ...others };
+  }
+  const cld = new Cloudinary({
+    cloud: { cloudName: match[1] },
+  });
+  const imageId = match[2];
+  return {
+    srcset: [
+      [width, "1x"],
+      [width * 2, "2x"],
+      [width * 4, "4x"],
+    ]
+      .map(
+        ([w, m]) =>
+          cld
+            .image(imageId)
+            .resize(thumbnail().width(w))
+            .toURL()
+            .replaceAll(",", "%2C") + ` ${m}`,
+      )
+      .join(", "),
+    "data-cldimage-src": im,
+    ...others,
+  };
 }
-const { image, alt, width, height, class: className, ...others } = Astro.props;
+
+const imgProps = await resolveImage(Astro.props);
 ---
 
-{
-  typeof image === "string" ? (
-    image.startsWith("https://res.cloudinary.com") ? (
-      <CldImage
-        src={image}
-        alt={alt}
-        unstyled
-        width={width}
-        height={height}
-        class={className}
-        {...others}
-      />
-    ) : (
-      <img
-        src={image}
-        alt={alt}
-        width={width}
-        height={height}
-        class={className}
-        {...others}
-      />
-    )
-  ) : (
-    <Image
-      src={image}
-      alt={alt}
-      width={width}
-      height={height}
-      layout="constrained"
-      class={className}
-      {...others}
-    />
-  )
-}
+<img {...imgProps} />

@@ -2,7 +2,7 @@
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { list } from "../db/gallery-items";
 import type { SupportedLocale } from "../strings/types";
-import { CldImage } from "astro-cloudinary";
+import Unimage from "./Unimage.astro";
 import { defaultLocale } from "../locale";
 
 interface Props {
@@ -29,19 +29,16 @@ const items = await list({
         class="h-60 min-w-40 flex-1 bg-orange-100 sm:min-w-[30%] md:max-w-[33%] md:min-w-[20%]"
         transition:name={`gallery-${id}`}
       >
-        {image.startsWith("https://res.cloudinary.com") ? (
-          <CldImage
-            src={image}
-            width={400}
-            height={240}
-            sizes="(max-width: 640px) 100vw, 33vw"
-            class="size-full object-cover"
-            unstyled
-            alt={alt}
-          />
-        ) : (
-          <img src={image} class="size-full object-cover" alt={alt} />
-        )}
+        <Unimage
+          image={image}
+          width={400}
+          height={240}
+          class="size-full object-cover"
+          loading="lazy"
+          decoding="async"
+          sizes="(max-width: 640px) 100vw, 33vw"
+          alt={alt}
+        />
       </a>
     ))
   }

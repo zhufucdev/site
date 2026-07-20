@@ -6,6 +6,7 @@ import { ipTtlSeconds } from "../sessions";
 import db from "../db/connection";
 import { pageViewsTable } from "../db/schema/page-views";
 import { desc } from "drizzle-orm";
+import { env } from "cloudflare:workers";
 
 export const server = {
   getRequireChallenge: defineAction({
@@ -15,7 +16,6 @@ export const server = {
       }
       const selfClaimedFingerprint = context.cookies.get("fingerprint")?.value;
       if (selfClaimedFingerprint) {
-        const { env } = context.locals.runtime;
         const existingSessionId = await env.SESSION_ID_BY_FINGERPRINT.get(
           selfClaimedFingerprint,
         );
@@ -57,7 +57,6 @@ export const server = {
             code: "BAD_REQUEST",
           });
         }
-        const { env } = context.locals.runtime;
         if (context.session) {
           context.session.set("fingerprint", fingerprint);
           const sessionId = context.session.sessionID;
@@ -88,7 +87,6 @@ export const server = {
           code: "SERVICE_UNAVAILABLE",
         });
       }
-      const { env } = context.locals.runtime;
       if (
         await shouldIncrementViews(
           pageId,

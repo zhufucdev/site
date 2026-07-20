@@ -1,3 +1,6 @@
+import { defineHastPlugin, defineMdastPlugin } from "satteri";
+import { satteri } from "@astrojs/markdown-satteri";
+
 /**
  * Helper function to HTML-escape text content
  * This ensures HTML tags in mermaid diagrams are preserved as text
@@ -12,6 +15,18 @@ function escapeHtml(text) {
   };
   return text.replace(/[&<>"']/g, (char) => htmlEntities[char]);
 }
+
+const mermaidMdastPlugin = defineMdastPlugin({
+  name: "mermaid-mast",
+  code(node, ctx) {
+    if (node.lang !== "mermaid") {
+      return;
+    }
+    return {
+      rawHtml: `<pre class="mermaid">${escapeHtml(node.value)}</pre>`,
+    };
+  },
+});
 
 function visit(tree, type, visitor) {
   if (!tree.children) {
@@ -177,15 +192,7 @@ function rehypeMermaidPlugin(options = {}) {
  * @param {boolean} [options.enableLog=true] - Enable client-side logging
  * @returns {import('astro').AstroIntegration}
  */
-export default function astroMermaid(options = {}) {
-  const {
-    theme = "default",
-    autoTheme = true,
-    mermaidConfig = {},
-    iconPacks = [],
-    enableLog = true,
-  } = options;
-
+export default function astroMermaid() {
   return {
     name: "astro-mermaid",
     hooks: {
@@ -205,28 +212,18 @@ export default function astroMermaid(options = {}) {
           config.markdown?.rehypePlugins?.length || 0,
         );
 
-        // Always include mermaid.
-        const viteOptimizeDepsInclude = ["mermaid"];
-
-        // Conditionally include ELK
-        const useElk = false;
-
         // Update markdown config to use both remark and rehype plugins
         updateConfig({
-          markdown: {
-            remarkPlugins: [
-              ...(config.markdown?.remarkPlugins || []),
-              [remarkMermaidPlugin, { logger }],
-            ],
-            rehypePlugins: [
-              ...(config.markdown?.rehypePlugins || []),
-              [rehypeMermaidPlugin, { logger }],
-            ],
-          },
           vite: {
             optimizeDeps: {
-              include: viteOptimizeDepsInclude,
+              include: ["mermaid"],
             },
+          },
+          markdown: {
+            processor: satteri({
+              mdastPlugins: [mermaidMdastPlugin],
+              features: { smartPunctuation: { dashes: false } },
+            }),
           },
         });
       },
