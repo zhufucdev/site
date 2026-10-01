@@ -46,15 +46,24 @@ const { cover, mask, class: className, customColors = false } = Astro.props;
         .join(";")}
     >
       {
-        cover && (
-          <Image
-            src={cover.image}
-            alt={cover.alt}
-            width={384}
-            height={384}
-            class="aspect-square size-full object-cover"
-          />
-        )
+        cover &&
+          (typeof cover.image === "object" ? (
+            <Image
+              src={cover.image}
+              alt={cover.alt}
+              width={384}
+              height={384}
+              class="aspect-square size-full object-cover"
+            />
+          ) : (
+            <img
+              src={cover.image}
+              alt={cover.alt}
+              width="384"
+              height="384"
+              class="aspect-square size-full object-cover"
+            />
+          ))
       }
     </div>
   </div>
