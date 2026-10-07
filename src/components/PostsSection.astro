@@ -3,7 +3,6 @@ import { getImage } from "astro:assets";
 import type { I18nResource } from "../strings/types";
 import type Post from "../post";
 import formatDate from "../utils/dateformat";
-import { imageByName } from "../shapes/by-name";
 import CoveredPostCard from "./CoveredPostCard.astro";
 
 import * as updatePost from "../db/update-posts";
@@ -26,7 +25,7 @@ const {
       title,
       summary,
       cover: cover ?? undefined,
-      maskUrl: `/shape/${mask}`,
+      maskUrl: `/shape/${mask}.svg`,
     })),
   ),
 } = Astro.props;
