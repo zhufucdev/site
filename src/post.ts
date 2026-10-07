@@ -10,5 +10,5 @@ export default interface Post {
   title: string;
   summary: string;
   cover?: Cover;
-  mask: ImageMetadata;
+  maskUrl: string;
 }

@@ -3,7 +3,7 @@ import { getImage } from "astro:assets";
 import type { I18nResource } from "../strings/types";
 import type Post from "../post";
 import formatDate from "../utils/dateformat";
-import { shapeByName } from "../shapes/by-name";
+import { imageByName } from "../shapes/by-name";
 import CoveredPostCard from "./CoveredPostCard.astro";
 
 import * as updatePost from "../db/update-posts";
@@ -26,7 +26,7 @@ const {
       title,
       summary,
       cover: cover ?? undefined,
-      mask: shapeByName[mask],
+      maskUrl: `/shape/${mask}`,
     })),
   ),
 } = Astro.props;
@@ -36,9 +36,9 @@ const {
   {
     (
       await Promise.all(
-        posts.map(async ({ mask, ...others }) => ({
+        posts.map(async ({ maskUrl, ...others }) => ({
           ...others,
-          mask: `url(${(await getImage({ src: mask })).src})`,
+          mask: `url(${maskUrl})`,
         })),
       )
     ).map(({ created, cover, mask, header, title, summary }) => (
