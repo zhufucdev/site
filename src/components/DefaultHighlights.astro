@@ -40,7 +40,7 @@ const {
 >
   <Topbar slot="nav" i18n={i18n} currentItem="" />
   <BottomFooter slot="footer" i18n={i18n} currentNavItem="/" />
-  <PostsSection i18n={i18n} posts={posts} />
+  <PostsSection i18n={i18n} posts={posts ?? []} />
   <div
     class="bg-blueprint-grid mt-2 h-20 w-full bg-gray-100 dark:bg-zinc-800"
     style={`mask-image: url(/WaveSegment.svg)`}
